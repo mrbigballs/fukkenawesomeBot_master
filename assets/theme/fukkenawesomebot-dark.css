@@ -1,3 +1,10 @@
-body, input{
+body{
     background-color: #242424 !important;
+    color: #ffffff !important;
 }
+
+input, textarea {
+    background-color: #494949 !important;
+    color: #ffffff !important;
+}
+
