@@ -8,32 +8,68 @@ let settingsDB = new Datastore({
   });
 
 
+
 let settingsStreamerName = document.getElementById('chatWindow');
+
+const settingsDiv = document.getElementById('settingsDiv');
 
 export class SettingsModule{
 
-    saveSettings(){
-        var document = { hello: 'world'
-               , n: 5
-               , today: new Date()
-               , nedbIsAwesome: true
-              // , notthere: null
-             //  , notToBeSaved: undefined  // Will not be saved
-               , fruits: [ 'apple', 'orange', 'pear' ]
-               , infos: { name: 'nedb' }
-               };
+    settings: Settings;
 
-        settingsDB.insert(document, function (err: Error, newDoc: Settings) {   // Callback is optional
+    saveSettings(){
+        var insertSettings: Settings = new Settings('fukkenawesome', 'oauth:ppjnhfg4obg377xghlujfw5pwull12',
+             'fukkenawesome', true,
+            null, null, true, 'theme-dark',
+            ['fukkenawesome', 'andre'], true, true, true,
+            true, true);
+
+        settingsDB.insert(insertSettings, function (err: Error, newDoc: Settings) {   // Callback is optional
         // newDoc is the newly inserted document, including its _id
         // newDoc has no key called notToBeSaved since its value was undefined
+        if(err){
+            console.log(err);
+        }else{
+            console.log(newDoc);
+        }
+           
         });
+    }
+    
+    mapEntrytoSettings(settingsEntry: any){
+        this.settings =  new Settings(settingsEntry.streamerUserName, settingsEntry.streamerOAuthkey,
+            settingsEntry.channel, settingsEntry.autoconnect,
+            settingsEntry.customBotName, settingsEntry.customBotOAuthkey, settingsEntry.themeDark, 
+            settingsEntry.themePath, settingsEntry.chatHighlightNames, settingsEntry.quoteSystemEnabled, 
+            settingsEntry.quote, settingsEntry.quoteAdd, settingsEntry.quoteDel, settingsEntry.quoteEdit);
+
+            settingsDiv.innerHTML = 'Username: ' + settingsEntry.streamerUserName + ' Channel: ' + settingsEntry.channel;
     }
 
     loadSettings(){
-        settingsDB.find({}, function (err: Error, docs: any) {
-            console.log(docs);
+        var self = this;
+        settingsDB.find({}, function (err: Error, settingsEntry: any) {
+            if(err){
+                console.log(err);
+            }else{
+                console.log(settingsEntry[0]);
+                self.mapEntrytoSettings(settingsEntry[0]);
+                
+            }
         });
     }
 
+
+    getStreamerOAuthkey(){
+        if(this.settings == null){
+            return;
+        }else{
+            return this.settings.streamerOAuthkey;
+        }
+    }
+
+    
+
+    
 
 }

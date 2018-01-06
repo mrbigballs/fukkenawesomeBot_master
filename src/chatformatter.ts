@@ -42,7 +42,7 @@ export class ChatMessageFormatter{
         return chatMessage;
     }
 
-    generateChatMessageElement(userstate: any, message: string){
+    generateChatMessageElement(userstate: any, message: string, keywords: string[]){
         let chatDivContainer = document.createElement('div');
         let timeStampSpan = document.createElement('span');
         let chatUsernameSpan = document.createElement('span');
@@ -53,6 +53,9 @@ export class ChatMessageFormatter{
         let displayName = userstate['display-name'];
         let displaNameColor = userstate.color == null ? this.getRandomColor() : userstate.color;
         let formattedMessage = this.formatEmotes(message, userstate.emotes);
+        if(this.highlightMessagesByKeywords(keywords, message)){
+            chatMessageSpan.style.background = 'rgba(102, 0, 0, 0.5)';
+        }
         chatDivContainer.setAttribute('class', 'user-chat-message');
         timeStampSpan.setAttribute('class','user-chat-message-timestamp');
         timeStampSpan.innerHTML = chatTimestamp;
@@ -90,6 +93,19 @@ export class ChatMessageFormatter{
         }else{
            return nameColor + ';'; 
         }
+      }
+
+      highlightMessagesByKeywords(keywords: string[], message: string){
+       let messageArray: string[] = message.split(' ');
+       for(let entry of messageArray){
+           for(let keyword of keywords){
+                if(entry.toLocaleLowerCase() === keyword.toLocaleLowerCase()){
+                    console.log(entry.toLocaleLowerCase + ' ==? ' + keyword.toLocaleLowerCase);
+                    return true;
+                }
+           }
+       }
+       return false;
       }
 
       scrollChat(){

@@ -28,8 +28,6 @@ export class Settings{
   quoteEdit: boolean;
 
 
-
-
   constructor(sName: string, sOauthkey: string, channel: string, autconn: boolean,
               cBotName: string, cBotOauthkey: string, themeDark: boolean, themePath: string,
               chatHighlights: string[], quoteEnabled: boolean, quote: boolean, quoteAdd: boolean,
@@ -47,7 +45,7 @@ export class Settings{
         this.quoteAdd = quoteAdd;
         this.quoteDel = quoteDel;
         this.quoteEdit = quoteEdit;
-
+        this.chatHighlightNames = chatHighlights;
   }
 
 

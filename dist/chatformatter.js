@@ -38,7 +38,7 @@ var ChatMessageFormatter = /** @class */ (function () {
             + '<span class=\"message\">' + formattedMessage + '</span></div>';
         return chatMessage;
     };
-    ChatMessageFormatter.prototype.generateChatMessageElement = function (userstate, message) {
+    ChatMessageFormatter.prototype.generateChatMessageElement = function (userstate, message, keywords) {
         var chatDivContainer = document.createElement('div');
         var timeStampSpan = document.createElement('span');
         var chatUsernameSpan = document.createElement('span');
@@ -49,6 +49,9 @@ var ChatMessageFormatter = /** @class */ (function () {
         var displayName = userstate['display-name'];
         var displaNameColor = userstate.color == null ? this.getRandomColor() : userstate.color;
         var formattedMessage = this.formatEmotes(message, userstate.emotes);
+        if (this.highlightMessagesByKeywords(keywords, message)) {
+            chatMessageSpan.style.background = 'rgba(102, 0, 0, 0.5)';
+        }
         chatDivContainer.setAttribute('class', 'user-chat-message');
         timeStampSpan.setAttribute('class', 'user-chat-message-timestamp');
         timeStampSpan.innerHTML = chatTimestamp;
@@ -86,6 +89,20 @@ var ChatMessageFormatter = /** @class */ (function () {
         else {
             return nameColor + ';';
         }
+    };
+    ChatMessageFormatter.prototype.highlightMessagesByKeywords = function (keywords, message) {
+        var messageArray = message.split(' ');
+        for (var _i = 0, messageArray_1 = messageArray; _i < messageArray_1.length; _i++) {
+            var entry = messageArray_1[_i];
+            for (var _a = 0, keywords_1 = keywords; _a < keywords_1.length; _a++) {
+                var keyword = keywords_1[_a];
+                if (entry.toLocaleLowerCase() === keyword.toLocaleLowerCase()) {
+                    console.log(entry.toLocaleLowerCase + ' ==? ' + keyword.toLocaleLowerCase);
+                    return true;
+                }
+            }
+        }
+        return false;
     };
     ChatMessageFormatter.prototype.scrollChat = function () {
         var chatDiv = document.getElementById("chatWindow");

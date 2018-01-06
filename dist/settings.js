@@ -22,6 +22,7 @@ var Settings = /** @class */ (function () {
         this.quoteAdd = quoteAdd;
         this.quoteDel = quoteDel;
         this.quoteEdit = quoteEdit;
+        this.chatHighlightNames = chatHighlights;
     }
     return Settings;
 }());

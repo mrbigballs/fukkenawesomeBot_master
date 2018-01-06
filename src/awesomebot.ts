@@ -4,9 +4,11 @@ const tmi = require("tmi.js");
 import { Credentials } from "./credentials";
 import { ChatMessageFormatter } from "./chatformatter";
 import { Settings } from './settings';
+import { SettingsModule } from './settingsmodule';
 
 const credentials = new Credentials();
 const chatMessageFormatter = new ChatMessageFormatter();
+const settingsmodule = new SettingsModule();
 
 let mainChatMessageWindow = document.getElementById('chatWindow');
 
@@ -15,10 +17,13 @@ let mainChatMessageWindow = document.getElementById('chatWindow');
 var autoconnect: boolean =  true;
 var deleteMessages: boolean = true;
 
+settingsmodule.loadSettings();
+
 
 
 
 console.log(__dirname);
+
 
 var options = {
     options: {
@@ -48,8 +53,9 @@ client.on("chat", function (channel: string, userstate: any, message: string, se
     // Don't listen to my own messages..
     //if (self) return;
     console.log(message);
+    console.log(settingsmodule.settings);
     // Do your stuff.
-    mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message));
+    mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames));
     chatMessageFormatter.scrollChat();
 });
 

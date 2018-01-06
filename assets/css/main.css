@@ -41,7 +41,7 @@ html {
     width: 100%;
     min-height: 300px;
     /*height: calc(100% - 18px);*/
-    margin-bottom: 20px;
+    margin-bottom: 1px;
     border:1px solid rgb(5, 230, 91);
     flex: 2;
     
@@ -58,6 +58,7 @@ html {
     width: 90%;
     border:1px solid rgba(73, 73, 73, 0.5);
     overflow-y: auto;
+    margin-bottom: 20px;
 }
 
 #chatInput{
