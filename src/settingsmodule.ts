@@ -18,7 +18,7 @@ export class SettingsModule{
     settings: Settings;
 
     saveSettings(){
-        var insertSettings: Settings = new Settings('fukkenawesome', 'oauth:ppjnhfg4obg377xghlujfw5pwull12',
+        var insertSettings: Settings = new Settings('fukkenawesome', 'oauth:xxxxx',
              'fukkenawesome', true,
             null, null, true, 'theme-dark',
             ['fukkenawesome', 'andre'], true, true, true,
