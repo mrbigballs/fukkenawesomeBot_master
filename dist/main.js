@@ -7,9 +7,10 @@ var mainWindow;
 function createWindow() {
     // Create the browser window.
     mainWindow = new electron_1.BrowserWindow({
-        /*frame: false,*/
+        frame: false,
         height: 600,
-        width: 800
+        width: 800,
+        icon: path.join(__dirname, '../assets/icons/bot_icon_no_background_128x128.ico')
     });
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({

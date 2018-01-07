@@ -1,0 +1,19 @@
+{
+	"@metadata": {
+		"authors": [
+			"fukkenawesome"
+		],
+		"last-updated": "2018-01-06",
+		"locale": "en",
+		"message-documentation": "qqq",
+		"AnotherMetadata": "AnotherMedatadataValue"
+	},
+	"appname-title": "fukkenawesomeBot",
+	"appname-about": "About this application",
+    "appname-footer": "Footer text",
+    "nav-chat": "Chat",
+    "nav-dashboard": "Dashboard",
+    "nav-raffle": "Raffle",
+    "nav-settings": "Settings",
+    "nav-commands": "Commands"
+}

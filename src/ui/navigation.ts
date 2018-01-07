@@ -32,4 +32,5 @@ function navigationSelectWindow(id: string){
         chatInput.style.display = 'none';
     }
 
+    
 }

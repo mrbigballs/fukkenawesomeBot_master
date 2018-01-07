@@ -21,13 +21,18 @@ html {
 }
 
 .mainWindow{
-    width:100%;
+     /*width:100%;
     height: calc(100% - 120px);
-    /*
+   
     display:block;
     display: flex;*/
     display: flex;
     align-items: stretch;
+    position: fixed;
+    bottom: 80px;
+    top: 35px;
+    left: 0;
+    right: 0;
 }
 
 .mainContent{
@@ -57,7 +62,7 @@ html {
     height: 100%;
     width: 90%;
     border:1px solid rgba(73, 73, 73, 0.5);
-    overflow-y: auto;
+    /*overflow-y: auto;*/
     margin-bottom: 20px;
 }
 

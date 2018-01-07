@@ -7,10 +7,11 @@ let mainWindow: Electron.BrowserWindow;
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    /*frame: false,*/
+    frame: false,
     height: 600,
     width: 800,
-    /*icon: '../assets/icons/favicon.ico',*/
+    icon: path.join(__dirname, '../assets/icons/bot_icon_no_background_128x128.ico')
+
   });
 
   // and load the index.html of the app.

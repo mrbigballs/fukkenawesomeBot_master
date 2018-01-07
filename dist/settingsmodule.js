@@ -13,7 +13,7 @@ var SettingsModule = /** @class */ (function () {
     function SettingsModule() {
     }
     SettingsModule.prototype.saveSettings = function () {
-        var insertSettings = new settings_1.Settings('fukkenawesome', 'oauth:ppjnhfg4obg377xghlujfw5pwull12', 'fukkenawesome', true, null, null, true, 'theme-dark', ['fukkenawesome', 'andre'], true, true, true, true, true);
+        var insertSettings = new settings_1.Settings('fukkenawesome', 'oauth:xxxxx', 'fukkenawesome', true, null, null, true, 'theme-dark', ['fukkenawesome', 'andre'], true, true, true, true, true);
         settingsDB.insert(insertSettings, function (err, newDoc) {
             // newDoc is the newly inserted document, including its _id
             // newDoc has no key called notToBeSaved since its value was undefined

@@ -8,3 +8,8 @@ input, textarea {
     color: #ffffff !important;
 }
 
+#electron-titlebar{
+    background-color: #595959;
+    height: 35px !important;
+}
+
