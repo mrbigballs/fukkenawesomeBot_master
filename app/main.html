@@ -30,6 +30,8 @@
         $.i18n({
                 locale: 'de' // Locale is Hebrew
         });
+
+        
     </script>
 </head>
 
@@ -37,7 +39,7 @@
     <div id="electron-titlebar">
         <div class="drag" style="width: 100%; height: 100%; text-align: left;  padding-left: 10px; font-size:14px;">
         <img style="height:1em;" src="../assets/icons/bot_icon_no_background_128x128.ico">
-        fukkenaswesomeBot</div>
+        fukkenawesomeBot</div>
     </div>
     <div class="mainWindow">
        
@@ -45,23 +47,28 @@
             <ul>
                 <li>
                     <a class="active" href="#"  id="navChat">
-                        <i class="fa fa-comments fa-fw" aria-hidden="true"></i> Chat</a>
+                        <i class="fa fa-comments fa-fw" aria-hidden="true"></i> 
+                        <span id="navChatText" data-i18n="nav-chat">Chat</span></a>
                 </li>
                 <li>
                     <a href="#"  id="navDashbaord" >
-                        <i class="fa fa-info fa-fw" aria-hidden="true"></i> Dashboard</a>
+                        <i class="fa fa-info fa-fw" aria-hidden="true"></i>  
+                        <span id="navDashboardText" data-i18n="nav-dashboard">Dashboard</span></a>
                 </li>
                 <li>
                     <a href="#"  id="navRaffle" >
-                        <i class="fa fa-gift fa-fw" aria-hidden="true"></i> Raffle</a>
+                        <i class="fa fa-gift fa-fw" aria-hidden="true"></i> 
+                        <span id="navRaffleText" data-i18n="nav-raffle">Raffle</span></a>
                 </li>
                 <li>
                     <a href="#"  id="navCommands" >
-                        <i class="fa fa-terminal fa-fw" aria-hidden="true" ></i> Commands</a>
+                        <i class="fa fa-terminal fa-fw" aria-hidden="true" ></i>
+                        <span id="navCommandsText" data-i18n="nav-commands">Commands</span></a>
                 </li>
                 <li>
                     <a href="#"  id="navSettings" >
-                        <i class="fa fa-cogs fa-fw" aria-hidden="true" ></i> Settings</a>
+                        <i class="fa fa-cogs fa-fw" aria-hidden="true" ></i> 
+                        <span id="navSettingsText" data-i18n="nav-settings">Settings</span></a>
                 </li>
             </ul>
         </div>
@@ -126,13 +133,13 @@
         /*ui stuff*/
         require('../dist/ui/navigation');
 
-        
+        $( '.navigationNormal' ).i18n();
         //translate menu
-        $('#navChat').html($('#navChat').html().replace('Chat', $.i18n('nav-chat')));
-        $('#navDashbaord').html($('#navDashbaord').html().replace('Dashboard', $.i18n('nav-dashboard')));
-        $('#navRaffle').html($('#navRaffle').html().replace('Raffle', $.i18n('nav-raffle')));
-        $('#navCommands').html($('#navCommands').html().replace('Commands', $.i18n('nav-commands')));
-        $('#navSettings').html($('#navSettings').html().replace('Settings', $.i18n('nav-settings')));
+        //$('#navChat').html($('#navChat').html().replace('Chat', $.i18n('nav-chat')));
+        //$('#navDashbaord').html($('#navDashbaord').html().replace('Dashboard', $.i18n('nav-dashboard')));
+        //$('#navRaffle').html($('#navRaffle').html().replace('Raffle', $.i18n('nav-raffle')));
+        //$('#navCommands').html($('#navCommands').html().replace('Commands', $.i18n('nav-commands')));
+        //$('#navSettings').html($('#navSettings').html().replace('Settings', $.i18n('nav-settings')));
     </script>
 
 
