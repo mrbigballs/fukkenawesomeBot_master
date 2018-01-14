@@ -20,6 +20,9 @@ export class Settings{
   //chat highlight  
   chatHighlightNames: string[] = [];
 
+  //use uiNotifications
+  uiNotifications: boolean;
+
   //quotes
   quoteSystemEnabled: boolean;
   quote: boolean;
@@ -31,7 +34,7 @@ export class Settings{
   constructor(sName: string, sOauthkey: string, channel: string, autconn: boolean,
               cBotName: string, cBotOauthkey: string, themeDark: boolean, themePath: string,
               chatHighlights: string[], quoteEnabled: boolean, quote: boolean, quoteAdd: boolean,
-              quoteDel: boolean, quoteEdit: boolean){
+              quoteDel: boolean, quoteEdit: boolean, uiNotifications:  boolean){
         this.streamerUserName = sName;
         this.streamerOAuthkey = sOauthkey;
         this.channel = channel;
@@ -46,6 +49,7 @@ export class Settings{
         this.quoteDel = quoteDel;
         this.quoteEdit = quoteEdit;
         this.chatHighlightNames = chatHighlights;
+        this.uiNotifications = uiNotifications;
   }
 
 

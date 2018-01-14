@@ -3,7 +3,8 @@ import * as path from "path";
 import * as url from "url";
 
 let mainWindow: Electron.BrowserWindow;
-let trayIconpath = path.join(__dirname, '../assets/icons/bot_icon_no_background_16x16.png');
+//let trayIconpath = path.join(__dirname, '../assets/icons/bot_icon_no_background_16x16.png');
+let trayIconpath = path.join(__dirname, '../assets/icons/fb_icon_16x16.png');
 let systemTray: Tray = null;
 let quitApplication: boolean = false;
 

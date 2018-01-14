@@ -9,31 +9,20 @@ let settingsDB = new Datastore({
 
 
 
-let settingsStreamerName = document.getElementById('chatWindow');
+let settingsStreamerName = <HTMLInputElement>document.getElementById('settingsStreamerName');
+let settingsStreamerOAuthkey = <HTMLInputElement>document.getElementById('settingsStreamerOauthkay');
 
 const settingsDiv = document.getElementById('settingsDiv');
+
 
 export class SettingsModule{
 
     settings: Settings;
 
     saveSettings(){
-        var insertSettings: Settings = new Settings('fukkenawesome', 'oauth:xxxxx',
-             'fukkenawesome', true,
-            null, null, true, 'theme-dark',
-            ['fukkenawesome', 'andre'], true, true, true,
-            true, true);
-
-        settingsDB.insert(insertSettings, function (err: Error, newDoc: Settings) {   // Callback is optional
-        // newDoc is the newly inserted document, including its _id
-        // newDoc has no key called notToBeSaved since its value was undefined
-        if(err){
-            console.log(err);
-        }else{
-            console.log(newDoc);
-        }
-           
-        });
+        settingsDB.update({ _id: 'QQGy79vh0WjCyifK' },  this.settings  , {}, function (err: Error, numReplaced: number) {
+            console.log("replaced---->" + numReplaced);
+          });
     }
     
     mapEntrytoSettings(settingsEntry: any){
@@ -41,9 +30,12 @@ export class SettingsModule{
             settingsEntry.channel, settingsEntry.autoconnect,
             settingsEntry.customBotName, settingsEntry.customBotOAuthkey, settingsEntry.themeDark, 
             settingsEntry.themePath, settingsEntry.chatHighlightNames, settingsEntry.quoteSystemEnabled, 
-            settingsEntry.quote, settingsEntry.quoteAdd, settingsEntry.quoteDel, settingsEntry.quoteEdit);
+            settingsEntry.quote, settingsEntry.quoteAdd, settingsEntry.quoteDel, settingsEntry.quoteEdit,
+            settingsEntry.uiNotifications);
 
-            settingsDiv.innerHTML = 'Username: ' + settingsEntry.streamerUserName + ' Channel: ' + settingsEntry.channel;
+            settingsStreamerName.value = settingsEntry.streamerUserName;
+            settingsStreamerOAuthkey.value = settingsEntry.streamerOAuthkey;
+            
     }
 
     loadSettings(){
@@ -59,6 +51,24 @@ export class SettingsModule{
         });
     }
 
+    initSettingsDB(){
+        var insertSettings: Settings = new Settings('fukkenawesome', 'oauth:xxxxx',
+             'fukkenawesome', true,
+            null, null, true, 'theme-dark',
+            ['fukkenawesome', 'andre'], true, true, true,
+            true, true, true);
+
+        settingsDB.insert(insertSettings, function (err: Error, newDoc: Settings) {   // Callback is optional
+        // newDoc is the newly inserted document, including its _id
+        // newDoc has no key called notToBeSaved since its value was undefined
+        if(err){
+            console.log(err);
+        }else{
+            console.log(newDoc);
+        }
+           
+        });
+    }
 
     getStreamerOAuthkey(){
         if(this.settings == null){

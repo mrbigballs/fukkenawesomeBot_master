@@ -1,6 +1,9 @@
 "use strict";
 exports.__esModule = true;
 var tmi = require("tmi.js");
+var fs = require('fs');
+var expressApp = require('express')();
+var express = require('express');
 var credentials_1 = require("./credentials");
 var chatformatter_1 = require("./chatformatter");
 var settingsmodule_1 = require("./settingsmodule");
@@ -8,10 +11,15 @@ var credentials = new credentials_1.Credentials();
 var chatMessageFormatter = new chatformatter_1.ChatMessageFormatter();
 var settingsmodule = new settingsmodule_1.SettingsModule();
 var mainChatMessageWindow = document.getElementById('chatWindow');
+document.getElementById("settingsGetOAuthkeyButton").addEventListener("click", function (e) { return credentials.getOAuthkey(); });
 var autoconnect = true;
 var deleteMessages = true;
 settingsmodule.loadSettings();
+var server = require('http').createServer(expressApp);
+var io = require('socket.io')(server);
 console.log(__dirname);
+expressApp.use(express.static(__dirname + '/../app/public'));
+server.listen(1337);
 var options = {
     options: {
         debug: true

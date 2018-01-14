@@ -4,7 +4,8 @@ var electron_1 = require("electron");
 var path = require("path");
 var url = require("url");
 var mainWindow;
-var trayIconpath = path.join(__dirname, '../assets/icons/bot_icon_no_background_16x16.png');
+//let trayIconpath = path.join(__dirname, '../assets/icons/bot_icon_no_background_16x16.png');
+var trayIconpath = path.join(__dirname, '../assets/icons/fb_icon_16x16.png');
 var systemTray = null;
 var quitApplication = false;
 function createWindow() {

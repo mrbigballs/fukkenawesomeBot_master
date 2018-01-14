@@ -1,4 +1,7 @@
 const tmi = require("tmi.js");
+const fs = require('fs');
+const expressApp = require('express')();
+var express = require('express');
 
 
 import { Credentials } from "./credentials";
@@ -12,18 +15,21 @@ const settingsmodule = new SettingsModule();
 
 let mainChatMessageWindow = document.getElementById('chatWindow');
 
-
+document.getElementById("settingsGetOAuthkeyButton").addEventListener ("click", (e:Event) => credentials.getOAuthkey());
 
 var autoconnect: boolean =  true;
 var deleteMessages: boolean = true;
 
 settingsmodule.loadSettings();
 
-
+var server = require('http').createServer(expressApp);
+var io = require('socket.io')(server);
 
 
 console.log(__dirname);
+expressApp.use(express.static(__dirname + '/../app/public'));
 
+server.listen(1337);
 
 var options = {
     options: {

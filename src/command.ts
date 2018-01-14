@@ -6,8 +6,13 @@ export class Command{
     cooldowntime: number = 0;
     parameters: string[] = []; //eg. <wurst> etc.
 
-    constructor(triggers: string[]){
+    constructor(triggers: string[], message: string = '', cooldowntime: number = 60, 
+                parameters: string[] = []){
         this.triggers = triggers;
+        this.message = message;
+        this.cooldowntime = cooldowntime;
+        this.parameters = parameters;
+
     }
 
     hasTriggerAlias(triggers: string[]): boolean {
@@ -34,7 +39,8 @@ export class Command{
     runCooldownTimer(): void{
         setTimeout(this.setCooldownState(false), this.cooldowntime);
     }
-
+    
+    
 
 
 }

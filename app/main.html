@@ -115,8 +115,28 @@
             <!--</div>-->     
             
             <div id="settingsDiv" style="display: none;">
+                <h2>Twtich Connection Settings</h2>
+                <h4>Streamer</h4><button id="settingsGetOAuthkeyButton" class="btn btn-primary">Get OAuthkey</button>
+                <form class="form-inline">
+                    <label class="sr-only" for="inlineFormInput">Streamer Username</label>
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="settingsStreamerName" placeholder="Streamer Twitch Username">
+                  
+                    <label class="sr-only" for="inlineFormInputGroup">Streamer OAuthkey</label>
+                    <input type="password" class="form-control mb-2 mr-sm-2 mb-sm-0" id="settingsStreamerOauthkay" placeholder="OAuthkey">
+                    
+                    
+                </form>
+                <h4>Bot</h4> optional when empty fukkenawesomeBot is used.
+                <form class="form-inline">
+                    <label class="sr-only" for="inlineFormInput">Bot Username</label>
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="settingsBotName" placeholder="Bot Twitch Username">
+                  
+                    <label class="sr-only" for="inlineFormInputGroup">Bot OAuthkey</label>
+                    <input type="password" class="form-control mb-2 mr-sm-2 mb-sm-0" id="settingsBotOauthkay" placeholder="OAuthkey">
+                    
+                </form>
                 
-
+                <button onclick="" class="btn btn-primary">Save</button>
             </div>
 
         </div>

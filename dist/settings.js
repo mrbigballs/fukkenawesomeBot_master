@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
 var Settings = /** @class */ (function () {
-    function Settings(sName, sOauthkey, channel, autconn, cBotName, cBotOauthkey, themeDark, themePath, chatHighlights, quoteEnabled, quote, quoteAdd, quoteDel, quoteEdit) {
+    function Settings(sName, sOauthkey, channel, autconn, cBotName, cBotOauthkey, themeDark, themePath, chatHighlights, quoteEnabled, quote, quoteAdd, quoteDel, quoteEdit, uiNotifications) {
         //autoconnect
         this.autoconnect = false;
         //Theme
@@ -23,6 +23,7 @@ var Settings = /** @class */ (function () {
         this.quoteDel = quoteDel;
         this.quoteEdit = quoteEdit;
         this.chatHighlightNames = chatHighlights;
+        this.uiNotifications = uiNotifications;
     }
     return Settings;
 }());
