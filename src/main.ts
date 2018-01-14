@@ -9,14 +9,31 @@ let systemTray: Tray = null;
 let quitApplication: boolean = false;
 
 function createWindow() {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
-    frame: false,
+
+  
+
+  if(process.platform == "darwin"){
+    // Create the browser window.
+    mainWindow = new BrowserWindow({
+    titleBarStyle: 'hidden',
+    frame: true,
     height: 720,
     width: 900,
     icon: path.join(__dirname, '../assets/icons/bot_icon_no_background_128x128.ico')
 
   });
+
+  }else{
+    // Create the browser window.
+    mainWindow = new BrowserWindow({
+    frame: false,
+    height: 720,
+    width: 900,
+    icon: path.join(__dirname, '../assets/icons/bot_icon_no_background_128x128.ico')
+
+    });
+  }
+  
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({

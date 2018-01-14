@@ -9,13 +9,25 @@ var trayIconpath = path.join(__dirname, '../assets/icons/fb_icon_16x16.png');
 var systemTray = null;
 var quitApplication = false;
 function createWindow() {
-    // Create the browser window.
-    mainWindow = new electron_1.BrowserWindow({
-        frame: false,
-        height: 720,
-        width: 900,
-        icon: path.join(__dirname, '../assets/icons/bot_icon_no_background_128x128.ico')
-    });
+    if (process.platform == "darwin") {
+        // Create the browser window.
+        mainWindow = new electron_1.BrowserWindow({
+            titleBarStyle: 'hidden',
+            frame: true,
+            height: 720,
+            width: 900,
+            icon: path.join(__dirname, '../assets/icons/bot_icon_no_background_128x128.ico')
+        });
+    }
+    else {
+        // Create the browser window.
+        mainWindow = new electron_1.BrowserWindow({
+            frame: false,
+            height: 720,
+            width: 900,
+            icon: path.join(__dirname, '../assets/icons/bot_icon_no_background_128x128.ico')
+        });
+    }
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, "../app/main.html"),
