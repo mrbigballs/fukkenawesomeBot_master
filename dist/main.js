@@ -5,18 +5,19 @@ var path = require("path");
 var url = require("url");
 var mainWindow;
 //let trayIconpath = path.join(__dirname, '../assets/icons/bot_icon_no_background_16x16.png');
-var trayIconpath = path.join(__dirname, '../assets/icons/fb_icon_16x16.png');
+var trayIconOnline = path.join(__dirname, '../assets/icons/fukkenbot_icon_16x16.png');
+var trayIconOffline = path.join(__dirname, '../assets/icons/fukkenbot_icon_16x16_red.png');
 var systemTray = null;
 var quitApplication = false;
 function createWindow() {
     if (process.platform == "darwin") {
-        // Create the browser window.
+        // Create the browser window for mac with mac specific titlebar buttons
         mainWindow = new electron_1.BrowserWindow({
             titleBarStyle: 'hidden',
             frame: true,
             height: 720,
             width: 900,
-            icon: path.join(__dirname, '../assets/icons/bot_icon_no_background_128x128.ico')
+            icon: path.join(__dirname, '../assets/icons/fukkenbot_icon_128x128_nvO_icon.ico')
         });
     }
     else {
@@ -25,7 +26,7 @@ function createWindow() {
             frame: false,
             height: 720,
             width: 900,
-            icon: path.join(__dirname, '../assets/icons/bot_icon_no_background_128x128.ico')
+            icon: path.join(__dirname, '../assets/icons/fukkenbot_icon_128x128_nvO_icon.ico')
         });
     }
     // and load the index.html of the app.
@@ -82,7 +83,7 @@ electron_1.app.on("activate", function () {
     }
 });
 function createTray() {
-    systemTray = new electron_1.Tray(trayIconpath);
+    systemTray = new electron_1.Tray(trayIconOffline);
     var trayMenuTemplate = [
         {
             label: 'Settings',
@@ -107,6 +108,10 @@ function createTray() {
     var trayMenu = electron_1.Menu.buildFromTemplate(trayMenuTemplate);
     systemTray.setContextMenu(trayMenu);
 }
+electron_1.ipcMain.on('botConnected', function (event, arg) {
+    console.log(arg);
+    systemTray.setImage(trayIconOnline);
+});
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here. 
 //# sourceMappingURL=main.js.map

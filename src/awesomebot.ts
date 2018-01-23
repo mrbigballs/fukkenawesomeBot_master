@@ -2,7 +2,7 @@ const tmi = require("tmi.js");
 const fs = require('fs');
 const expressApp = require('express')();
 var express = require('express');
-
+var {ipcRenderer, remote} = require('electron');
 
 import { Credentials } from "./credentials";
 import { ChatMessageFormatter } from "./chatformatter";
@@ -53,8 +53,11 @@ if(autoconnect){
     client.connect();
 }
 
-//on chat message do
+client.on("connected", function (address: string, port: number) {
+    ipcRenderer.send('botConnected', 'connected yeah');
+});
 
+//on chat message do
 client.on("chat", function (channel: string, userstate: any, message: string, self: any) {
     // Don't listen to my own messages..
     //if (self) return;

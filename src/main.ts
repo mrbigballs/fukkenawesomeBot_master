@@ -1,10 +1,11 @@
-import { app, BrowserWindow, Tray, Menu } from "electron";
+import { app, BrowserWindow, Tray, Menu, ipcMain } from "electron";
 import * as path from "path";
 import * as url from "url";
 
 let mainWindow: Electron.BrowserWindow;
 //let trayIconpath = path.join(__dirname, '../assets/icons/bot_icon_no_background_16x16.png');
-let trayIconpath = path.join(__dirname, '../assets/icons/fb_icon_16x16.png');
+let trayIconOnline = path.join(__dirname, '../assets/icons/fukkenbot_icon_16x16.png');
+let trayIconOffline = path.join(__dirname, '../assets/icons/fukkenbot_icon_16x16_red.png');
 let systemTray: Tray = null;
 let quitApplication: boolean = false;
 
@@ -13,13 +14,13 @@ function createWindow() {
   
 
   if(process.platform == "darwin"){
-    // Create the browser window.
+    // Create the browser window for mac with mac specific titlebar buttons
     mainWindow = new BrowserWindow({
     titleBarStyle: 'hidden',
     frame: true,
     height: 720,
     width: 900,
-    icon: path.join(__dirname, '../assets/icons/bot_icon_no_background_128x128.ico')
+    icon: path.join(__dirname, '../assets/icons/fukkenbot_icon_128x128_nvO_icon.ico')
 
   });
 
@@ -29,7 +30,7 @@ function createWindow() {
     frame: false,
     height: 720,
     width: 900,
-    icon: path.join(__dirname, '../assets/icons/bot_icon_no_background_128x128.ico')
+    icon: path.join(__dirname, '../assets/icons/fukkenbot_icon_128x128_nvO_icon.ico')
 
     });
   }
@@ -103,7 +104,7 @@ app.on("activate", () => {
 });
 
 function createTray(){
-  systemTray = new Tray(trayIconpath);
+  systemTray = new Tray(trayIconOffline);
   const trayMenuTemplate = [
     {
       label: 'Settings',
@@ -129,6 +130,16 @@ function createTray(){
   let trayMenu = Menu.buildFromTemplate(trayMenuTemplate)
   systemTray.setContextMenu(trayMenu)
 }
+
+ipcMain.on('botConnected', (event:any, arg:any) => {  
+  console.log(arg);
+  systemTray.setImage(trayIconOnline);
+});
+
+ipcMain.on('botDisconnected', (event:any, arg:any) => {  
+  console.log(arg);
+  systemTray.setImage(trayIconOffline);
+});
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
