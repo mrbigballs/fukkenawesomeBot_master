@@ -60,3 +60,4 @@ typings/
 # credentials and default oauthkeys
 credentials.ts
 credentials.js
+credentials.js.map
