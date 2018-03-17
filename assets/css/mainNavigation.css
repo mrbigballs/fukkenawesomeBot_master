@@ -19,7 +19,7 @@
     min-width: 50px;
     background-color: #414040;
     position: fixed;
-    height: 100%;
+    height: auto;
     overflow: auto;
     
 }

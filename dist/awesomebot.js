@@ -5,6 +5,7 @@ var fs = require('fs');
 var expressApp = require('express')();
 var express = require('express');
 var _a = require('electron'), ipcRenderer = _a.ipcRenderer, remote = _a.remote;
+var YeelightSearch = require('yeelight-wifi');
 var credentials_1 = require("./credentials");
 var chatformatter_1 = require("./chatformatter");
 var settingsmodule_1 = require("./settingsmodule");
@@ -32,7 +33,7 @@ var options = {
         username: credentials.default_botname,
         password: credentials.default_bot_oauthkey
     },
-    channels: ["#slethzockt"]
+    channels: ["#fukkenawesome"]
 };
 var client = new tmi.client(options);
 // Connect the client to the server..
@@ -52,6 +53,7 @@ client.on("chat", function (channel, userstate, message, self) {
     // Do your stuff.
     mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames));
     chatMessageFormatter.scrollChat();
+    simpleCommand(message);
 });
 client.on("timeout", function (channel, username, reason, duration) {
     console.log(username + ' timeouted for ' + duration + ' because: ' + reason);
@@ -60,6 +62,18 @@ client.on("timeout", function (channel, username, reason, duration) {
 });
 function sendMessage(message) {
     client.say(options.channels, message);
+}
+function simpleCommand(message) {
+    console.log('lampen?? ' + list.length);
+    if (message == '!lassblinkenbaby') {
+        list[0].startColorFlow(5, 0, '1000, 2, 2700, 100, 500, 1, 255, 10, 500, 2, 5000, 1');
+    }
+    if (message == '!stahp') {
+        list[0].stopColorFlow();
+    }
+    if (message == '!toggle') {
+        list[0].toggle();
+    }
 }
 document.getElementById('chatMessageInput').onkeypress = function (e) {
     if (e.keyCode == 13) {
@@ -72,4 +86,21 @@ document.getElementById('chatMessageInput').onkeypress = function (e) {
         }
     }
 };
+var yeelightSearch = new YeelightSearch();
+var list = [];
+yeelightSearch.on('found', function (lightBulb) {
+    console.log(lightBulb.getValues(""));
+    list.push(lightBulb);
+    /*
+  lightBulb.toggle()
+    .then(() => {
+      console.log(lightBulb.get_prop + ' toggled');
+    })
+    .catch((err: Error) => {
+      console.log(`received some error: ${err}`);
+    });
+    //lass es blinken baby ;)
+    */
+});
+//list[0].startColorFlow(50, 0, '1000, 2, 2700, 100, 500, 1, 255, 10, 500, 2, 5000, 1');
 //# sourceMappingURL=awesomebot.js.map

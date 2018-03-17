@@ -4,6 +4,8 @@ const expressApp = require('express')();
 var express = require('express');
 var {ipcRenderer, remote} = require('electron');
 
+const YeelightSearch = require('yeelight-wifi');
+
 import { Credentials } from "./credentials";
 import { ChatMessageFormatter } from "./chatformatter";
 import { Settings } from './settings';
@@ -42,7 +44,7 @@ var options = {
         username: credentials.default_botname,
         password: credentials.default_bot_oauthkey
     },
-    channels: ["#slethzockt"]
+    channels: ["#fukkenawesome"]
 };
 
 const client = new tmi.client(options);
@@ -66,6 +68,8 @@ client.on("chat", function (channel: string, userstate: any, message: string, se
     // Do your stuff.
     mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames));
     chatMessageFormatter.scrollChat();
+    simpleCommand(message);
+
 });
 
 client.on("timeout", function (channel: string, username: string, reason: string, duration: number) {
@@ -79,7 +83,18 @@ function sendMessage(message: string){
     client.say(options.channels, message);
 }
 
-
+function simpleCommand(message: string){
+    console.log('lampen?? ' + list.length);
+    if(message == '!lassblinkenbaby'){
+        list[0].startColorFlow(5, 0, '1000, 2, 2700, 100, 500, 1, 255, 10, 500, 2, 5000, 1');
+    }
+    if(message == '!stahp'){
+        list[0].stopColorFlow();
+    }
+    if(message == '!toggle'){
+        list[0].toggle();
+    }
+}
 
 document.getElementById('chatMessageInput').onkeypress = function(e) {
     if(e.keyCode == 13) {
@@ -93,3 +108,24 @@ document.getElementById('chatMessageInput').onkeypress = function(e) {
         }
     }
 }
+
+const yeelightSearch = new YeelightSearch();
+let list: Array<any> = [];
+yeelightSearch.on('found', (lightBulb: any) => {
+    console.log(lightBulb.getValues(""));
+    
+    list.push(lightBulb);
+    /*
+  lightBulb.toggle()
+    .then(() => {
+      console.log(lightBulb.get_prop + ' toggled');
+    })
+    .catch((err: Error) => {
+      console.log(`received some error: ${err}`);
+    });
+    //lass es blinken baby ;)
+    */
+});
+
+//list[0].startColorFlow(50, 0, '1000, 2, 2700, 100, 500, 1, 255, 10, 500, 2, 5000, 1');
+

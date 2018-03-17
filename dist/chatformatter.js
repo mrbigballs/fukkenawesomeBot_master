@@ -33,7 +33,7 @@ var ChatMessageFormatter = /** @class */ (function () {
         var displaNameColor = userstate.color;
         var formattedMessage = this.formatEmotes(message, userstate.emotes);
         chatMessage += '<div class=\"user-chat-message\"><span class=\"user-chat-message-timestamp\">' + chatTimestamp + '</span>'
-            + '<span class=\"user-chat-message-username\" style=\" + displaNameColor + \">' + displayName + '</span>'
+            + '<span class=\"context-menu-one user-chat-message-username\" style=\" + displaNameColor + \">' + displayName + '</span>'
             + '<span>:</span>'
             + '<span class=\"message\">' + formattedMessage + '</span></div>';
         return chatMessage;
@@ -55,7 +55,7 @@ var ChatMessageFormatter = /** @class */ (function () {
         chatDivContainer.setAttribute('class', 'user-chat-message');
         timeStampSpan.setAttribute('class', 'user-chat-message-timestamp');
         timeStampSpan.innerHTML = chatTimestamp;
-        chatUsernameSpan.setAttribute('class', 'user-chat-message-username');
+        chatUsernameSpan.setAttribute('class', 'task context-menu-one user-chat-message-username');
         chatUsernameSpan.setAttribute('style', 'color:' + this.getNameColor(displaNameColor, true));
         chatUsernameSpan.innerHTML = '' + displayName;
         chatMessageSpan.setAttribute('class', 'message');

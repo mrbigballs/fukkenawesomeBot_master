@@ -47,4 +47,22 @@
     
 </body>
 
+<menu id="chatContextMenu" style="display:none" class="showcase">
+        <command label="Open Twitch Page" icon="address-card" onclick="alert('Open user')">
+        <command label="Purge"  icon="microphone-slashon" click="alert('Purge')"> 
+        <command label="Ban" icon="ban" onclick="alert('Ban')">
+        <menu label="Timeout">
+                <command label="1 min" onclick="alert('timeout 1min')" icon="clock">
+                <hr>
+                <command label="5 min" onclick="alert('timeout 5min')" icon="clock">
+                <hr>
+                <command label="10 min" onclick="alert('timeout 10min')" icon="clock">
+                <hr>
+                </command>
+                <label>Für <input type="text" name="foo"> Minuten </label>
+        </menu>
+          <hr> 
+          <command label="facebook" onclick="alert('facebook')">
+        </menu>
+      </menu>
 </html>
