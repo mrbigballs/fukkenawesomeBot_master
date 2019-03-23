@@ -44,9 +44,14 @@ var ChatMessageFormatter = /** @class */ (function () {
         var chatUsernameSpan = document.createElement('span');
         var chatMessageSpan = document.createElement('span');
         var chatMessageTrennerSpan = document.createElement('span');
+        var userIdSpan = document.createElement('span');
+        var userTypeSpan = document.createElement('span');
         var chatMessage;
         var chatTimestamp = this.getTimeStamp();
         var displayName = userstate['display-name'];
+        var userId = userstate['user-id'];
+        var userType = userstate['user-type'];
+        console.log("id???: " + userstate['user-id'] + ' ' + userType);
         var displaNameColor = userstate.color == null ? this.getRandomColor() : userstate.color;
         var formattedMessage = this.formatEmotes(message, userstate.emotes);
         if (this.highlightMessagesByKeywords(keywords, message)) {
@@ -61,8 +66,13 @@ var ChatMessageFormatter = /** @class */ (function () {
         chatMessageSpan.setAttribute('class', 'message');
         chatMessageSpan.innerHTML = formattedMessage;
         chatMessageTrennerSpan.innerHTML = ':';
+        //userTypeSpan
+        userIdSpan.setAttribute('class', 'userId');
+        userIdSpan.innerHTML = userId;
+        userIdSpan.style.display = 'none';
         chatDivContainer.appendChild(timeStampSpan);
         chatDivContainer.appendChild(chatUsernameSpan);
+        chatUsernameSpan.appendChild(userIdSpan);
         chatDivContainer.appendChild(chatMessageTrennerSpan);
         chatDivContainer.appendChild(chatMessageSpan);
         console.log(chatDivContainer);

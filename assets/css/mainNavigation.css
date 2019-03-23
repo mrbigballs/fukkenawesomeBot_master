@@ -11,7 +11,7 @@
     opacity: 0.5;
   }*/
 
-  ul {
+.navigationNormal ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -19,12 +19,13 @@
     min-width: 50px;
     background-color: #414040;
     position: fixed;
-    height: auto;
-    overflow: auto;
+    height: 75vh;
+    /*overflow: auto;*/
+    overflow-y: auto;
     
 }
 
-li a {
+.navigationNormal ul li a {
     display: block;
     color: rgb(0, 0, 0) !important;
     padding: 8px 16px;
@@ -33,45 +34,52 @@ li a {
     
 }
 
-li a.active {
+.navigationNormal ul li a.active {
     background-color: #242424;
     color: rgb(124, 0, 0) !important;
     text-decoration: none;
 }
 
-li a:hover:not(.active) {
+.navigationNormal ul li a:hover:not(.active) {
     background-color: rgb(112, 112, 112);
     color: white !important;
     text-decoration: none;
 }
 
-li a:hover {
+.navigationNormal ul li a:hover {
     text-decoration: none;
 }
 
-li a:link {
+.navigationNormal ul li a:link {
     text-decoration: none;
     color: rgb(3, 3, 3);
 }
 
-li a:visited {
+.navigationNormal ul li a:visited {
     text-decoration: none;
     color: inherit;
 }
 
 .navigationNormal{
     width: auto;
+    height: 100%;
     flex: 1;
+    
 }
 
-.navigationSmall{
+/*.navigationSmall{
     width: auto;
+    overflow-y: auto;
     flex: 1;
 }
+*/
 
 @media only screen and (max-width: 480px) {
     /*Hide the icon only menu*/
-    .navigationNormal { display: none; }
+    /*.navigationNormal { display: none; }*/
+    .navigationNormal span{
+        display: none;
+    }
     .mainContent{
         margin-left: 20px;
         padding:1px 16px;
@@ -79,7 +87,10 @@ li a:visited {
   }
 
 @media only screen and (min-width: 480px) {
-    .navigationSmall { display: none; }
+    /*.navigationSmall { display: none; }*/
+    .navigationNormal span{
+        display: inline-block;
+    }
     .mainContent{
         margin-left: 100px;
         padding:1px 16px;

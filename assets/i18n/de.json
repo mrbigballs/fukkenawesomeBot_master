@@ -3,7 +3,7 @@
 		"authors": [
 			"fukkenawesome"
 		],
-		"last-updated": "2018-01-06",
+		"last-updated": "2018-03-22",
 		"locale": "de",
 		"message-documentation": "qqq",
 		"AnotherMetadata": "AnotherMedatadataValue"
@@ -15,5 +15,14 @@
     "nav-dashboard": "Dashboard",
     "nav-raffle": "Verlosung",
     "nav-settings": "Einstellungen",
-    "nav-commands": "Befehle"
+	"nav-commands": "Commands",
+	"nav-polls": "Umfagen",
+	"nav-chatNotifications": "Benachrichtigungen",
+	"nav-uiNotifications": "Alerts",
+	"nav-hardware": "Hardware Funktionen",
+	"nav-xsplit": "xSplit Funktionen",
+	"nav-userdb": "Nutzer Datenbank",
+	"nav-currency": "Währung/XP",
+	"nav-currencyGames": "Währung/XP-Games",
+	"nav-mediaPlayer": "Mediaplayer"
 }

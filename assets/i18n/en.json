@@ -15,5 +15,14 @@
     "nav-dashboard": "Dashboard",
     "nav-raffle": "Raffle",
     "nav-settings": "Settings",
-    "nav-commands": "Commands"
+	"nav-commands": "Commands",
+	"nav-polls": "Polls",
+	"nav-chatNotifications": "Notifications",
+	"nav-uiNotifications": "Alerts",
+	"nav-hardware": "Hardware Functions",
+	"nav-xsplit": "xSplit Functions",
+	"nav-userdb": "User Database",
+	"nav-currency": "Currency/XP",
+	"nav-currencyGames": "Currency/XP-Games",
+	"nav-mediaPlayer": "Mediaplayer"
 }

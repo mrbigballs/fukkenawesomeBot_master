@@ -36,7 +36,7 @@
             } );
 
         $.i18n({
-                locale: 'de' // Locale is Hebrew
+                locale: 'de' //current locale
         });
 
         
@@ -89,12 +89,58 @@
                         <span id="navCommandsText" data-i18n="nav-commands">Commands</span></a>
                 </li>
                 <li>
+                    <a href="#"  id="navPolls" >
+                        <i class="fa fa-bar-chart fa-fw" aria-hidden="true" ></i>
+                        <span id="navPollsText" data-i18n="nav-polls">Commands</span></a>
+                </li>
+                <li>
+                    <a href="#"  id="navNotifications" >
+                        <i class="fa fa-exclamation-circle fa-fw" aria-hidden="true" ></i> 
+                        <span id="navNotificationsText" data-i18n="nav-chatNotifications">Settings</span></a>
+                </li>
+                <li>
+                    <a href="#"  id="navUiNotifications" >
+                        <i class="fa fa-bullhorn fa-fw" aria-hidden="true" ></i> 
+                        <span id="navUiNotificationsText" data-i18n="nav-uiNotifications">Settings</span></a>
+                </li>
+                <li>
+                    <a href="#"  id="navHardware" >
+                        <i class="fa fa-lightbulb-o fa-fw" aria-hidden="true" ></i> 
+                        <span id="navHardwareText" data-i18n="nav-hardware">Settings</span></a>
+                </li>
+                <li>
+                    <a href="#"  id="navXsplit" >
+                        <i class="fa fa-eject fa-fw" aria-hidden="true" ></i> 
+                        <span id="navXsplitText" data-i18n="nav-xsplit">Settings</span></a>
+                </li>
+                <li>
+                    <a href="#"  id="navUserdb" >
+                        <i class="fa fa-database fa-fw" aria-hidden="true" ></i> 
+                        <span id="navUserdbText" data-i18n="nav-userdb">Settings</span></a>
+                </li>
+                <li>
+                    <a href="#"  id="navCurrency" >
+                        <i class="fa fa-btc fa-fw" aria-hidden="true" ></i> 
+                        <span id="navCurrencyText" data-i18n="nav-currency">Settings</span></a>
+                </li>
+                <li>
+                    <a href="#"  id="navCurrencyGames" >
+                        <i class="fa fa-gamepad fa-fw" aria-hidden="true" ></i> 
+                        <span id="navCurrencyGamesText" data-i18n="nav-currencyGames">Settings</span></a>
+                </li>
+                <li>
+                    <a href="#"  id="navMediaplayer" >
+                        <i class="fa fa-play fa-fw" aria-hidden="true" ></i> 
+                        <span id="navMediaplayerText" data-i18n="nav-mediaPlayer">Settings</span></a>
+                </li>
+                <li>
                     <a href="#"  id="navSettings" >
                         <i class="fa fa-cogs fa-fw" aria-hidden="true" ></i> 
                         <span id="navSettingsText" data-i18n="nav-settings">Settings</span></a>
                 </li>
             </ul>
         </div>
+        <!--
         <div class="navigationSmall">
             <ul>
                 <li>
@@ -118,13 +164,59 @@
                     </a>
                 </li>
                 <li>
+                    <a href="#"  id="navPolls" >
+                        <i class="fa fa-bar-chart fa-fw" aria-hidden="true" ></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"  id="navNotifications" >
+                        <i class="fa fa-exclamation-circle fa-fw" aria-hidden="true" ></i> 
+                    </a>
+                </li>
+                <li>
+                    <a href="#"  id="navUiNotifications" >
+                        <i class="fa fa-bullhorn fa-fw" aria-hidden="true" ></i> 
+                    </a>
+                </li>
+                <li>
+                    <a href="#"  id="navHardware" >
+                        <i class="fa fa-lightbulb-o fa-fw" aria-hidden="true" ></i> 
+                    </a>
+                </li>
+                <li>
+                    <a href="#"  id="navXsplit" >
+                        <i class="fa fa-eject fa-fw" aria-hidden="true" ></i> 
+                     </a>
+                </li>
+                <li>
+                    <a href="#"  id="navUserdb" >
+                        <i class="fa fa-database fa-fw" aria-hidden="true" ></i> 
+                    </a>
+                </li>
+                <li>
+                    <a href="#"  id="navCurrency" >
+                        <i class="fa fa-btc fa-fw" aria-hidden="true" ></i> 
+                    </a>
+                </li>
+                <li>
+                    <a href="#"  id="navCurrencyGames" >
+                        <i class="fa fa-gamepad fa-fw" aria-hidden="true" ></i> 
+                    </a>
+                </li>
+                <li>
+                    <a href="#"  id="navMediaplayer" >
+                        <i class="fa fa-play fa-fw" aria-hidden="true" ></i> 
+                    </a>
+                </li>
+                <li>
                     <a href="#"  id="navSettings">
                         <i class="fa fa-cogs fa-fw" aria-hidden="true"></i>
                     </a>
                 </li>
             </ul>
         </div>
-    
+    -->
+
         <div class="mainContent" style="flex-grow: 8">
 
             <!--<div id="chatDiv">-->
@@ -161,7 +253,33 @@
                 
                 <button onclick="" class="btn btn-primary">Save</button>
             </div>
-
+            <div id="lotteryDiv" style="display: none;">
+                <form class="form-inline">
+                    <div class="form-row align-items-center">
+                      <div class="col-auto">
+                        <label class="sr-only" for="inlineFormInput">Keyword</label>
+                        <input type="text" class="form-control mb-2" id="keywordInput" placeholder="Raffle Keyword">
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check mb-2">
+                          <input class="form-check-input" type="checkbox" id="timedRaffleCheck">
+                          <label class="form-check-label" for="autoSizingCheck">
+                            Timed Raffle
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <label class="sr-only" for="inlineFormInput">Min</label>
+                        <input type="text" class="form-control mb-2" id="timedRaffleMinInput" placeholder="5">
+                      </div>
+                      <div class="col-auto">
+                        <label class="sr-only" for="inlineFormInput">Sec</label>
+                        <input type="text" class="form-control mb-2" id="timedRaffleSecInput" placeholder="00">
+                      </div>
+                    </div>
+                  </form>
+                  <button id="setRaffleKeywordButton" class="btn btn-primary">Set Keyword</button>
+            </div>
         </div>
         
     </div>

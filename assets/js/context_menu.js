@@ -114,6 +114,9 @@
   
         if ( taskItemInContext ) {
           e.preventDefault();
+          
+          var userId = taskItemInContext.getElementsByClassName("userId");
+          console.log('element ' + taskItemInContext + '' + userId[0].innerHTML);
           toggleMenuOn();
           positionMenu(e);
         } else {

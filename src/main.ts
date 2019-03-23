@@ -16,10 +16,14 @@ function createWindow() {
   if(process.platform == "darwin"){
     // Create the browser window for mac with mac specific titlebar buttons
     mainWindow = new BrowserWindow({
+    backgroundColor: '#242424',
     titleBarStyle: 'hidden',
     frame: true,
+    show: false,
     height: 720,
     width: 900,
+    minHeight: 500,
+    minWidth: 400,
     icon: path.join(__dirname, '../assets/icons/fukkenbot_icon_128x128_nvO_icon.ico')
 
   });
@@ -27,9 +31,13 @@ function createWindow() {
   }else{
     // Create the browser window.
     mainWindow = new BrowserWindow({
+    backgroundColor: '#242424',
     frame: false,
+    show: false,
     height: 720,
     width: 900,
+    minHeight: 500,
+    minWidth: 400,
     icon: path.join(__dirname, '../assets/icons/fukkenbot_icon_128x128_nvO_icon.ico')
 
     });
@@ -47,6 +55,14 @@ function createWindow() {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+
+  //show window when content has been loaded
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+  })
+
+
 
   mainWindow.on("close", (e) => {
     //when closing process is started

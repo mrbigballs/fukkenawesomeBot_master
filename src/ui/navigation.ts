@@ -1,6 +1,7 @@
 const chatWindow = document.getElementById('chatWindow');
 const chatInput = document.getElementById('chatInput');
 const settingsDiv = document.getElementById('settingsDiv');
+const lotteryDiv = document.getElementById('lotteryDiv');
 
 document.getElementById("navChat").addEventListener ("click", (e:Event) => navigationSelectWindow('navChat'));
 document.getElementById("navDashbaord").addEventListener ("click", (e:Event) => navigationSelectWindow('navDashbaord'));
@@ -11,11 +12,11 @@ document.getElementById("navSettings").addEventListener ("click", (e:Event) => n
 function navigationSelectWindow(id: string){
 
     var alldescendantsNormal = document.getElementsByClassName('navigationNormal')[0].getElementsByTagName('a');
-    var alldescendantsSmall = document.getElementsByClassName('navigationSmall')[0].getElementsByTagName('a');
+    //var alldescendantsSmall = document.getElementsByClassName('navigationSmall')[0].getElementsByTagName('a');
 
     for (var i = 0; i < alldescendantsNormal.length; i++) {
         alldescendantsNormal[i].classList.remove('active');
-        alldescendantsSmall[i].classList.remove('active');
+        //alldescendantsSmall[i].classList.remove('active');
     }
 
     let clickedElement = document.getElementById(id);
@@ -23,11 +24,18 @@ function navigationSelectWindow(id: string){
 
     if(id == 'navChat'){
         console.log('sdlkfjsldkjfkljsd');
+        lotteryDiv.style.display = 'none';
         settingsDiv.style.display = 'none';
         chatWindow.style.display = '';
         chatInput.style.display = '';
     }else if(id == 'navSettings'){
+        lotteryDiv.style.display = 'none';
         settingsDiv.style.display = '';
+        chatWindow.style.display = 'none';
+        chatInput.style.display = 'none';
+    }else if(id == 'navRaffle'){
+        lotteryDiv.style.display = '';
+        settingsDiv.style.display = 'none';
         chatWindow.style.display = 'none';
         chatInput.style.display = 'none';
     }
