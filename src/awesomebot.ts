@@ -44,7 +44,8 @@ var options = {
         username: credentials.default_botname,
         password: credentials.default_bot_oauthkey
     },
-    channels: ["#fukkenawesome"]
+    /*channels: ["#fukkenawesome"]*/
+    channels: ["#kyri_valkyrie"]
 };
 
 const client = new tmi.client(options);
