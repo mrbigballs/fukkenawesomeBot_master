@@ -18,7 +18,7 @@
   "author": "fukkenawesome",
   "license": "ISC",
   "devDependencies": {
-    "electron": "1.7.10"
+    "electron": "7.2.4"
   },
   "dependencies": {
     "bootstrap": "^4.0.0-alpha.6",
