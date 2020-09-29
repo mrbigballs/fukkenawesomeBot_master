@@ -18,13 +18,15 @@
   "author": "fukkenawesome",
   "license": "ISC",
   "devDependencies": {
-    "electron": "1.7.10"
+    "electron": "^10.1.2"
   },
   "dependencies": {
     "bootstrap": "^4.0.0-alpha.6",
+    "custom-electron-titlebar": "^3.2.4",
+    "electron-store": "^6.0.0",
     "electron-titlebar": "0.0.3",
     "express": "^4.16.2",
-    "jquery": "^3.2.1",
+    "jquery": "^3.5.1",
     "jquery-contextmenu": "^2.6.3",
     "jquery-ui": "^1.12.1",
     "nedb": "^1.8.0",
@@ -32,7 +34,7 @@
     "socket.io": "^2.0.4",
     "tether": "^1.4.3",
     "tinycolor2": "^1.4.1",
-    "tmi.js": "^1.2.1",
+    "tmi.js": "^1.5.0",
     "yeelight-wifi": "^2.3.0"
   }
 }

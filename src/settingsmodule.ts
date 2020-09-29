@@ -1,4 +1,5 @@
 import { Settings } from "./settings";
+const ipcRenderer = require("electron").ipcRenderer;
 
 var Datastore = require('nedb');
 let settingsDB = new Datastore({
@@ -10,7 +11,8 @@ let settingsDB = new Datastore({
 
 
 let settingsStreamerName = <HTMLInputElement>document.getElementById('settingsStreamerName');
-let settingsStreamerOAuthkey = <HTMLInputElement>document.getElementById('settingsStreamerOauthkay');
+let settingsBotName = <HTMLInputElement>document.getElementById('settingsBotName');
+let settingsChannelName = <HTMLInputElement>document.getElementById('settingsChannelName');
 
 const settingsDiv = document.getElementById('settingsDiv');
 
@@ -34,7 +36,8 @@ export class SettingsModule{
             settingsEntry.uiNotifications);
 
             settingsStreamerName.value = settingsEntry.streamerUserName;
-            settingsStreamerOAuthkey.value = settingsEntry.streamerOAuthkey;
+            settingsBotName.value = settingsEntry.customBotName;
+            settingsChannelName.value = settingsEntry.channel;
             
     }
 

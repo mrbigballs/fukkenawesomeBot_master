@@ -1,6 +1,7 @@
 body{
-    background-color: #242424 !important;
+    background: linear-gradient(0deg, rgba(55,59,59,1) 0%, rgba(0,0,0,1) 100%) !important;
     color: #ffffff !important;
+    height: 100vh;
 }
 
 input, textarea {

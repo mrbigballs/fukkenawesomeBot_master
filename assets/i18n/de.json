@@ -24,5 +24,12 @@
 	"nav-userdb": "Nutzer Datenbank",
 	"nav-currency": "Währung/XP",
 	"nav-currencyGames": "Währung/XP-Games",
-	"nav-mediaPlayer": "Mediaplayer"
+	"nav-mediaPlayer": "Mediaplayer",
+	"settings-steamer-con-button": "Verbinde Streamer Account",
+	"settings-bot-con-button": "Verbinde Bot Account",
+	"settings-connection-headline": "Twitch Verbindungs Einstellungen",
+	"settings-streamer-headline": "Streamer",
+	"settings-bot-headline": "Bot",
+	"settings-channel-headline": "Chat Kanal",
+	"settings-save-and-connect-button": "Speichern & Verbinden"
 }

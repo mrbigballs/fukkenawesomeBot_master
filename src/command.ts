@@ -37,7 +37,7 @@ export class Command{
     }
 
     runCooldownTimer(): void{
-        setTimeout(this.setCooldownState(false), this.cooldowntime);
+        //setTimeout(this.setCooldownState(false), this.cooldowntime);
     }
     
     

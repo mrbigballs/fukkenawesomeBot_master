@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+        <head>
+        <meta charset="utf-8">
+
+        <!--Bootstrap-->
+        <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <!--Font Awesome 4.7.0-->
+        <link rel="stylesheet" href="../assets/font-awesome/css/font-awesome.min.css">
+        <!--<link rel="stylesheet" href="../assets/css/main.css">-->
+        <link rel="stylesheet" href="../assets/css/mainNavigation.css">
+        <link rel="stylesheet" href="../assets/css/grid-main.css">
+        <!--Theme-->
+        <link rel="stylesheet" href="../assets/theme/fukkenawesomebot-dark.css">
+        <script>window.$ = window.jQuery = require('jquery');</script>
+        <!--<script src="../node_modules/jquery/dist/jquery.min.js"></script>-->
+        <script src="../node_modules/tether/dist/js/tether.min.js"></script>
+        <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- localization -->
+        <script src="../assets/js/jqueryi18n/jquery.i18n.js"></script>
+        <script src="../assets/js/jqueryi18n/jquery.i18n.messagestore.js"></script>
+        <script src="../assets/js/jqueryi18n/jquery.i18n.fallbacks.js"></script>
+        <script src="../assets/js/jqueryi18n/jquery.i18n.parser.js"></script>
+        <script src="../assets/js/jqueryi18n/jquery.i18n.emitter.js"></script>
+        <script src="../assets/js/jqueryi18n/jquery.i18n.language.js"></script>
+        <!--other stuff experimental-->
+        <script src="../assets/js/jquery-ui-1.12.1/jquery-ui.js"></script>
+       <!-- <script src="../node_modules/jquery-contextmenu/src/jquery.contextMenu.js"></script>
+        <script src="../node_modules/jquery-contextmenu/src/jquery.ui.position.js"></script>
+
+        <link rel="stylesheet" href="../assets/css/contextmenu.css">-->
+
+            <script>
+                $.i18n().load( {
+                        en: '../assets/i18n/en.json',
+                        de: '../assets/i18n/de.json'
+                    } );
+
+                $.i18n({
+                        locale: 'de' //current locale
+                });
+
+                
+            </script>
+        </head>
+
+        <body>
+
+        <div class="grid-container">
+            <div class="menu">
+                <div class="navigationNormal">
+                    <ul>
+                        <li>
+                            <a class="active" href="#"  id="navChat">
+                                <i class="fa fa-comments fa-fw" aria-hidden="true"></i> 
+                                <span id="navChatText" data-i18n="nav-chat">Chat</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navDashbaord" >
+                                <i class="fa fa-info fa-fw" aria-hidden="true"></i>  
+                                <span id="navDashboardText" data-i18n="nav-dashboard">Dashboard</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navRaffle" >
+                                <i class="fa fa-gift fa-fw" aria-hidden="true"></i> 
+                                <span id="navRaffleText" data-i18n="nav-raffle">Raffle</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navCommands" >
+                                <i class="fa fa-terminal fa-fw" aria-hidden="true" ></i>
+                                <span id="navCommandsText" data-i18n="nav-commands">Commands</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navPolls" >
+                                <i class="fa fa-bar-chart fa-fw" aria-hidden="true" ></i>
+                                <span id="navPollsText" data-i18n="nav-polls">Commands</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navNotifications" >
+                                <i class="fa fa-exclamation-circle fa-fw" aria-hidden="true" ></i> 
+                                <span id="navNotificationsText" data-i18n="nav-chatNotifications">Settings</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navUiNotifications" >
+                                <i class="fa fa-bullhorn fa-fw" aria-hidden="true" ></i> 
+                                <span id="navUiNotificationsText" data-i18n="nav-uiNotifications">Settings</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navHardware" >
+                                <i class="fa fa-lightbulb-o fa-fw" aria-hidden="true" ></i> 
+                                <span id="navHardwareText" data-i18n="nav-hardware">Settings</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navXsplit" >
+                                <i class="fa fa-eject fa-fw" aria-hidden="true" ></i> 
+                                <span id="navXsplitText" data-i18n="nav-xsplit">Settings</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navUserdb" >
+                                <i class="fa fa-database fa-fw" aria-hidden="true" ></i> 
+                                <span id="navUserdbText" data-i18n="nav-userdb">Settings</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navCurrency" >
+                                <i class="fa fa-btc fa-fw" aria-hidden="true" ></i> 
+                                <span id="navCurrencyText" data-i18n="nav-currency">Settings</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navCurrencyGames" >
+                                <i class="fa fa-gamepad fa-fw" aria-hidden="true" ></i> 
+                                <span id="navCurrencyGamesText" data-i18n="nav-currencyGames">Settings</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navMediaplayer" >
+                                <i class="fa fa-play fa-fw" aria-hidden="true" ></i> 
+                                <span id="navMediaplayerText" data-i18n="nav-mediaPlayer">Settings</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navSettings" >
+                                <i class="fa fa-cogs fa-fw" aria-hidden="true" ></i> 
+                                <span id="navSettingsText" data-i18n="nav-settings">Settings</span></a>
+                        </li>
+                        <li>
+                            <a href="#"  id="navSettingsCollapse" >
+                                <i class="fa fa-angle-double-left fa-fw" aria-hidden="true" ></i> 
+                                <span id="navSettingsText" ></span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="main">
+                <!--Chat-->
+                <div class="chat-grid">
+                    <div class="chat" id="chatWindow">
+                    
+                    </div>
+                    <div id="chatInput" class="chat-input col-sm-8">
+                            <input id="chatMessageInput" rows="2" type="text" class="form-control" placeholder="Type chat message...">
+                    </div>
+                </div>
+                <!--Settings-->
+                
+            <div id="settingsDiv" style="display: none;">
+                <h2 data-i18n="settings-connection-headline">Twtich Connection Settings</h2>
+                <h4 data-i18n="settings-streamer-headline">Streamer</h4><button id="settingsGetOAuthkeyButton" class="btn btn-primary" data-i18n="settings-steamer-con-button">Connect Streamer Account</button>
+                <form class="form-inline">
+                    <label class="sr-only" for="inlineFormInput">Streamer Username</label>
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="settingsStreamerName" placeholder="Streamer Twitch Username">
+                  
+                    
+                    
+                </form>
+                <h4 data-i18n="settings-bot-headline">Bot</h4> <button id="settingsGetOAuthkeyButtonBot" class="btn btn-primary" data-i18n="settings-bot-con-button">Connect Bot Account</button>
+                <form class="form-inline">
+                    <label class="sr-only" for="inlineFormInput">Bot Username</label>
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="settingsBotName" placeholder="Bot Twitch Username">
+                  
+                    
+                </form>
+                <h4 data-i18n="settings-channel-headline">Channel</h4>
+                <form class="form-inline">
+                    <label class="sr-only" for="inlineFormInput">Channel</label>
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="settingsChannelName" placeholder="...">
+                    
+                </form>
+                
+                <button id="settingsSaveAccountDataConnect" class="btn btn-primary" data-i18n="settings-save-and-connect-button">Save</button>
+            </div>
+
+            <!--Lottery-->
+            <div id="lotteryDiv" style="display: none;">
+                <form class="form-inline">
+                    <div class="form-row align-items-center">
+                      <div class="col-auto">
+                        <label class="sr-only" for="inlineFormInput">Keyword</label>
+                        <input type="text" class="form-control mb-2" id="keywordInput" placeholder="Raffle Keyword">
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check mb-2">
+                          <input class="form-check-input" type="checkbox" id="timedRaffleCheck">
+                          <label class="form-check-label" for="autoSizingCheck">
+                            Timed Raffle
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <label class="sr-only" for="inlineFormInput">Min</label>
+                        <input type="text" class="form-control mb-2" id="timedRaffleMinInput" placeholder="5">
+                      </div>
+                      <div class="col-auto">
+                        <label class="sr-only" for="inlineFormInput">Sec</label>
+                        <input type="text" class="form-control mb-2" id="timedRaffleSecInput" placeholder="00">
+                      </div>
+                    </div>
+                  </form>
+                  <button id="setRaffleKeywordButton" class="btn btn-primary">Set Keyword</button>
+            </div>
+
+            </div>
+            <div class="titlebar"> 
+              
+                    <div class="logo"><img style="height:1em;" src="../assets/icons/bot_icon_no_background_128x128.ico"></div>
+                    
+                
+                
+                <div class="bot-title">fukkenawesomeBot</div>
+                <div class="title-icons">
+                    <div id="window-controls">
+                        <div class="button" id="min-button"><i class="fa fa-window-minimize" aria-hidden="true"></i></div>
+                        <div class="button" id="max-button"><i class="fa fa-window-maximize" aria-hidden="true"></i></div>
+                        <div class="button" id="restore-button"><i class="fa fa-window-restore" aria-hidden="true"></i></div>
+                        <div class="button" id="close-button"><i class="fa fa-times" aria-hidden="true"></i> </div>
+                    </div>
+            </div>
+            </div>
+            <div class="mediamanager"></div>
+        </div>
+
+        <script>
+            //require('electron-titlebar');
+            // 1. Require the installed module
+            //const customTitlebar = require('custom-electron-titlebar');
+    
+            // 2. Create the custom titlebar with your own settings
+            //    To make it work, we just need to provide the backgroundColor property
+            //    Other properties are optional.
+            /*let MyTitleBar = new customTitlebar.Titlebar({
+                backgroundColor: customTitlebar.Color.fromHex('#03a9f4'),
+                //shadow: true,
+                icon: './assets/icons/bot_icon_no_background_32x32.png'
+            });
+    
+            // 3. Update Titlebar text
+            //MyTitleBar.updateTitle('Our Code World Tutorials Rock !');
+            */
+            require('../dist/awesomebot')
+            /*ui stuff*/
+            require('../dist/ui/navigation');
+    
+            $( '.navigationNormal' ).i18n();
+            $( '#settingsDiv' ).i18n();
+            //translate menu
+            //$('#navChat').html($('#navChat').html().replace('Chat', $.i18n('nav-chat')));
+            //$('#navDashbaord').html($('#navDashbaord').html().replace('Dashboard', $.i18n('nav-dashboard')));
+            //$('#navRaffle').html($('#navRaffle').html().replace('Raffle', $.i18n('nav-raffle')));
+            //$('#navCommands').html($('#navCommands').html().replace('Commands', $.i18n('nav-commands')));
+            //$('#navSettings').html($('#navSettings').html().replace('Settings', $.i18n('nav-settings')));
+            /*
+            $(function(){
+                $.contextMenu({
+                    selector: '.context-menu-one',
+                    callback: function(key, options) {
+                        var m = "clicked: " + key;
+                        window.console && console.log(m) || alert(m); 
+                    }, 
+                    items: $.contextMenu.fromMenu($('#chatContextMenu'))
+                });
+            });
+           
+            $(function() {
+            $.contextMenu({
+                selector: '.context-menu-one', 
+                callback: function(key, options) {
+                    var m = "clicked: " + key;
+                    window.console && console.log(m) || alert(m); 
+                },
+                items: {
+                    "edit": {name: "Edit", icon: "edit"},
+                    "cut": {name: "Cut", icon: "cut"},
+                   copy: {name: "Copy", icon: "copy"},
+                    "paste": {name: "Paste", icon: "paste"},
+                    "delete": {name: "Delete", icon: "delete"},
+                    "sep1": "---------",
+                    "quit": {name: "Quit", icon: function(){
+                        return 'context-menu-icon context-menu-icon-quit';
+                    }}
+                }
+            });
+    
+            $('.context-menu-one').on('click', function(e){
+                console.log('clicked', this);
+            })    
+        });
+         */
+        </script>
+        <!--<script src="../assets/js/context_menu.js"></script>-->
+    
+    
+    
+    
+    </body>
+    
+</html>

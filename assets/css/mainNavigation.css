@@ -17,9 +17,9 @@
     padding: 0;
    /* width: 200px;*/
     min-width: 50px;
-    background-color: #414040;
+   /* background-color: #414040;*/
     position: fixed;
-    height: 75vh;
+    height: 100vh;
     /*overflow: auto;*/
     overflow-y: auto;
     
@@ -27,7 +27,7 @@
 
 .navigationNormal ul li a {
     display: block;
-    color: rgb(0, 0, 0) !important;
+    color: rgb(43, 88, 114) !important;
     padding: 8px 16px;
     text-decoration: none;
     margin: 5;
@@ -35,24 +35,26 @@
 }
 
 .navigationNormal ul li a.active {
-    background-color: #242424;
+    background: radial-gradient(circle, rgba(148,148,150,1) 0%, rgba(74,74,74,1) 100%);
     color: rgb(124, 0, 0) !important;
     text-decoration: none;
 }
 
 .navigationNormal ul li a:hover:not(.active) {
-    background-color: rgb(112, 112, 112);
+    background: radial-gradient(circle, rgba(102,102,102,1) 0%, rgba(41,41,41,1) 100%);
     color: white !important;
     text-decoration: none;
+    transition: all 0.2s ease-in-out;
 }
 
 .navigationNormal ul li a:hover {
     text-decoration: none;
+    
 }
 
 .navigationNormal ul li a:link {
     text-decoration: none;
-    color: rgb(3, 3, 3);
+    
 }
 
 .navigationNormal ul li a:visited {
@@ -61,7 +63,7 @@
 }
 
 .navigationNormal{
-    width: auto;
+    width: 200px;
     height: 100%;
     flex: 1;
     
@@ -79,6 +81,13 @@
     /*.navigationNormal { display: none; }*/
     .navigationNormal span{
         display: none;
+   
+    }
+    .navigationNormal{
+        width: 60px;
+    }
+    .grid-container {
+        grid-template-columns: 60px 1fr 1fr 1fr !important;
     }
     .mainContent{
         margin-left: 20px;
@@ -90,6 +99,14 @@
     /*.navigationSmall { display: none; }*/
     .navigationNormal span{
         display: inline-block;
+       
+    }
+    .grid-container {
+        grid-template-columns:220px 1fr 1fr 1fr !important;
+    }
+    .navigationNormal{
+        transition: all 1s;
+        width: 200px;
     }
     .mainContent{
         margin-left: 100px;

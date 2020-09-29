@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.Command = void 0;
 var Command = /** @class */ (function () {
     function Command(triggers, message, cooldowntime, parameters) {
         if (message === void 0) { message = ''; }
@@ -36,7 +37,7 @@ var Command = /** @class */ (function () {
         this.cooldown = coolDown;
     };
     Command.prototype.runCooldownTimer = function () {
-        setTimeout(this.setCooldownState(false), this.cooldowntime);
+        //setTimeout(this.setCooldownState(false), this.cooldowntime);
     };
     return Command;
 }());

@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.Raffle = void 0;
 var Raffle = /** @class */ (function () {
     function Raffle(client) {
         this.timer = 300000; //5 min

@@ -1,6 +1,8 @@
 "use strict";
 exports.__esModule = true;
+exports.SettingsModule = void 0;
 var settings_1 = require("./settings");
+var ipcRenderer = require("electron").ipcRenderer;
 var Datastore = require('nedb');
 var settingsDB = new Datastore({
     filename: __dirname + '/../db/settings.db',
@@ -8,7 +10,8 @@ var settingsDB = new Datastore({
     timestampData: true // automatically add and manage the fields createdAt and updatedAt
 });
 var settingsStreamerName = document.getElementById('settingsStreamerName');
-var settingsStreamerOAuthkey = document.getElementById('settingsStreamerOauthkay');
+var settingsBotName = document.getElementById('settingsBotName');
+var settingsChannelName = document.getElementById('settingsChannelName');
 var settingsDiv = document.getElementById('settingsDiv');
 var SettingsModule = /** @class */ (function () {
     function SettingsModule() {
@@ -21,7 +24,8 @@ var SettingsModule = /** @class */ (function () {
     SettingsModule.prototype.mapEntrytoSettings = function (settingsEntry) {
         this.settings = new settings_1.Settings(settingsEntry.streamerUserName, settingsEntry.streamerOAuthkey, settingsEntry.channel, settingsEntry.autoconnect, settingsEntry.customBotName, settingsEntry.customBotOAuthkey, settingsEntry.themeDark, settingsEntry.themePath, settingsEntry.chatHighlightNames, settingsEntry.quoteSystemEnabled, settingsEntry.quote, settingsEntry.quoteAdd, settingsEntry.quoteDel, settingsEntry.quoteEdit, settingsEntry.uiNotifications);
         settingsStreamerName.value = settingsEntry.streamerUserName;
-        settingsStreamerOAuthkey.value = settingsEntry.streamerOAuthkey;
+        settingsBotName.value = settingsEntry.customBotName;
+        settingsChannelName.value = settingsEntry.channel;
     };
     SettingsModule.prototype.loadSettings = function () {
         var self = this;

@@ -13,6 +13,7 @@ export class Settings{
   //optional
   customBotName: string | null;
   customBotOAuthkey: string| null;
+  
 
   //Theme
   themeDark: boolean = true;
@@ -50,7 +51,32 @@ export class Settings{
         this.quoteEdit = quoteEdit;
         this.chatHighlightNames = chatHighlights;
         this.uiNotifications = uiNotifications;
+       
   }
+
+  setBotToken(token: string): void {
+      this.customBotOAuthkey = token;
+  }
+
+  setUserNameBot(username: string): void {
+    this.customBotName = username;
+  }
+
+  setUserNameStreamer(username: string): void {
+    this.streamerUserName = username;
+  }
+
+  setStreamerToken(token: string): void {
+    this.streamerOAuthkey = token;
+}
+
+setChannel(channel_name: string): void {
+  this.channel = channel_name;
+}
+
+setAutoconnect(autoCon: boolean): void {
+  this.autoconnect = autoCon;
+}
 
 
     
