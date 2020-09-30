@@ -297,6 +297,39 @@ function initTmi(){
             mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' resubbed for ' + cumulativeMonths + ' in a row!', 'sub-chat-info', userstate, message));
         });
 
+        client.on("giftpaidupgrade", (channel: string, username: string, sender: string, userstate: any) => {
+            mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' extends the gifsub from ' + sender, 'sub-chat-info', userstate, null));
+        });
+
+        client.on("anongiftpaidupgrade", (channel: string, username: string, userstate: any) => {
+            mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' extends the gifsub from someone', 'sub-chat-info', userstate, null));
+        });
+
+        client.on("subgift", (channel: string, username: string, streakMonths: number, recipient: string, methods: any, userstate: any) => {
+            // Do your stuff.
+            let senderCount = ~~userstate["msg-param-sender-count"];
+            if(senderCount > 1){
+                mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' gifts ' + senderCount + ' subscriptions!', 'sub-chat-info', userstate, null));
+            }else{
+                mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' gifts ' + recipient + ' a subscription!', 'sub-chat-info', userstate, null));
+            }
+            
+        });
+
+        client.on("submysterygift", (channel: string, username: string, numbOfSubs: number, methods: any, userstate: any) => {
+            // Do your stuff.
+            let senderCount = ~~userstate["msg-param-sender-count"];
+            if(senderCount > 1){
+                mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' gifts ' + senderCount + ' subscriptions!', 'sub-chat-info', userstate, null));
+            }else{
+                mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' gifts a subscription!', 'sub-chat-info', userstate, null));
+            }
+        });
+
+        client.on("cheer", (channel: string, userstate: any, message: string) => {
+            mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' cheered with ' + userstate.bits, 'cheer-chat-info', userstate, null));
+        });
+
     }catch(e){
         console.log(e.message);
     }

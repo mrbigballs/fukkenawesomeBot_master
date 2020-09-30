@@ -243,7 +243,7 @@ function initTmi() {
             }
         });
         client.on("raided", function (channel, username, viewers) {
-            mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage('RAIDED by : ' + channel + ' : ' + username + ' with: ' + viewers + ' viewers', 'important', null, null));
+            mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage('RAIDED by : ' + username + ' with: ' + viewers + ' viewers', 'important', null, null));
         });
         client.on("subscription", function (channel, username, method, message, userstate) {
             var optionalmessage = message != null ? ' - ' + message : '';
@@ -253,6 +253,35 @@ function initTmi() {
             var optionalmessage = message != null ? ' - ' + message : '';
             var cumulativeMonths = ~~userstate["msg-param-cumulative-months"];
             mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' resubbed for ' + cumulativeMonths + ' in a row!', 'sub-chat-info', userstate, message));
+        });
+        client.on("giftpaidupgrade", function (channel, username, sender, userstate) {
+            mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' extends the gifsub from ' + sender, 'sub-chat-info', userstate, null));
+        });
+        client.on("anongiftpaidupgrade", function (channel, username, userstate) {
+            mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' extends the gifsub from someone', 'sub-chat-info', userstate, null));
+        });
+        client.on("subgift", function (channel, username, streakMonths, recipient, methods, userstate) {
+            // Do your stuff.
+            var senderCount = ~~userstate["msg-param-sender-count"];
+            if (senderCount > 1) {
+                mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' gifts ' + senderCount + ' subscriptions!', 'sub-chat-info', userstate, null));
+            }
+            else {
+                mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' gifts ' + recipient + ' a subscription!', 'sub-chat-info', userstate, null));
+            }
+        });
+        client.on("submysterygift", function (channel, username, numbOfSubs, methods, userstate) {
+            // Do your stuff.
+            var senderCount = ~~userstate["msg-param-sender-count"];
+            if (senderCount > 1) {
+                mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' gifts ' + senderCount + ' subscriptions!', 'sub-chat-info', userstate, null));
+            }
+            else {
+                mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' gifts a subscription!', 'sub-chat-info', userstate, null));
+            }
+        });
+        client.on("cheer", function (channel, userstate, message) {
+            mainChatMessageWindow.appendChild(chatMessageFormatter.generateInfoMessage(' cheered with ' + userstate.bits, 'cheer-chat-info', userstate, null));
         });
     }
     catch (e) {

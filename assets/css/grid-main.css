@@ -204,6 +204,11 @@
   font-weight: bold;
 }
 
+.cheer-chat-info{
+  color: #06cff3 !important;
+  font-weight: bold;
+}
+
 img.badges{
   height: 1.2em;
   margin-left: 2px;

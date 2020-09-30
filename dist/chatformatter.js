@@ -41,7 +41,7 @@ var ChatMessageFormatter = /** @class */ (function () {
                     //console.log('badgename: ' + i + ' value' + glob_badges.i);
                     if (badges.hasOwnProperty(key)) {
                         //console.log(key + " -> " + badges[key]);
-                        if (key != 'subscriber' && key != 'bits') {
+                        if (key != 'subscriber') {
                             console.log(key + " -> " + badges[key]);
                             var badge_url = glob_badges.badge_sets[key].versions[badges[key]].image_url_1x;
                             badgeimg.setAttribute('src', badge_url);

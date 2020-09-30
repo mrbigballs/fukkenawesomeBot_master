@@ -43,7 +43,7 @@ export class ChatMessageFormatter{
                     //console.log('badgename: ' + i + ' value' + glob_badges.i);
                     if (badges.hasOwnProperty(key)) {
                         //console.log(key + " -> " + badges[key]);
-                        if(key != 'subscriber' && key != 'bits'){
+                        if(key != 'subscriber'){
                             console.log(key + " -> " + badges[key]);
                             let badge_url = glob_badges.badge_sets[key].versions[badges[key]].image_url_1x;
                             badgeimg.setAttribute('src', badge_url);
@@ -106,7 +106,7 @@ export class ChatMessageFormatter{
         let userId = userstate['user-id'];
         let userType = userstate['user-type'];
         var str = JSON.stringify(userstate)
-        console.log("id???: " + userstate['user-id'] + ' ' + userType + ' ' + str);
+        console.log("id???: " + userId + ' ' + userType + ' ' + str);
         let displaNameColor: string;
         if(userstate.color == null){
             console.log(store.get(displayName+'_color'));
