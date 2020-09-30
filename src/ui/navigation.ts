@@ -2,12 +2,17 @@ const chatWindow = document.getElementById('chatWindow');
 const chatInput = document.getElementById('chatInput');
 const settingsDiv = document.getElementById('settingsDiv');
 const lotteryDiv = document.getElementById('lotteryDiv');
+const chatSettingsDiv = document.getElementById('chatSettingsDiv');
+const chatGridDiv = document.getElementById('chatGridDiv');
 
 document.getElementById("navChat").addEventListener ("click", (e:Event) => navigationSelectWindow('navChat'));
 document.getElementById("navDashbaord").addEventListener ("click", (e:Event) => navigationSelectWindow('navDashbaord'));
 document.getElementById("navRaffle").addEventListener ("click", (e:Event) => navigationSelectWindow('navRaffle'));
 document.getElementById("navCommands").addEventListener ("click", (e:Event) => navigationSelectWindow('navCommands'));
 document.getElementById("navSettings").addEventListener ("click", (e:Event) => navigationSelectWindow('navSettings'));
+
+
+
 
 function navigationSelectWindow(id: string){
 
@@ -23,7 +28,7 @@ function navigationSelectWindow(id: string){
     clickedElement.classList.add('active');
 
     if(id == 'navChat'){
-        console.log('sdlkfjsldkjfkljsd');
+        //console.log('sdlkfjsldkjfkljsd');
         lotteryDiv.style.display = 'none';
         settingsDiv.style.display = 'none';
         chatWindow.style.display = '';
@@ -42,3 +47,18 @@ function navigationSelectWindow(id: string){
 
     
 }
+
+
+//chat options button
+//document.getElementById("chat-settings-button").addEventListener ("click", (e:Event) => toggleChatSettings());
+
+function toggleChatSettings(){
+    if(chatSettingsDiv.style.display == 'none'){
+        chatSettingsDiv.style.display = '';
+        chatWindow.style.display = 'none';
+    }else{
+        chatSettingsDiv.style.display = 'none';
+        chatWindow.style.display = '';
+    }
+}
+

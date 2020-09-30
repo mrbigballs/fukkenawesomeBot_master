@@ -157,12 +157,16 @@ var settingsloaded = setInterval(function() {
 
 function initApplication(){
     //clear session staorage for username colors in chat
-    store.clear();
-    
+    //store.clear();
+    store.del('channel_info');
     twitchapi.getGlobalBadges();
     twitchapi.getChannelInfo(settingsmodule.settings.channel, settingsmodule.settings.streamerOAuthkey);
 
+    //ini ui comps
+    initChatSettingsUIComponents();
+
     initTmi();
+   
     
     
 }
@@ -228,25 +232,25 @@ function initTmi(){
         */
         client.on("message", (channel: string, userstate: any, message: string, self: any) => {
             // Don't listen to my own messages..
-            if (self) return;
+            //if (self) return;
         
             // Handle different message types..
             switch(userstate["message-type"]) {
                 case "action":
                     console.log(message);
-                    mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames));
+                    mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames, 'action'));
                     chatMessageFormatter.scrollChat();
                     break;
                 case "chat":
                     console.log(message);
-                    mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames));
+                    mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames, 'chat'));
                     chatMessageFormatter.scrollChat();
                     simpleCommand(message);
 
                     break;
                 case "whisper":
                     console.log(message);
-                    mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames));
+                    mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames, 'whisper'));
                     chatMessageFormatter.scrollChat();
                     break;
                 default:
@@ -342,7 +346,7 @@ function reconnectTmi(){
         settingsmodule.settings.setChannel(channel_tmp);
         settingsmodule.saveSettings();
     }
-    twitchapi.getChannelInfo(settingsmodule.settings.channel, settingsmodule.settings.streamerOAuthkey);
+    twitchapi.getChannelInfo(channel_tmp.toLocaleLowerCase(), settingsmodule.settings.streamerOAuthkey);
     initTmi();
     
 }
@@ -412,7 +416,58 @@ function handleWindowControls() {
     }
 }
 
+//Chat settings
+document.getElementById("chat-set-radio-none").addEventListener ("click", (e:Event) => {
+    store.set('chat_settings_outlines', 'none');
+});
 
+document.getElementById("chat-set-radio-white").addEventListener ("click", (e:Event) => {
+    store.set('chat_settings_outlines', 'white');
+});
+
+document.getElementById("chat-set-radio-dynamic").addEventListener ("click", (e:Event) => {
+    store.set('chat_settings_outlines', 'dynamic');
+});
+
+(<HTMLInputElement>document.getElementById("chat-set-check-whisper")).addEventListener( 'change', function() {
+    if(this.checked) {
+        store.set('chat_settings_show_whisper', 'true');
+        let whispers = document.getElementsByClassName("whisper");
+          for(var i = 0; i < whispers.length; i++) {
+            var classes = (<HTMLElement>whispers[i]).getAttribute('class').replace('none-show','');
+            (<HTMLElement>whispers[i]).setAttribute('class', classes);
+          }
+       
+    } else {
+        store.set('chat_settings_show_whisper', 'false');
+        let whispers = document.getElementsByClassName("whisper");
+        for(var i = 0; i < whispers.length; i++) {
+            var classes = (<HTMLElement>whispers[i]).getAttribute('class');
+            (<HTMLElement>whispers[i]).setAttribute('class', classes + ' none-show');
+          }
+    }
+});
+
+function initChatSettingsUIComponents(){
+    if(store.get('chat_settings_outlines') != 'undefined'){
+        if(store.get('chat_settings_outlines') == 'white'){
+            (<HTMLInputElement>document.getElementById("chat-set-radio-white")).checked = true;
+        }else if(store.get('chat_settings_outlines') == 'dynamic'){
+            (<HTMLInputElement>document.getElementById("chat-set-radio-dynamic")).checked = true;
+        }else{
+            (<HTMLInputElement>document.getElementById("chat-set-radio-none")).checked = true;
+        }
+    }
+
+    if(store.get('chat_settings_show_whisper') != 'undefined'){
+        if(store.get('chat_settings_show_whisper') == 'true'){
+            console.log('indeed its true');
+            (<HTMLInputElement>document.getElementById("chat-set-check-whisper")).checked = true;
+        }else{
+            (<HTMLInputElement>document.getElementById("chat-set-check-whisper")).checked = false;
+        }
+    }
+}
 
 
 //list[0].startColorFlow(50, 0, '1000, 2, 2700, 100, 500, 1, 255, 10, 500, 2, 5000, 1');

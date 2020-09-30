@@ -51,7 +51,7 @@
 .chat-grid{
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 1fr 50px;
+    grid-template-rows: 1fr 0.06fr;
     gap: 1px 1px;
     grid-template-areas:
       "chat"
@@ -67,8 +67,24 @@
     width: 100%;
     overflow-x: hidden;
     grid-area: chat;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     overflow-y: auto;
+}
+
+.chat-input input{
+  height: 100%;
+}
+
+.chat-input button{
+  height: 100%;
+}
+
+.btn-outline-secondary:hover span{
+  filter: invert(1);
+}
+
+.btn-outline-secondary:active span{
+  filter: invert(1);
 }
 
 .titlebar img{
@@ -170,14 +186,18 @@
 
 #chatInput{
     
-    
     width: 100%;
+}
+
+#chatInput form{
+  width: 100%;
 }
 
 
 .user-chat-message{
     display: block;
     color: #ffffff !important;
+    overflow: hidden;
 }
 .user-chat-message span{
     padding: 2px;
@@ -197,6 +217,10 @@
 
 .serve{
   color: #f72b2b !important;
+}
+
+.user-chat-message.whisper.none-show{
+  display: none;
 }
 
 .sub-chat-info{
@@ -234,4 +258,20 @@ img.emoticon {
 ::-webkit-scrollbar-thumb {
     background: rgb(7, 7, 7); 
     border-radius: 5px;
+}
+
+/* Modals */
+
+.modal-awesome{
+  background: linear-gradient(0deg, rgba(55,59,59,1) 0%, rgb(109, 109, 109) 100%) !important;
+  color: #ffffff !important;
+}
+
+.modal-awesome .close{
+  color: #ffffff !important;
+  float: right;
+}
+
+.modal-body .form-check{
+  margin-left: 20px;
 }

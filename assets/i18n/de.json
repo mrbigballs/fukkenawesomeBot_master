@@ -31,5 +31,11 @@
 	"settings-streamer-headline": "Streamer",
 	"settings-bot-headline": "Bot",
 	"settings-channel-headline": "Chat Kanal",
-	"settings-save-and-connect-button": "Speichern & Verbinden"
+	"settings-save-and-connect-button": "Speichern & Verbinden",
+	"chat-settings-outline-selection": "Chatnamen Umrandungsoptionen",
+	"chat-settings-outline-white": "Weiße Umrandung",
+	"chat-settings-outline-dynamic": "Dynamische Umrandung",
+	"chat-settings-outline-none": "Keine (Standard)",
+	"chat-settings-whis-title": "Flüsternachrichten Anzeige",
+	"chat-settings-whisper": "Zeige Flüsternachrichten im Chat"
 }

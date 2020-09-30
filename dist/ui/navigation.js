@@ -2,6 +2,8 @@ var chatWindow = document.getElementById('chatWindow');
 var chatInput = document.getElementById('chatInput');
 var settingsDiv = document.getElementById('settingsDiv');
 var lotteryDiv = document.getElementById('lotteryDiv');
+var chatSettingsDiv = document.getElementById('chatSettingsDiv');
+var chatGridDiv = document.getElementById('chatGridDiv');
 document.getElementById("navChat").addEventListener("click", function (e) { return navigationSelectWindow('navChat'); });
 document.getElementById("navDashbaord").addEventListener("click", function (e) { return navigationSelectWindow('navDashbaord'); });
 document.getElementById("navRaffle").addEventListener("click", function (e) { return navigationSelectWindow('navRaffle'); });
@@ -17,7 +19,7 @@ function navigationSelectWindow(id) {
     var clickedElement = document.getElementById(id);
     clickedElement.classList.add('active');
     if (id == 'navChat') {
-        console.log('sdlkfjsldkjfkljsd');
+        //console.log('sdlkfjsldkjfkljsd');
         lotteryDiv.style.display = 'none';
         settingsDiv.style.display = 'none';
         chatWindow.style.display = '';
@@ -36,4 +38,18 @@ function navigationSelectWindow(id) {
         chatInput.style.display = 'none';
     }
 }
+//chat options button
+//document.getElementById("chat-settings-button").addEventListener ("click", (e:Event) => toggleChatSettings());
+function toggleChatSettings() {
+    if (chatSettingsDiv.style.display == 'none') {
+        chatSettingsDiv.style.display = '';
+        chatWindow.style.display = 'none';
+    }
+    else {
+        chatSettingsDiv.style.display = 'none';
+        chatWindow.style.display = '';
+    }
+}
+document.getElementById("chat-set-radio-none").addEventListener("click", function (e) {
+});
 //# sourceMappingURL=navigation.js.map

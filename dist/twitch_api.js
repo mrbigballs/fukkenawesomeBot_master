@@ -165,7 +165,7 @@ var TwitchAPI = /** @class */ (function () {
         })["catch"](function (error) { console.log(error); });
     };
     TwitchAPI.prototype.getChannelInfo = function (channel_name, token) {
-        console.log('stuff should happen ' + token);
+        console.log('stuff should happen ' + channel_name);
         fetch(twitch_hostname + 'search/channels?query=' + channel_name, {
             method: 'GET',
             headers: {

@@ -31,5 +31,11 @@
 	"settings-streamer-headline": "Streamer Account",
 	"settings-bot-headline": "Bot Account",
 	"settings-channel-headline": "Chat Channel",
-	"settings-save-and-connect-button": "Save & Connect"
+	"settings-save-and-connect-button": "Save & Connect",
+	"chat-settings-outline-selection": "Chat name outline options",
+	"chat-settings-outline-white": "White outline",
+	"chat-settings-outline-dynamic": "Dynamic outline",
+	"chat-settings-outline-none": "None (default)",
+	"chat-settings-whis-title": "Whisper display",
+	"chat-settings-whisper": "Show whisper messages in chat"
 }

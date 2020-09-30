@@ -206,7 +206,7 @@ export class TwitchAPI{
     }
 
     getChannelInfo(channel_name: string, token: string){
-        console.log('stuff should happen ' + token);
+        console.log('stuff should happen ' + channel_name);
         fetch(twitch_hostname + 'search/channels?query=' + channel_name, {
             method: 'GET',
             headers: {

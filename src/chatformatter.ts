@@ -6,7 +6,7 @@ const store = new StoreLocal().getLocalStore();
 
 export class ChatMessageFormatter{
     
-    
+    chatcolors = new Map();
 
     formatEmotes(text: string, emotes: any) {
         let splitText = text.split('');
@@ -91,9 +91,10 @@ export class ChatMessageFormatter{
         return chatMessage;
     }
 
-    generateChatMessageElement(userstate: any, message: string, keywords: string[]){
+    generateChatMessageElement(userstate: any, message: string, keywords: string[], type: string){
         let chatDivContainer = document.createElement('div');
         let timeStampSpan = document.createElement('span');
+        let typeSpan = document.createElement('span');
         let chatUsernameSpan = document.createElement('span');
         let chatMessageSpan = document.createElement('span');
         let chatMessageTrennerSpan = document.createElement('span');
@@ -109,13 +110,17 @@ export class ChatMessageFormatter{
         console.log("id???: " + userId + ' ' + userType + ' ' + str);
         let displaNameColor: string;
         if(userstate.color == null){
-            console.log(store.get(displayName+'_color'));
-            if(store.has(displayName+'_color')){
-                displaNameColor = store.get(displayName+'_color');
+            //console.log(store.get(displayName+'_color'));
+            //store.has(displayName+'_color') ||
+            if( this.chatcolors.has(displayName+'_color')){
+                //displaNameColor = store.get(displayName+'_color');
+                displaNameColor = this.chatcolors.get(displayName+'_color');
+                console.log('temporary ' + this.chatcolors.get(displayName+'_color'))
             }else{
                 var user_temp_color = this.getRandomColor();
-                store.set(displayName+'_color', user_temp_color);
-                console.log(store.get(displayName+'_color'));
+                //store.set(displayName+'_color', user_temp_color);
+                this.chatcolors.set(displayName+'_color', user_temp_color);
+                //console.log(store.get(displayName+'_color'));
                 displaNameColor = user_temp_color;
             }
         }else{
@@ -126,9 +131,15 @@ export class ChatMessageFormatter{
         if(this.highlightMessagesByKeywords(keywords, message)){
             chatMessageSpan.style.background = 'rgba(102, 0, 0, 0.5)';
         }
-        chatDivContainer.setAttribute('class', 'user-chat-message');
+        if(store.get('chat_settings_show_whisper') == 'true'){
+            chatDivContainer.setAttribute('class', 'user-chat-message ' + type);
+        }else{
+            chatDivContainer.setAttribute('class', 'user-chat-message ' + type + ' none-show');
+        }
+       
         timeStampSpan.setAttribute('class','user-chat-message-timestamp');
         timeStampSpan.innerHTML = chatTimestamp;
+       
         chatUsernameSpan.setAttribute('class','task context-menu-one user-chat-message-username');
         chatUsernameSpan.setAttribute('style', 'color:'+ this.getNameColor(displaNameColor, true));
         chatUsernameSpan.innerHTML = '' +displayName;
@@ -142,6 +153,10 @@ export class ChatMessageFormatter{
         userIdSpan.innerHTML = userId;
         userIdSpan.style.display = 'none';
         chatDivContainer.appendChild(timeStampSpan);
+        if(type === 'whisper' || type === 'action'){
+            typeSpan.innerHTML = '[' + type.toLocaleUpperCase() +']';
+            chatDivContainer.appendChild(typeSpan);
+        }
         chatDivContainer.appendChild(badgesSpan);
         chatDivContainer.appendChild(chatUsernameSpan);
         chatUsernameSpan.appendChild(userIdSpan);
@@ -164,7 +179,13 @@ export class ChatMessageFormatter{
         let color = new tinycolor(nameColor);
         let text_shadow_color = color.complement().toHexString();
         if(dark && color.isDark()){
-            return nameColor;
+            if(store.get('chat_settings_outlines') == 'white'){
+                return nameColor + '; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;';
+            }else if(store.get('chat_settings_outlines') == 'dynamic'){
+                return nameColor +'; text-shadow: -1px 0 ' + text_shadow_color +', 0 1px ' + text_shadow_color + ' , 1px 0 ' + text_shadow_color + ', 0 -1px ' + text_shadow_color +';';
+            }else{
+                return nameColor;
+            }
             //return nameColor +'; text-shadow: -1px 0 ' + text_shadow_color +', 0 1px ' + text_shadow_color + ' , 1px 0 ' + text_shadow_color + ', 0 -1px ' + text_shadow_color +';';
             //return nameColor + '; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;';
             //text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;

@@ -7,6 +7,7 @@ var storelocal_1 = require("./storelocal");
 var store = new storelocal_1.StoreLocal().getLocalStore();
 var ChatMessageFormatter = /** @class */ (function () {
     function ChatMessageFormatter() {
+        this.chatcolors = new Map();
     }
     ChatMessageFormatter.prototype.formatEmotes = function (text, emotes) {
         var splitText = text.split('');
@@ -86,9 +87,10 @@ var ChatMessageFormatter = /** @class */ (function () {
             + '<span class=\"message\">' + formattedMessage + '</span></div>';
         return chatMessage;
     };
-    ChatMessageFormatter.prototype.generateChatMessageElement = function (userstate, message, keywords) {
+    ChatMessageFormatter.prototype.generateChatMessageElement = function (userstate, message, keywords, type) {
         var chatDivContainer = document.createElement('div');
         var timeStampSpan = document.createElement('span');
+        var typeSpan = document.createElement('span');
         var chatUsernameSpan = document.createElement('span');
         var chatMessageSpan = document.createElement('span');
         var chatMessageTrennerSpan = document.createElement('span');
@@ -101,17 +103,21 @@ var ChatMessageFormatter = /** @class */ (function () {
         var userId = userstate['user-id'];
         var userType = userstate['user-type'];
         var str = JSON.stringify(userstate);
-        console.log("id???: " + userstate['user-id'] + ' ' + userType + ' ' + str);
+        console.log("id???: " + userId + ' ' + userType + ' ' + str);
         var displaNameColor;
         if (userstate.color == null) {
-            console.log(store.get(displayName + '_color'));
-            if (store.has(displayName + '_color')) {
-                displaNameColor = store.get(displayName + '_color');
+            //console.log(store.get(displayName+'_color'));
+            //store.has(displayName+'_color') ||
+            if (this.chatcolors.has(displayName + '_color')) {
+                //displaNameColor = store.get(displayName+'_color');
+                displaNameColor = this.chatcolors.get(displayName + '_color');
+                console.log('temporary ' + this.chatcolors.get(displayName + '_color'));
             }
             else {
                 var user_temp_color = this.getRandomColor();
-                store.set(displayName + '_color', user_temp_color);
-                console.log(store.get(displayName + '_color'));
+                //store.set(displayName+'_color', user_temp_color);
+                this.chatcolors.set(displayName + '_color', user_temp_color);
+                //console.log(store.get(displayName+'_color'));
                 displaNameColor = user_temp_color;
             }
         }
@@ -123,7 +129,12 @@ var ChatMessageFormatter = /** @class */ (function () {
         if (this.highlightMessagesByKeywords(keywords, message)) {
             chatMessageSpan.style.background = 'rgba(102, 0, 0, 0.5)';
         }
-        chatDivContainer.setAttribute('class', 'user-chat-message');
+        if (store.get('chat_settings_show_whisper') == 'true') {
+            chatDivContainer.setAttribute('class', 'user-chat-message ' + type);
+        }
+        else {
+            chatDivContainer.setAttribute('class', 'user-chat-message ' + type + ' none-show');
+        }
         timeStampSpan.setAttribute('class', 'user-chat-message-timestamp');
         timeStampSpan.innerHTML = chatTimestamp;
         chatUsernameSpan.setAttribute('class', 'task context-menu-one user-chat-message-username');
@@ -137,6 +148,10 @@ var ChatMessageFormatter = /** @class */ (function () {
         userIdSpan.innerHTML = userId;
         userIdSpan.style.display = 'none';
         chatDivContainer.appendChild(timeStampSpan);
+        if (type === 'whisper' || type === 'action') {
+            typeSpan.innerHTML = '[' + type.toLocaleUpperCase() + ']';
+            chatDivContainer.appendChild(typeSpan);
+        }
         chatDivContainer.appendChild(badgesSpan);
         chatDivContainer.appendChild(chatUsernameSpan);
         chatUsernameSpan.appendChild(userIdSpan);
@@ -157,7 +172,15 @@ var ChatMessageFormatter = /** @class */ (function () {
         var color = new tinycolor(nameColor);
         var text_shadow_color = color.complement().toHexString();
         if (dark && color.isDark()) {
-            return nameColor;
+            if (store.get('chat_settings_outlines') == 'white') {
+                return nameColor + '; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;';
+            }
+            else if (store.get('chat_settings_outlines') == 'dynamic') {
+                return nameColor + '; text-shadow: -1px 0 ' + text_shadow_color + ', 0 1px ' + text_shadow_color + ' , 1px 0 ' + text_shadow_color + ', 0 -1px ' + text_shadow_color + ';';
+            }
+            else {
+                return nameColor;
+            }
             //return nameColor +'; text-shadow: -1px 0 ' + text_shadow_color +', 0 1px ' + text_shadow_color + ' , 1px 0 ' + text_shadow_color + ', 0 -1px ' + text_shadow_color +';';
             //return nameColor + '; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;';
             //text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;

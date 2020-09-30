@@ -130,17 +130,35 @@
             </div>
             <div class="main">
                 <!--Chat-->
-                <div class="chat-grid">
+                <div class="chat-grid" id="chatGridDiv">
                     <div class="chat" id="chatWindow">
                     
                     </div>
-                    <div id="chatInput" class="chat-input col-sm-8">
-                            <input id="chatMessageInput" rows="2" type="text" class="form-control" placeholder="Type chat message...">
+                    <div id="chatInput" class="chat-input col input-group ">
+                       
+                                        
+                                            
+                                            <input id="chatMessageInput"  type="text" class="form-control input-sm" placeholder="Type chat message..." aria-describedby="button-addon2" />
+                                        
+                                            <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" id="chat-settings-button" data-toggle="modal" data-target="#chatSettingsModal">
+                                                <span class="fa fa-cog fa-lg" aria-hidden="true"></span>
+                                            </button>
+                                            </div>
+                                        
+                                  
+                                
                     </div>
+                </div>
+                <!--Chat-Settings-->
+                
+                <div id="chatSettingsDiv" class="chat-settings-grid" style="display: none;">
+
+                   
                 </div>
                 <!--Settings-->
                 
-            <div id="settingsDiv" style="display: none;">
+              <div id="settingsDiv" style="display: none;">
                 <h2 data-i18n="settings-connection-headline">Twtich Connection Settings</h2>
                 <h4 data-i18n="settings-streamer-headline">Streamer</h4><button id="settingsGetOAuthkeyButton" class="btn btn-primary" data-i18n="settings-steamer-con-button">Connect Streamer Account</button>
                 <form class="form-inline">
@@ -165,36 +183,36 @@
                 </form>
                 
                 <button id="settingsSaveAccountDataConnect" class="btn btn-primary" data-i18n="settings-save-and-connect-button">Save</button>
-            </div>
+              </div>
 
-            <!--Lottery-->
-            <div id="lotteryDiv" style="display: none;">
-                <form class="form-inline">
-                    <div class="form-row align-items-center">
-                      <div class="col-auto">
-                        <label class="sr-only" for="inlineFormInput">Keyword</label>
-                        <input type="text" class="form-control mb-2" id="keywordInput" placeholder="Raffle Keyword">
-                      </div>
-                      <div class="col-auto">
-                        <div class="form-check mb-2">
-                          <input class="form-check-input" type="checkbox" id="timedRaffleCheck">
-                          <label class="form-check-label" for="autoSizingCheck">
-                            Timed Raffle
-                          </label>
+                <!--Lottery-->
+                <div id="lotteryDiv" style="display: none;">
+                    <form class="form-inline">
+                        <div class="form-row align-items-center">
+                        <div class="col-auto">
+                            <label class="sr-only" for="inlineFormInput">Keyword</label>
+                            <input type="text" class="form-control mb-2" id="keywordInput" placeholder="Raffle Keyword">
                         </div>
-                      </div>
-                      <div class="col-auto">
-                        <label class="sr-only" for="inlineFormInput">Min</label>
-                        <input type="text" class="form-control mb-2" id="timedRaffleMinInput" placeholder="5">
-                      </div>
-                      <div class="col-auto">
-                        <label class="sr-only" for="inlineFormInput">Sec</label>
-                        <input type="text" class="form-control mb-2" id="timedRaffleSecInput" placeholder="00">
-                      </div>
-                    </div>
-                  </form>
-                  <button id="setRaffleKeywordButton" class="btn btn-primary">Set Keyword</button>
-            </div>
+                        <div class="col-auto">
+                            <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="timedRaffleCheck">
+                            <label class="form-check-label" for="autoSizingCheck">
+                                Timed Raffle
+                            </label>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <label class="sr-only" for="inlineFormInput">Min</label>
+                            <input type="text" class="form-control mb-2" id="timedRaffleMinInput" placeholder="5">
+                        </div>
+                        <div class="col-auto">
+                            <label class="sr-only" for="inlineFormInput">Sec</label>
+                            <input type="text" class="form-control mb-2" id="timedRaffleSecInput" placeholder="00">
+                        </div>
+                        </div>
+                    </form>
+                    <button id="setRaffleKeywordButton" class="btn btn-primary">Set Keyword</button>
+                </div>
 
             </div>
             <div class="titlebar"> 
@@ -214,6 +232,51 @@
             </div>
             </div>
             <div class="mediamanager"></div>
+        </div>
+
+        <!-- Modal for Chat-Settings -->
+        <div class="modal fade" id="chatSettingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content modal-awesome">
+                
+                <div class="modal-body">
+                    <div data-i18n="chat-settings-outline-selection">chat-settings-outline-selection</div>
+                    <br>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="outline" id="chat-set-radio-none" value="none" checked>
+                        <label class="form-check-label" for="chat-set-radio-none"  data-i18n="chat-settings-outline-none">
+                          none
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="outline" id="chat-set-radio-white" value="white">
+                        <label class="form-check-label" for="chat-set-radio-white" data-i18n="chat-settings-outline-white">
+                          white
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="outline" id="chat-set-radio-dynamic" value="dynamic">
+                        <label class="form-check-label" for="chat-set-radio-dynamic" data-i18n="chat-settings-outline-dynamic">
+                          dynamic
+                        </label>
+                      </div>
+                      <br>
+                      <div data-i18n="chat-settings-whis-title">chat-settings-whispser</div>
+                      <br>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="chat-set-check-whisper">
+                        <label class="form-check-label" for="chat-set-check-whisper" data-i18n="chat-settings-whisper">
+                          Default checkbox
+                        </label>
+                      </div>
+                </div>
+                <div class="modal-footer">
+                    
+                    <button type="button" class="btn btn-outline-secondary">Save changes</button>
+                </div>
+            </div>
+            </div>
         </div>
 
         <script>
@@ -239,6 +302,7 @@
     
             $( '.navigationNormal' ).i18n();
             $( '#settingsDiv' ).i18n();
+            $( '.modal-body' ).i18n();
             //translate menu
             //$('#navChat').html($('#navChat').html().replace('Chat', $.i18n('nav-chat')));
             //$('#navDashbaord').html($('#navDashbaord').html().replace('Dashboard', $.i18n('nav-dashboard')));

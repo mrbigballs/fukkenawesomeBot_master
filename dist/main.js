@@ -131,6 +131,7 @@ electron_1.app.on("ready", function () {
     createWindow();
     createSplashScreen();
     splashToBormalWidow();
+    console.log('path: ' + electron_1.app.getPath('userData'));
 });
 // Quit when all windows are closed.
 electron_1.app.on("window-all-closed", function () {

@@ -120,6 +120,7 @@ app.on("ready", function(){
   createWindow();
   createSplashScreen();
   splashToBormalWidow();
+  console.log('path: ' + app.getPath('userData'));
 });
 
 // Quit when all windows are closed.
