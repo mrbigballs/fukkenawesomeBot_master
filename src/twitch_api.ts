@@ -169,6 +169,7 @@ export class TwitchAPI{
     }
 
     getGlobalBadges(){
+        console.log('globalBadges');
         fetch(global_badges_url, {
             method: 'GET',
             headers: {

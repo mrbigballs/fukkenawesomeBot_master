@@ -158,7 +158,12 @@ var settingsloaded = setInterval(function() {
 function initApplication(){
     //clear session staorage for username colors in chat
     //store.clear();
-    store.del('channel_info');
+    console.log('oookey');
+    if(store.has('channel_info')){
+        store.delete('channel_info');
+        console.log('has key');
+    }
+    //store.del('channel_info');
     twitchapi.getGlobalBadges();
     twitchapi.getChannelInfo(settingsmodule.settings.channel, settingsmodule.settings.streamerOAuthkey);
 
@@ -467,8 +472,27 @@ function initChatSettingsUIComponents(){
             (<HTMLInputElement>document.getElementById("chat-set-check-whisper")).checked = false;
         }
     }
+
+    var highlightKeywordsAsString = settingsmodule.settings.chatHighlightNames.toString();
+    console.log('keswords: ' + highlightKeywordsAsString);
+    (<HTMLInputElement>document.getElementById("chat-set-highlight-textarea")).value = highlightKeywordsAsString; 
+    //chat-set-highlight-textarea
 }
 
+function closedSettingsTest(){
+    console.log('Call test');
+}
+
+jQuery('#chatSettingsModal').on('hidden.bs.modal', function () {
+    closedSettingsTest();
+    let kewywords = (<HTMLInputElement>document.getElementById("chat-set-highlight-textarea")).value.replace(/ /g,'');
+    var highlightKeywordsAsString = settingsmodule.settings.chatHighlightNames.toString();
+    if(kewywords != highlightKeywordsAsString){
+        let keyList = kewywords.split(",");
+        settingsmodule.settings.chatHighlightNames = keyList;
+        settingsmodule.saveSettings();
+    }
+});
 
 //list[0].startColorFlow(50, 0, '1000, 2, 2700, 100, 500, 1, 255, 10, 500, 2, 5000, 1');
 

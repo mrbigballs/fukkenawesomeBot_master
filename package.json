@@ -18,6 +18,7 @@
   "author": "fukkenawesome",
   "license": "ISC",
   "devDependencies": {
+    "@types/jquery": "^3.5.1",
     "electron": "^10.1.2"
   },
   "dependencies": {

@@ -37,5 +37,7 @@
 	"chat-settings-outline-dynamic": "Dynamische Umrandung",
 	"chat-settings-outline-none": "Keine (Standard)",
 	"chat-settings-whis-title": "Flüsternachrichten Anzeige",
-	"chat-settings-whisper": "Zeige Flüsternachrichten im Chat"
+	"chat-settings-whisper": "Zeige Flüsternachrichten im Chat",
+	"chat-settings-highlight-keywords-label": "Schlüsselwörter hervorheben (als Komma, getrennte Liste)",
+	"chat-settings-highlight-keywords-save-button": "Speichern"
 }

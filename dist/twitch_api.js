@@ -134,6 +134,7 @@ var TwitchAPI = /** @class */ (function () {
         })["catch"](function (error) { console.log(error); });
     };
     TwitchAPI.prototype.getGlobalBadges = function () {
+        console.log('globalBadges');
         fetch(global_badges_url, {
             method: 'GET',
             headers: {

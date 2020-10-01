@@ -221,7 +221,7 @@
                     
                 
                 
-                <div class="bot-title">fukkenawesomeBot</div>
+                <div class="bot-title" data-i18n="appname-title">fukkenawesomeBot</div>
                 <div class="title-icons">
                     <div id="window-controls">
                         <div class="button" id="min-button"><i class="fa fa-window-minimize" aria-hidden="true"></i></div>
@@ -270,11 +270,14 @@
                           Default checkbox
                         </label>
                       </div>
+                      <br>
+                      <div data-i18n="chat-settings-highlight-keywords-label">highlight keywords</div>
+                        <div class="input-group mb-3">
+                            <textarea class="form-control" aria-label="With textarea" id="chat-set-highlight-textarea"></textarea>
+                           
+                        </div>
                 </div>
-                <div class="modal-footer">
-                    
-                    <button type="button" class="btn btn-outline-secondary">Save changes</button>
-                </div>
+                
             </div>
             </div>
         </div>
@@ -296,13 +299,16 @@
             // 3. Update Titlebar text
             //MyTitleBar.updateTitle('Our Code World Tutorials Rock !');
             */
-            require('../dist/awesomebot')
+            const awesome = require('../dist/awesomebot');
             /*ui stuff*/
             require('../dist/ui/navigation');
     
             $( '.navigationNormal' ).i18n();
             $( '#settingsDiv' ).i18n();
             $( '.modal-body' ).i18n();
+            $( '.titlebar' ).i18n()
+
+            
             //translate menu
             //$('#navChat').html($('#navChat').html().replace('Chat', $.i18n('nav-chat')));
             //$('#navDashbaord').html($('#navDashbaord').html().replace('Dashboard', $.i18n('nav-dashboard')));

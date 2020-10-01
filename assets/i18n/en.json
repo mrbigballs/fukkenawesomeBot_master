@@ -37,5 +37,7 @@
 	"chat-settings-outline-dynamic": "Dynamic outline",
 	"chat-settings-outline-none": "None (default)",
 	"chat-settings-whis-title": "Whisper display",
-	"chat-settings-whisper": "Show whisper messages in chat"
+	"chat-settings-whisper": "Show whisper messages in chat",
+	"chat-settings-highlight-keywords-label": "Highlighting Keywords (as comma , seperated list)",
+	"chat-settings-highlight-keywords-save-button": "Save"
 }

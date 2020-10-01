@@ -50,6 +50,4 @@ function toggleChatSettings() {
         chatWindow.style.display = '';
     }
 }
-document.getElementById("chat-set-radio-none").addEventListener("click", function (e) {
-});
 //# sourceMappingURL=navigation.js.map
