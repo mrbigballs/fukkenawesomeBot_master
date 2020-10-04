@@ -18,8 +18,8 @@
    /* width: 200px;*/
     min-width: 50px;
    /* background-color: #414040;*/
-    position: fixed;
-    height: 100vh;
+   /* position: fixed; */
+    height: 100%;
     /*overflow: auto;*/
     overflow-y: auto;
     
@@ -63,10 +63,10 @@
 }
 
 .navigationNormal{
-    width: 200px;
+    
     height: 100%;
     flex: 1;
-    
+    overflow-y: auto;
 }
 
 /*.navigationSmall{
@@ -106,7 +106,7 @@
     }
     .navigationNormal{
         transition: all 1s;
-        width: 200px;
+        width: auto;
     }
     .mainContent{
         margin-left: 100px;

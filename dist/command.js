@@ -33,6 +33,10 @@ var Command = /** @class */ (function () {
         }
         return false;
     };
+    Command.prototype.replaceGlobalParameters = function (message, store) {
+        var map = new Map(JSON.parse(store.get('global_parameters')));
+        console.log(message.replace(/##(\w+)##/g, function (_, m) { return map.get(m); }));
+    };
     Command.prototype.setCooldownState = function (coolDown) {
         this.cooldown = coolDown;
     };

@@ -25,6 +25,12 @@ document.getElementById("settingsGetOAuthkeyButtonBot").addEventListener("click"
 document.getElementById("settingsSaveAccountDataConnect").addEventListener("click", function (e) { return reconnectTmi(); });
 var autoconnect = true;
 var deleteMessages = true;
+var currentGame = '';
+var game_info;
+var channel_info;
+var stream_info;
+var searchedGames;
+var intervalRequests = [];
 settingsmodule.loadSettings();
 var server = require('http').createServer(expressApp);
 var io = require('socket.io')(server);
@@ -174,9 +180,13 @@ function initTmi() {
     var challeBadgesloaded = setInterval(function () {
         try {
             if (typeof store.get('channel_info') != "undefined") {
+                channel_info = JSON.parse(store.get('channel_info'));
                 console.log("channel bades loadded");
                 clearInterval(challeBadgesloaded);
                 twitchapi.getChannelBadges(settingsmodule.settings.streamerOAuthkey);
+                setStreamingTitleUI(channel_info.title);
+                getGameInfo();
+                initIntervals();
             }
         }
         catch (e) {
@@ -215,7 +225,7 @@ function initTmi() {
                     break;
                 case "chat":
                     console.log(message);
-                    mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames, 'chat'));
+                    mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames, 'chat-normal'));
                     chatMessageFormatter.scrollChat();
                     simpleCommand(message);
                     break;
@@ -305,6 +315,61 @@ function reconnectTmi() {
     twitchapi.getChannelInfo(channel_tmp.toLocaleLowerCase(), settingsmodule.settings.streamerOAuthkey);
     initTmi();
 }
+function initIntervals() {
+    // update channel_info
+    var channelInfoInterval = setInterval(function () {
+        try {
+            var updateChannelPromise = twitchapi.callTwitchApiFetch(settingsmodule.settings.streamerOAuthkey, 'search/channels?query=' + settingsmodule.settings.channel);
+            updateChannelPromise.then(function (response) {
+                return response.json();
+            }).then(function (channels) {
+                // var jgame = JSON.parse(games);
+                console.log(channels.data[0]);
+                channel_info = channels.data[0];
+                //console.log(games.data[0].name);
+                store.set('channel_info', JSON.stringify(channel_info));
+                setStreamingTitleUI(channel_info.title);
+                getGameInfo();
+                console.log("channel_info_updated");
+            });
+        }
+        catch (e) {
+            return;
+        }
+    }, 60000);
+    intervalRequests.push(channelInfoInterval);
+    var streamInfoInterval = setInterval(function () {
+        try {
+            var updateChannelPromise = twitchapi.callTwitchApiFetch(settingsmodule.settings.streamerOAuthkey, 'streams?user_id=' + channel_info.id);
+            updateChannelPromise.then(function (response) {
+                return response.json();
+            }).then(function (streams) {
+                // var jgame = JSON.parse(games);
+                if (typeof streams.data[0] != 'undefined') {
+                    console.log(streams);
+                    stream_info = streams.data[0];
+                    //console.log(games.data[0].name);
+                    store.set('stream_info', JSON.stringify(stream_info));
+                    //setStreamingTitleUI(channel_info.title);
+                    //getGameInfo();
+                    console.log("cstream_info_updated");
+                }
+                else {
+                    store.set('stream_info', '');
+                    stream_info = null;
+                }
+            });
+        }
+        catch (e) { //stream offline
+        }
+    }, 60000);
+    intervalRequests.push(streamInfoInterval);
+}
+function clearAllIntervals() {
+    for (var i = 0; intervalRequests.length > i; i++) {
+        clearInterval(intervalRequests[i]);
+    }
+}
 ipcRenderer.on('save-token', function (event, data) {
     // this function never gets called
     console.log('save-token ' + data.user_token + ' ' + data.user_type);
@@ -361,6 +426,26 @@ function handleWindowControls() {
         }
     }
 }
+function getGameInfo() {
+    var gameId = JSON.parse(store.get('channel_info')).game_id;
+    if (store.get('channel_info') != "undefined") {
+        twitchapi.callTwtichApi(settingsmodule.settings.streamerOAuthkey, 'games?id=' + gameId, 'game_info');
+        var gameInfoSet = setInterval(function () {
+            try {
+                if (typeof store.get('game_info') != "undefined") {
+                    console.log("game_info_set");
+                    clearInterval(gameInfoSet);
+                    game_info = JSON.parse(store.get('game_info'));
+                    document.getElementById("mediamanager-game-title").value = game_info.name;
+                    changeBoxArt(game_info.box_art_url);
+                }
+            }
+            catch (e) {
+                return;
+            }
+        }, 300);
+    }
+}
 //Chat settings
 document.getElementById("chat-set-radio-none").addEventListener("click", function (e) {
     store.set('chat_settings_outlines', 'none');
@@ -415,11 +500,15 @@ function initChatSettingsUIComponents() {
     document.getElementById("chat-set-highlight-textarea").value = highlightKeywordsAsString;
     //chat-set-highlight-textarea
 }
-function closedSettingsTest() {
-    console.log('Call test');
+function changeBoxArt(url) {
+    var img_correct_dimensions = url.replace('{height}', '100').replace('{width}', '77');
+    //console.log('imgurl___ ' +img_correct_dimensions);
+    document.getElementById("box_art").setAttribute('src', img_correct_dimensions);
+}
+function setStreamingTitleUI(title) {
+    document.getElementById("mediamanager-stream-title").value = title;
 }
 jQuery('#chatSettingsModal').on('hidden.bs.modal', function () {
-    closedSettingsTest();
     var kewywords = document.getElementById("chat-set-highlight-textarea").value.replace(/ /g, '');
     var highlightKeywordsAsString = settingsmodule.settings.chatHighlightNames.toString();
     if (kewywords != highlightKeywordsAsString) {
@@ -427,6 +516,54 @@ jQuery('#chatSettingsModal').on('hidden.bs.modal', function () {
         settingsmodule.settings.chatHighlightNames = keyList;
         settingsmodule.saveSettings();
     }
+});
+//stream title & game update
+document.getElementById("mediamanager-game-title").addEventListener('input', function (e) {
+    var suggestions = [];
+    if (e.target.value.length > 4) {
+        console.log('yallah');
+        var searchgamespromise = twitchapi.callTwitchApiFetch(settingsmodule.settings.streamerOAuthkey, 'search/categories?query=' + e.target.value);
+        searchgamespromise.then(function (response) {
+            return response.json();
+        }).then(function (games) {
+            // var jgame = JSON.parse(games);
+            console.log(games);
+            searchedGames = games;
+            //console.log(games.data[0].name);
+            for (var i = 0; games.data.length > i; i++) {
+                //console.log(games.data[i]);
+                suggestions.push(games.data[i].name);
+            }
+            console.log('suggestionslength ' + suggestions.length);
+            jQuery("#mediamanager-game-title").autocomplete({
+                source: suggestions,
+                "position": { my: "left bottom", at: "left top" }
+            });
+        });
+    }
+});
+//update stream & title button
+document.getElementById("stream-update-button-button").addEventListener('click', function (e) {
+    document.getElementById("update-title-icon").setAttribute('class', 'fa fa-refresh fa-spin fa-lg');
+    var game_title = document.getElementById("mediamanager-game-title").value;
+    var stream_title = document.getElementById("mediamanager-stream-title").value;
+    var game_id = '';
+    for (var i = 0; searchedGames.data.length > i; i++) {
+        //console.log(games.data[i]);
+        if (searchedGames.data[i].name == game_title) {
+            game_id = searchedGames.data[i].id;
+            break;
+        }
+    }
+    console.log(game_title + ' id: ' + game_id + ' - ' + stream_title + ' - ' + channel_info.id);
+    //twitchapi.updateChannelDataHelix(settingsmodule.settings.streamerOAuthkey, channel_info.id, game_id, stream_title, channel_info.broadcaster_language);
+    var updateGameAndTitlePromise = twitchapi.updateChannelData(settingsmodule.settings.streamerOAuthkey, channel_info.id, game_title, stream_title);
+    //const updateGameAndTitlePromise = twitchapi.updateChannelDataHelix(settingsmodule.settings.streamerOAuthkey, channel_info.id.trim(), game_id, stream_title, channel_info.broadcaster_language);
+    updateGameAndTitlePromise.then(function (response) {
+        if (response.ok) {
+            document.getElementById("update-title-icon").setAttribute('class', 'fa fa-refresh fa-lg');
+        }
+    });
 });
 //list[0].startColorFlow(50, 0, '1000, 2, 2700, 100, 500, 1, 255, 10, 500, 2, 5000, 1');
 //# sourceMappingURL=awesomebot.js.map

@@ -8,6 +8,8 @@
         <!--Font Awesome 4.7.0-->
         <link rel="stylesheet" href="../assets/font-awesome/css/font-awesome.min.css">
         <!--<link rel="stylesheet" href="../assets/css/main.css">-->
+        <!--jquery ui css-->
+        <link rel="stylesheet" href="../assets/js/jquery-ui-1.12.1/jquery-ui.css">
         <link rel="stylesheet" href="../assets/css/mainNavigation.css">
         <link rel="stylesheet" href="../assets/css/grid-main.css">
         <!--Theme-->
@@ -25,10 +27,10 @@
         <script src="../assets/js/jqueryi18n/jquery.i18n.language.js"></script>
         <!--other stuff experimental-->
         <script src="../assets/js/jquery-ui-1.12.1/jquery-ui.js"></script>
-       <!-- <script src="../node_modules/jquery-contextmenu/src/jquery.contextMenu.js"></script>
+       <script src="../node_modules/jquery-contextmenu/src/jquery.contextMenu.js"></script>
         <script src="../node_modules/jquery-contextmenu/src/jquery.ui.position.js"></script>
 
-        <link rel="stylesheet" href="../assets/css/contextmenu.css">-->
+        <link rel="stylesheet" href="../assets/css/contextmenu.css">
 
             <script>
                 $.i18n().load( {
@@ -216,9 +218,9 @@
 
             </div>
             <div class="titlebar"> 
-              
+               
                     <div class="logo"><img style="height:1em;" src="../assets/icons/bot_icon_no_background_128x128.ico"></div>
-                    
+                    <div class="titlebar-drag-region"></div>
                 
                 
                 <div class="bot-title" data-i18n="appname-title">fukkenawesomeBot</div>
@@ -231,7 +233,43 @@
                     </div>
             </div>
             </div>
-            <div class="mediamanager"></div>
+            <div class="mediamanager">
+                <div class="boxart">
+                    <img id="box_art" src="../assets/img/fish_boxart_dummy.png"/>
+                </div>
+                <div class="title-game">
+                  <div class="game-title">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text" id="game-title-label" data-i18n="game-title-label">Game</span>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Small" aria-describedby="game-title-label" id="mediamanager-game-title">
+                        </div>
+                  </div>
+                  <div class="stream-title">
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text" id="stream-title-label" data-i18n="stream-title-label">Title</span>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Small" aria-describedby="stream-title-label" id="mediamanager-stream-title">
+                        </div>
+                  </div>
+                </div>
+                <div class="stream-update-button">
+                    <div class="stream-update-button-wrapper text-center">
+                    <button class="btn btn-outline-secondary" type="button" id="stream-update-button-button" >
+                        <span class="fa fa-refresh fa-lg" aria-hidden="true" id="update-title-icon"></span>
+                    </button>
+                    </div>
+                </div>
+                <div class="stream-info">
+                    <div class="info-live"></div>
+                    <div class="info-viewer"></div>
+                    <div class="info-time"></div>
+                    <div class="info-follower"></div>
+                    <div class="info-subs"></div>
+                </div>
+              </div>
         </div>
 
         <!-- Modal for Chat-Settings -->
@@ -307,7 +345,7 @@
             $( '#settingsDiv' ).i18n();
             $( '.modal-body' ).i18n();
             $( '.titlebar' ).i18n()
-
+            $( '.mediamanager' ).i18n()
             
             //translate menu
             //$('#navChat').html($('#navChat').html().replace('Chat', $.i18n('nav-chat')));

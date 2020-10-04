@@ -1,4 +1,5 @@
 const tmi = require("tmi.js");
+import { language } from "custom-electron-titlebar/lib/common/platform";
 import { Credentials } from "./credentials";
 import { Settings } from './settings';
 import { SettingsModule } from './settingsmodule';
@@ -227,6 +228,74 @@ export class TwitchAPI{
                 }
             )
             .catch(function(error){console.log(error);});
+    }
+
+    callTwtichApi(oauth: string, url: string, savekey: string): void{
+        let twitch_url = twitch_hostname + url;
+        console.log('api call for: ' + twitch_url)
+        fetch(twitch_url, {
+            method: 'GET',
+            headers: {
+                accept: 'application/vnd.twitchtv.v5+json',
+                "Client-ID": this.bot_clientId,
+                "Authorization": "Bearer " + oauth
+                }
+        })
+            .then(function(response){return response.json();})
+            .then(function(data) {
+
+                    console.log(data);
+                    if(savekey != ''){
+                        store.set(savekey, JSON.stringify(data.data[0]));
+                    }
+                    return JSON.stringify(data.data);
+                   
+                }
+            )
+            .catch(function(error){console.log(error);
+                });
+    }
+
+    callTwitchApiFetch(oauth: string, url: string){
+        return fetch(twitch_hostname + url,
+            {
+                method: 'GET',
+                headers: {
+                    accept: 'application/vnd.twitchtv.v5+json',
+                    "Client-ID": this.bot_clientId,
+                    "Authorization": "Bearer " + oauth
+                    }
+            });
+    }
+
+    updateChannelDataHelix(oauth: string, broadcasterId: string, gameId: string, title: string, lang: string){
+        console.log('{"game_id":"' +  gameId + '", "title":"' + title + '", "broadcaster_language":"' + lang + '"}');
+        // body: JSON.stringify({"game_id": gameId, "title":title , "broadcaster_language":lang})
+        //+ '&game_id=' + gameId +'&title=' + title + '&broadcaster_language=' + lang
+        return fetch(twitch_hostname + 'channels?broadcaster_id=' + broadcasterId ,
+            {
+                method: 'PATCH',
+                headers: {
+                    accept: 'application/vnd.twitchtv.v5+json',
+                    //'Content-Type': 'application/json',
+                    "Client-ID": this.bot_clientId,
+                    "Authorization": "Bearer " + oauth
+                    },
+                    body: JSON.stringify({"game_id": gameId, "title":title , "broadcaster_language":lang})
+            });
+    }
+
+    updateChannelData(oauth: string, broadcasterId: string, gameName: string, title: string){
+        return fetch(api_startpoint_url + 'channels/' + broadcasterId ,
+            {
+                method: 'PUT',
+                headers: {
+                    accept: 'application/vnd.twitchtv.v5+json',
+                    "Client-ID": this.bot_clientId,
+                    "Authorization": "OAuth " + oauth
+                    },
+                    body: JSON.stringify({"channel": {"status": title, "game": gameName, "channel_feed_enabled": true}})
+            });
     }
 
 

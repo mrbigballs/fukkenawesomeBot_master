@@ -4,6 +4,7 @@ const settingsDiv = document.getElementById('settingsDiv');
 const lotteryDiv = document.getElementById('lotteryDiv');
 const chatSettingsDiv = document.getElementById('chatSettingsDiv');
 const chatGridDiv = document.getElementById('chatGridDiv');
+//const chatGridDiv = document.getElementById(chat-grid
 
 document.getElementById("navChat").addEventListener ("click", (e:Event) => navigationSelectWindow('navChat'));
 document.getElementById("navDashbaord").addEventListener ("click", (e:Event) => navigationSelectWindow('navDashbaord'));
@@ -31,18 +32,21 @@ function navigationSelectWindow(id: string){
         //console.log('sdlkfjsldkjfkljsd');
         lotteryDiv.style.display = 'none';
         settingsDiv.style.display = 'none';
-        chatWindow.style.display = '';
-        chatInput.style.display = '';
+        //chatWindow.style.display = '';
+        //chatInput.style.display = '';
+        chatGridDiv.style.display ='';
     }else if(id == 'navSettings'){
         lotteryDiv.style.display = 'none';
         settingsDiv.style.display = '';
-        chatWindow.style.display = 'none';
-        chatInput.style.display = 'none';
+        //chatWindow.style.display = 'none';
+        //chatInput.style.display = 'none';
+        chatGridDiv.style.display ='none';
     }else if(id == 'navRaffle'){
         lotteryDiv.style.display = '';
         settingsDiv.style.display = 'none';
-        chatWindow.style.display = 'none';
-        chatInput.style.display = 'none';
+        //chatWindow.style.display = 'none';
+        //chatInput.style.display = 'none';
+        chatGridDiv.style.display ='none';
     }
 
     

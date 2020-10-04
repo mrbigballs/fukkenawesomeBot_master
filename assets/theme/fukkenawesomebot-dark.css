@@ -2,6 +2,7 @@ body{
     background: linear-gradient(0deg, rgba(55,59,59,1) 0%, rgba(0,0,0,1) 100%) !important;
     color: #ffffff !important;
     height: 100vh;
+    overflow: hidden;
 }
 
 input, textarea {
@@ -12,5 +13,9 @@ input, textarea {
 #electron-titlebar{
     background-color: #595959;
     height: 35px !important;
+}
+
+.title-game input{
+    background-color: #3b3b3b !important;
 }
 

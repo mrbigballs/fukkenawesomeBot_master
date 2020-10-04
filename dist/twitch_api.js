@@ -182,6 +182,64 @@ var TwitchAPI = /** @class */ (function () {
             store.set('channel_info', JSON.stringify(data.data[0]));
         })["catch"](function (error) { console.log(error); });
     };
+    TwitchAPI.prototype.callTwtichApi = function (oauth, url, savekey) {
+        var twitch_url = twitch_hostname + url;
+        console.log('api call for: ' + twitch_url);
+        fetch(twitch_url, {
+            method: 'GET',
+            headers: {
+                accept: 'application/vnd.twitchtv.v5+json',
+                "Client-ID": this.bot_clientId,
+                "Authorization": "Bearer " + oauth
+            }
+        })
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+            console.log(data);
+            if (savekey != '') {
+                store.set(savekey, JSON.stringify(data.data[0]));
+            }
+            return JSON.stringify(data.data);
+        })["catch"](function (error) {
+            console.log(error);
+        });
+    };
+    TwitchAPI.prototype.callTwitchApiFetch = function (oauth, url) {
+        return fetch(twitch_hostname + url, {
+            method: 'GET',
+            headers: {
+                accept: 'application/vnd.twitchtv.v5+json',
+                "Client-ID": this.bot_clientId,
+                "Authorization": "Bearer " + oauth
+            }
+        });
+    };
+    TwitchAPI.prototype.updateChannelDataHelix = function (oauth, broadcasterId, gameId, title, lang) {
+        console.log('{"game_id":"' + gameId + '", "title":"' + title + '", "broadcaster_language":"' + lang + '"}');
+        // body: JSON.stringify({"game_id": gameId, "title":title , "broadcaster_language":lang})
+        //+ '&game_id=' + gameId +'&title=' + title + '&broadcaster_language=' + lang
+        return fetch(twitch_hostname + 'channels?broadcaster_id=' + broadcasterId, {
+            method: 'PATCH',
+            headers: {
+                accept: 'application/vnd.twitchtv.v5+json',
+                //'Content-Type': 'application/json',
+                "Client-ID": this.bot_clientId,
+                "Authorization": "Bearer " + oauth
+            },
+            body: JSON.stringify({ "game_id": gameId, "title": title, "broadcaster_language": lang })
+        });
+    };
+    TwitchAPI.prototype.updateChannelData = function (oauth, broadcasterId, gameName, title) {
+        return fetch(api_startpoint_url + 'channels/' + broadcasterId, {
+            method: 'PUT',
+            headers: {
+                accept: 'application/vnd.twitchtv.v5+json',
+                "Client-ID": this.bot_clientId,
+                "Authorization": "OAuth " + oauth
+            },
+            body: JSON.stringify({ "channel": { "status": title, "game": gameName, "channel_feed_enabled": true } })
+        });
+    };
     return TwitchAPI;
 }());
 exports.TwitchAPI = TwitchAPI;

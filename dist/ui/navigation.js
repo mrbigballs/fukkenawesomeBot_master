@@ -4,6 +4,7 @@ var settingsDiv = document.getElementById('settingsDiv');
 var lotteryDiv = document.getElementById('lotteryDiv');
 var chatSettingsDiv = document.getElementById('chatSettingsDiv');
 var chatGridDiv = document.getElementById('chatGridDiv');
+//const chatGridDiv = document.getElementById(chat-grid
 document.getElementById("navChat").addEventListener("click", function (e) { return navigationSelectWindow('navChat'); });
 document.getElementById("navDashbaord").addEventListener("click", function (e) { return navigationSelectWindow('navDashbaord'); });
 document.getElementById("navRaffle").addEventListener("click", function (e) { return navigationSelectWindow('navRaffle'); });
@@ -22,20 +23,23 @@ function navigationSelectWindow(id) {
         //console.log('sdlkfjsldkjfkljsd');
         lotteryDiv.style.display = 'none';
         settingsDiv.style.display = 'none';
-        chatWindow.style.display = '';
-        chatInput.style.display = '';
+        //chatWindow.style.display = '';
+        //chatInput.style.display = '';
+        chatGridDiv.style.display = '';
     }
     else if (id == 'navSettings') {
         lotteryDiv.style.display = 'none';
         settingsDiv.style.display = '';
-        chatWindow.style.display = 'none';
-        chatInput.style.display = 'none';
+        //chatWindow.style.display = 'none';
+        //chatInput.style.display = 'none';
+        chatGridDiv.style.display = 'none';
     }
     else if (id == 'navRaffle') {
         lotteryDiv.style.display = '';
         settingsDiv.style.display = 'none';
-        chatWindow.style.display = 'none';
-        chatInput.style.display = 'none';
+        //chatWindow.style.display = 'none';
+        //chatInput.style.display = 'none';
+        chatGridDiv.style.display = 'none';
     }
 }
 //chat options button

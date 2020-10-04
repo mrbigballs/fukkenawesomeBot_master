@@ -39,5 +39,7 @@
 	"chat-settings-whis-title": "Whisper display",
 	"chat-settings-whisper": "Show whisper messages in chat",
 	"chat-settings-highlight-keywords-label": "Highlighting Keywords (as comma , seperated list)",
-	"chat-settings-highlight-keywords-save-button": "Save"
+	"chat-settings-highlight-keywords-save-button": "Save",
+	"game-title-label": "Game",
+	"stream-title-label": "Titel"
 }

@@ -107,7 +107,7 @@ export class ChatMessageFormatter{
         let userId = userstate['user-id'];
         let userType = userstate['user-type'];
         var str = JSON.stringify(userstate)
-        console.log("id???: " + userId + ' ' + userType + ' ' + str);
+        //console.log("id???: " + userId + ' ' + userType + ' ' + str);
         let displaNameColor: string;
         if(userstate.color == null){
             //console.log(store.get(displayName+'_color'));
