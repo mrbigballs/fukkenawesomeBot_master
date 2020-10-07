@@ -402,13 +402,16 @@ function initIntervals(){
                     stream_info = streams.data[0];
                     //console.log(games.data[0].name);
                     store.set('stream_info', JSON.stringify(stream_info));
-                   
+                   console.log(new Date(stream_info.started_at))
+                   updateLiveUI();
                     //setStreamingTitleUI(channel_info.title);
                     //getGameInfo();
                     console.log("cstream_info_updated");
                  }else{
                     store.set('stream_info', '');
                     stream_info = null;
+                    jQuery('.stream-info').removeClass('online');
+                    //jQuery('.stream-info').addClass('offline');
                  }
                
               });  
@@ -425,6 +428,42 @@ function clearAllIntervals(){
         clearInterval( intervalRequests[i]);
     }
 }
+
+function updateLiveUI(){
+    jQuery('.stream-info').addClass('online');
+    document.getElementById("stream-time").innerHTML = timeDiffCalc(new Date(stream_info.started_at), new Date());
+    document.getElementById("viewer-count-update").innerHTML = stream_info.viewer_count;
+}
+
+function timeDiffCalc(dateFuture: any, dateNow: any) {
+    let diffInMilliSeconds = Math.abs(dateFuture - dateNow) / 1000;
+
+    // calculate days
+    const days = Math.floor(diffInMilliSeconds / 86400);
+    diffInMilliSeconds -= days * 86400;
+    console.log('calculated days', days);
+
+    // calculate hours
+    const hours = Math.floor(diffInMilliSeconds / 3600) % 24;
+    diffInMilliSeconds -= hours * 3600;
+    console.log('calculated hours', hours);
+
+    // calculate minutes
+    const minutes = Math.floor(diffInMilliSeconds / 60) % 60;
+    diffInMilliSeconds -= minutes * 60;
+    console.log('minutes', minutes);
+
+    let difference = '';
+    if (days > 0) {
+      difference += (days === 1) ? `${days}:` : `${days}:`;
+    }
+
+    difference += (hours < 10 && days > 0 ) ? `0${hours}:` : `${hours}:`;
+
+    difference += (minutes < 10 ) ? `0${minutes}` : `${minutes}`; 
+
+    return difference;
+  }
 
 
 ipcRenderer.on('save-token', function(event, data) {
@@ -523,6 +562,10 @@ document.getElementById("chat-set-radio-dynamic").addEventListener ("click", (e:
     store.set('chat_settings_outlines', 'dynamic');
 });
 
+/*
+*Chat settings menu Eventlistenr for chat whisper checkbox
+*
+*/
 (<HTMLInputElement>document.getElementById("chat-set-check-whisper")).addEventListener( 'change', function() {
     if(this.checked) {
         store.set('chat_settings_show_whisper', 'true');
@@ -542,6 +585,21 @@ document.getElementById("chat-set-radio-dynamic").addEventListener ("click", (e:
     }
 });
 
+/*
+*Chat settings menu Eventlistenr for zebra chat checkbox
+*
+*/
+(<HTMLInputElement>document.getElementById("chat-set-check-zebra")).addEventListener( 'change', function() {
+    if(this.checked) {
+        store.set('chat_settings_zebra_chat', 'true');
+        jQuery('.chat').addClass('zebra');
+       
+    } else {
+        store.set('chat_settings_zebra_chat', 'false');
+        jQuery('.chat').removeClass('zebra');
+    }
+});
+
 function initChatSettingsUIComponents(){
     if(store.get('chat_settings_outlines') != 'undefined'){
         if(store.get('chat_settings_outlines') == 'white'){
@@ -553,6 +611,7 @@ function initChatSettingsUIComponents(){
         }
     }
 
+    //chat settings whisper checkbox
     if(store.get('chat_settings_show_whisper') != 'undefined'){
         if(store.get('chat_settings_show_whisper') == 'true'){
             console.log('indeed its true');
@@ -560,6 +619,23 @@ function initChatSettingsUIComponents(){
         }else{
             (<HTMLInputElement>document.getElementById("chat-set-check-whisper")).checked = false;
         }
+    }else{//initialize value
+        store.set('chat_settings_show_whisper', 'false');
+        (<HTMLInputElement>document.getElementById("chat-set-check-whisper")).checked = false;
+    }
+
+    //chat settings zebra checkbox
+    if(store.get('chat_settings_zebra_chat') != 'undefined'){
+        if(store.get('chat_settings_zebra_chat') == 'true'){
+            console.log('indeed its true');
+            (<HTMLInputElement>document.getElementById("chat-set-check-zebra")).checked = true;
+            jQuery('.chat').addClass('zebra');
+        }else{
+            (<HTMLInputElement>document.getElementById("chat-set-check-zebra")).checked = false;
+        }
+    }else{//initialize value
+        store.set('chat_settings_zebra_chat', 'false');
+        (<HTMLInputElement>document.getElementById("chat-set-check-zebra")).checked = false;
     }
 
     var highlightKeywordsAsString = settingsmodule.settings.chatHighlightNames.toString();

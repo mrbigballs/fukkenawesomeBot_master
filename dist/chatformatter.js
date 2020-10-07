@@ -129,6 +129,7 @@ var ChatMessageFormatter = /** @class */ (function () {
         if (this.highlightMessagesByKeywords(keywords, message)) {
             chatMessageSpan.style.background = 'rgba(102, 0, 0, 0.5)';
         }
+        //whisper check
         if (store.get('chat_settings_show_whisper') == 'true') {
             chatDivContainer.setAttribute('class', 'user-chat-message ' + type);
         }

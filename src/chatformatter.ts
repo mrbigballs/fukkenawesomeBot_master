@@ -131,11 +131,13 @@ export class ChatMessageFormatter{
         if(this.highlightMessagesByKeywords(keywords, message)){
             chatMessageSpan.style.background = 'rgba(102, 0, 0, 0.5)';
         }
+        //whisper check
         if(store.get('chat_settings_show_whisper') == 'true'){
             chatDivContainer.setAttribute('class', 'user-chat-message ' + type);
         }else{
             chatDivContainer.setAttribute('class', 'user-chat-message ' + type + ' none-show');
         }
+        
        
         timeStampSpan.setAttribute('class','user-chat-message-timestamp');
         timeStampSpan.innerHTML = chatTimestamp;

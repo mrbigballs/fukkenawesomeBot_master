@@ -40,6 +40,8 @@
 	"chat-settings-whisper": "Zeige Flüsternachrichten im Chat",
 	"chat-settings-highlight-keywords-label": "Schlüsselwörter hervorheben (als Komma, getrennte Liste)",
 	"chat-settings-highlight-keywords-save-button": "Speichern",
+	"chat-settings-zebra-title": "Zebra Hintergrund für Chatnachrichten für bessere Lesbarkeit",
+	"chat-settings-zebra": "Zebrahintergrund Ein/Aus",
 	"game-title-label": "Spiel",
 	"stream-title-label": "Titel"
 }

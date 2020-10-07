@@ -40,6 +40,8 @@
 	"chat-settings-whisper": "Show whisper messages in chat",
 	"chat-settings-highlight-keywords-label": "Highlighting Keywords (as comma , seperated list)",
 	"chat-settings-highlight-keywords-save-button": "Save",
+	"chat-settings-zebra-title": "Zebra background for chat messages for better readability",
+	"chat-settings-zebra": "Zebra background on/off",
 	"game-title-label": "Game",
 	"stream-title-label": "Titel"
 }
