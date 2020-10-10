@@ -420,3 +420,86 @@ img.emoticon {
 .modal-body .form-check{
   margin-left: 20px;
 }
+
+/*
+*RAFFLE MAIN
+*
+*
+*/
+
+.raffle-main{
+  display: grid;
+  grid-template-columns: 1fr 1fr 200px;
+  grid-template-rows: 55px 55px 55px 60px 150px 1fr;
+  gap: 1px 0px;
+  grid-template-areas:
+    "raffle-keyword raffle-set-clear raffle-participant-list"
+    "raffle-roll raffle-autoroll raffle-participant-list"
+    "raffle-subonly raffle-costs raffle-participant-list"
+    "raffle-subluck-slider raffle-subluck-slider raffle-participant-list"
+    "raffle-timer-min raffle-timer-sec raffle-participant-list"
+    "raffle-price-tab raffle-price-tab raffle-participant-list";
+}
+
+.raffle-set-clear { 
+  grid-area: raffle-set-clear;
+  padding: 15px;
+}
+.raffle-keyword { 
+  grid-area: raffle-keyword;
+  padding: 10px;
+}
+.raffle-roll { 
+  grid-area: raffle-roll; 
+  padding: 10px;
+}
+.raffle-autoroll {
+   grid-area: raffle-autoroll; 
+   padding: 10px;
+  }
+.raffle-subonly { 
+  grid-area: raffle-subonly; 
+  padding-left: 35px;
+}
+.raffle-costs { grid-area: raffle-costs; }
+.raffle-subluck-slider { 
+  grid-area: raffle-subluck-slider; 
+  padding: 15px;
+}
+.raffle-timer-min { grid-area: raffle-timer-min; }
+.raffle-timer-sec { grid-area: raffle-timer-sec; }
+.raffle-price-tab { grid-area: raffle-price-tab; }
+.raffle-participant-list { grid-area: raffle-participant-list; }
+
+input[type='range'] {
+  background: #0b31d8;
+}
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;  
+  /*background: #d3d3d3;*/
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background: #0b31d8;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #0b31d8;
+  cursor: pointer;
+}

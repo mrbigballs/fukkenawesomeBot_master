@@ -43,5 +43,8 @@
 	"chat-settings-zebra-title": "Zebra background for chat messages for better readability",
 	"chat-settings-zebra": "Zebra background on/off",
 	"game-title-label": "Game",
-	"stream-title-label": "Titel"
+	"stream-title-label": "Titel",
+	"raffle-roll-button-text": "Roll",
+	"raffle-autoroll-button-text": "Autom. Roll",
+	"raffle-subonly-chekbox-text": "Subscriber only"
 }

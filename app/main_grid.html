@@ -188,32 +188,48 @@
               </div>
 
                 <!--Lottery-->
-                <div id="lotteryDiv" style="display: none;">
-                    <form class="form-inline">
-                        <div class="form-row align-items-center">
-                        <div class="col-auto">
-                            <label class="sr-only" for="inlineFormInput">Keyword</label>
-                            <input type="text" class="form-control mb-2" id="keywordInput" placeholder="Raffle Keyword">
+                <div id="lotteryDiv" class="raffle-main" style="display: none;">
+                    <div class="raffle-keyword">
+                        <input id="raffle-keyword-input"  type="text" class="form-control input-sm" placeholder="Keyword.."/>
+                    </div>
+                    <div class="raffle-set-clear">  
+                        <div>
+                            <button class="btn btn-outline-secondary" type="button" id="raffle-set-button" >
+                                <span class="fa fa-lock fa-lg" aria-hidden="true" id="raffle-lock-icon"></span>
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" id="raffle-clear-button" >
+                                <span class="fa fa-times fa-lg" aria-hidden="true" id="raffle-clear-icon"></span>
+                            </button>
                         </div>
-                        <div class="col-auto">
-                            <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="timedRaffleCheck">
-                            <label class="form-check-label" for="autoSizingCheck">
-                                Timed Raffle
+                    </div>
+                    <div class="raffle-roll">
+                        <button class="btn btn-outline-secondary" type="button" id="raffle-roll-button" >
+                            <span data-i18n="raffle-roll-button-text">Roll</span>&nbsp;&nbsp;<span class="fa fa-check fa-lg" aria-hidden="true" id="raffle-lock-icon"></span>
+                        </button>
+                    </div>
+                    <div class="raffle-autoroll">
+                        <button class="btn btn-outline-secondary" type="button" id="raffle-autoroll-button" >
+                            <span data-i18n="raffle-autoroll-button-text">Auto Roll</span>&nbsp;&nbsp;<span class="fa fa-refresh fa-lg" aria-hidden="true" id="raffle-lock-icon"></span>
+                        </button>
+                    </div>
+                    <div class="raffle-subonly">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="raffle-subonly-checkbox">
+                            <label class="form-check-label" for="raffle-subonly-checkbox" data-i18n="raffle-subonly-chekbox-text">
+                              Default checkbox
                             </label>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <label class="sr-only" for="inlineFormInput">Min</label>
-                            <input type="text" class="form-control mb-2" id="timedRaffleMinInput" placeholder="5">
-                        </div>
-                        <div class="col-auto">
-                            <label class="sr-only" for="inlineFormInput">Sec</label>
-                            <input type="text" class="form-control mb-2" id="timedRaffleSecInput" placeholder="00">
-                        </div>
-                        </div>
-                    </form>
-                    <button id="setRaffleKeywordButton" class="btn btn-primary">Set Keyword</button>
+                          </div>
+                    </div>
+                    <div class="raffle-costs"></div>
+                    <div class="raffle-subluck-slider">
+                        <div class="slidecontainer">
+                            <input type="range" min="0" max="5" value="0" class="slider" id="raffe-subluck-slider">
+                          </div>
+                    </div>
+                    <div class="raffle-timer-min"></div>
+                    <div class="raffle-timer-sec"></div>
+                    <div class="raffle-price-tab"></div>
+                    <div class="raffle-participant-list"></div>
                 </div>
 
             </div>
@@ -358,6 +374,7 @@
     
             $( '.navigationNormal' ).i18n();
             $( '#settingsDiv' ).i18n();
+            $( '#lotteryDiv' ).i18n();
             $( '.modal-body' ).i18n();
             $( '.titlebar' ).i18n()
             $( '.mediamanager' ).i18n()

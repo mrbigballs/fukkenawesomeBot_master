@@ -43,5 +43,8 @@
 	"chat-settings-zebra-title": "Zebra Hintergrund für Chatnachrichten für bessere Lesbarkeit",
 	"chat-settings-zebra": "Zebrahintergrund Ein/Aus",
 	"game-title-label": "Spiel",
-	"stream-title-label": "Titel"
+	"stream-title-label": "Titel",
+	"raffle-roll-button-text": "Auslosen",
+	"raffle-autoroll-button-text": "Autom. Auslosung",
+	"raffle-subonly-chekbox-text": "Nur für Abbonennten"
 }
