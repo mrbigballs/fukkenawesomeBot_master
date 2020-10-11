@@ -12,6 +12,7 @@ var settingsmodule_1 = require("./settingsmodule");
 var wikipedia_1 = require("./wikipedia");
 var twitch_api_1 = require("./twitch_api");
 var storelocal_1 = require("./storelocal");
+var raffle_1 = require("./raffle");
 var store = new storelocal_1.StoreLocal().getLocalStore();
 var credentials = new credentials_1.Credentials();
 var chatMessageFormatter = new chatformatter_1.ChatMessageFormatter();
@@ -19,6 +20,7 @@ var settingsmodule = new settingsmodule_1.SettingsModule();
 var wikipedia = new wikipedia_1.Wikipedia();
 var twitchapi = new twitch_api_1.TwitchAPI();
 var win = remote.getCurrentWindow();
+var raffle;
 var mainChatMessageWindow = document.getElementById('chatWindow');
 document.getElementById("settingsGetOAuthkeyButton").addEventListener("click", function (e) { return credentials.getOAuthkeyFor('streamer'); });
 document.getElementById("settingsGetOAuthkeyButtonBot").addEventListener("click", function (e) { return credentials.getOAuthkeyFor('bot'); });
@@ -198,6 +200,7 @@ function initTmi() {
         client.connect();
         client.on("connected", function (address, port) {
             ipcRenderer.send('botConnected', 'connected yeah');
+            raffle = new raffle_1.Raffle(store, client);
         });
         //on chat message do
         /*
@@ -228,6 +231,11 @@ function initTmi() {
                     mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames, 'chat-normal'));
                     chatMessageFormatter.scrollChat();
                     simpleCommand(message);
+                    if (raffle.raffle_active) {
+                        if (message == raffle.keyword) {
+                            updateRaffleList(raffle.addParticipant(userstate));
+                        }
+                    }
                     break;
                 case "whisper":
                     console.log(message);
@@ -635,4 +643,29 @@ document.getElementById("stream-update-button-button").addEventListener('click',
     });
 });
 //list[0].startColorFlow(50, 0, '1000, 2, 2700, 100, 500, 1, 255, 10, 500, 2, 5000, 1');
+//RAFFLE UI
+document.getElementById("raffle-set-button").addEventListener('click', function (e) {
+    raffle.setKeyword(document.getElementById("raffle-keyword-input").value);
+    raffle.raffle_active = true;
+});
+document.getElementById("raffle-clear-button").addEventListener('click', function (e) {
+    raffle.raffle_active = false;
+    document.getElementById("raffle-part-list-ul").innerHTML = '';
+    raffle.clearparticipants();
+});
+function updateRaffleList(userstate) {
+    var list_elem = document.createElement('li');
+    var displayname_span = document.createElement('span');
+    var user_type_icon_span = document.createElement('span');
+    if (userstate['subscriber']) {
+        user_type_icon_span.setAttribute('class', 'fa fa-usd');
+    }
+    else {
+        user_type_icon_span.setAttribute('class', 'fa fa-user-o');
+    }
+    displayname_span.innerHTML = userstate['display-name'];
+    list_elem.appendChild(user_type_icon_span);
+    list_elem.appendChild(displayname_span);
+    document.getElementById("raffle-part-list-ul").appendChild(list_elem);
+}
 //# sourceMappingURL=awesomebot.js.map

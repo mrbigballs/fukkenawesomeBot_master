@@ -3,10 +3,11 @@
 export class Raffle{
 
     keyword: string;
+    raffle_active: boolean = false;
     subscriberOnly: boolean;
     timer: number = 300000; //5 min
     winner: string;
-    participants: string[];
+    participants: any[] = [];
     raffleItems: any[];
     automaticWhisperWinner: boolean = false;
     announceWinnerInChat: boolean = false;
@@ -39,8 +40,36 @@ export class Raffle{
         
       }
 
-    addParticipant(displayName: string){
-        this.participants.indexOf(displayName) === -1 ? this.participants.push(displayName) : console.log("This user " + displayName + " is already on the list.");
+    addParticipant(userstate: any){
+        if(this.subscriberOnly){
+            if(userstate['subscriber']){
+                for(var i = 0; i < this.participants.length; i++){
+                    if(this.participants[i]['user-id'] == userstate['user-id']){
+                        return;
+                    }
+                }
+                this.participants.push(userstate);
+                return userstate;
+            }
+        }else{
+            for(var i = 0; i < this.participants.length; i++){
+                if(this.participants[i]['user-id'] == userstate['user-id']){
+                    return;
+                }
+            }
+            this.participants.push(userstate);
+            return userstate;
+        }
+        //this.participants.indexOf(displayName) === -1 ? this.participants.push(displayName) : console.log("This user " + displayName + " is already on the list.");
+    }
+
+
+    addUserToList(userstate: any){
+       
+    }
+
+    updateUIList(){
+
     }
 
     drawWinner(){

@@ -4,7 +4,9 @@ exports.Raffle = void 0;
 var Raffle = /** @class */ (function () {
     //load or init settings
     function Raffle(localStore, tmiClient) {
+        this.raffle_active = false;
         this.timer = 300000; //5 min
+        this.participants = [];
         this.automaticWhisperWinner = false;
         this.announceWinnerInChat = false;
         this.raffleSettings = {
@@ -27,8 +29,32 @@ var Raffle = /** @class */ (function () {
             this.store.set('raffle_settings', JSON.stringify(this.raffleSettings));
         }
     }
-    Raffle.prototype.addParticipant = function (displayName) {
-        this.participants.indexOf(displayName) === -1 ? this.participants.push(displayName) : console.log("This user " + displayName + " is already on the list.");
+    Raffle.prototype.addParticipant = function (userstate) {
+        if (this.subscriberOnly) {
+            if (userstate['subscriber']) {
+                for (var i = 0; i < this.participants.length; i++) {
+                    if (this.participants[i]['user-id'] == userstate['user-id']) {
+                        return;
+                    }
+                }
+                this.participants.push(userstate);
+                return userstate;
+            }
+        }
+        else {
+            for (var i = 0; i < this.participants.length; i++) {
+                if (this.participants[i]['user-id'] == userstate['user-id']) {
+                    return;
+                }
+            }
+            this.participants.push(userstate);
+            return userstate;
+        }
+        //this.participants.indexOf(displayName) === -1 ? this.participants.push(displayName) : console.log("This user " + displayName + " is already on the list.");
+    };
+    Raffle.prototype.addUserToList = function (userstate) {
+    };
+    Raffle.prototype.updateUIList = function () {
     };
     Raffle.prototype.drawWinner = function () {
         var winner = this.participants[Math.floor(Math.random() * this.participants.length)];
