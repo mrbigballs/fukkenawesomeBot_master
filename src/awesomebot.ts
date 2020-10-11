@@ -17,6 +17,7 @@ import { TwitchAPI } from './twitch_api';
 import { StoreLocal } from './storelocal';
 import { Raffle } from './raffle';
 
+
 const store = new StoreLocal().getLocalStore();
 
 
@@ -27,6 +28,7 @@ const wikipedia = new Wikipedia();
 const twitchapi = new TwitchAPI();
 const win = remote.getCurrentWindow();
 let raffle: Raffle;
+
 
 let mainChatMessageWindow = document.getElementById('chatWindow');
 
@@ -41,6 +43,7 @@ let game_info: any;
 let channel_info: any;
 let stream_info: any;
 let searchedGames: any;
+
 
 let intervalRequests: NodeJS.Timer[] = [];
 
@@ -233,6 +236,7 @@ function initTmi(){
         client.on("connected", function (address: string, port: number) {
             ipcRenderer.send('botConnected', 'connected yeah');
             raffle = new Raffle(store, client);
+            
         });
         
         //on chat message do
@@ -266,7 +270,7 @@ function initTmi(){
                     chatMessageFormatter.scrollChat();
                     simpleCommand(message);
                     if(raffle.raffle_active){
-                        if(message == raffle.keyword){
+                        if(message.toLocaleLowerCase() == raffle.keyword.toLocaleLowerCase()){
                             updateRaffleList(raffle.addParticipant(userstate));
                         }
                     }
@@ -728,6 +732,12 @@ document.getElementById("stream-update-button-button").addEventListener('click',
 
 document.getElementById("raffle-set-button").addEventListener('click', function(e){
     raffle.setKeyword((<HTMLInputElement>document.getElementById("raffle-keyword-input")).value);
+    document.getElementById("raffle-lock-icon").setAttribute('class', 'fa fa-lock fa-lg');
+    jQuery('#raffle-set-button').prop('disabled', true);
+    jQuery('#raffle-clear-button').prop('disabled', false);
+    jQuery('#raffle-keyword-input').addClass('locked');
+    jQuery('#raffle-keyword-input').prop('disabled', true);
+    jQuery('#raffle-subonly-checkbox').prop('disabled', true);
     raffle.raffle_active = true;
 
 });
@@ -735,21 +745,60 @@ document.getElementById("raffle-set-button").addEventListener('click', function(
 document.getElementById("raffle-clear-button").addEventListener('click', function(e){
     raffle.raffle_active = false;
     document.getElementById("raffle-part-list-ul").innerHTML = '';
+    document.getElementById("raffle-lock-icon").setAttribute('class', 'fa fa-unlock fa-lg');
+    jQuery('#raffle-set-button').prop('disabled', false);
+    jQuery('#raffle-clear-button').prop('disabled', true);
+    jQuery('#raffle-keyword-input').removeClass('locked');
+    jQuery('#raffle-keyword-input').prop('disabled', false);
+    jQuery('#raffle-subonly-checkbox').prop('disabled', false);
     raffle.clearparticipants();
 });
 
-function updateRaffleList(userstate: any){
-    let list_elem = document.createElement('li');
-    let displayname_span = document.createElement('span');
-    let user_type_icon_span = document.createElement('span');
-    if(userstate['subscriber']){
-        user_type_icon_span.setAttribute('class', 'fa fa-usd');
-    }else{
-        user_type_icon_span.setAttribute('class', 'fa fa-user-o');
-    }
-    displayname_span.innerHTML = userstate['display-name'];
+//sub only checkbox
+(<HTMLInputElement>document.getElementById("raffle-subonly-checkbox")).addEventListener( 'change', function() {
+    if(this.checked) {
+        raffle.subscriberOnly = true;
+        jQuery('#raffe-subluck-slider').prop('disabled', true);
+        jQuery('#sub-luck-muliplayer-dispaly').css('visibility', 'hidden');
 
-    list_elem.appendChild(user_type_icon_span);
-    list_elem.appendChild(displayname_span);
-    document.getElementById("raffle-part-list-ul").appendChild(list_elem);
+    }else{
+        raffle.subscriberOnly = false;
+        jQuery('#raffe-subluck-slider').prop('disabled', false);
+        jQuery('#sub-luck-muliplayer-dispaly').css('visibility', 'visible');
+    }
+});
+
+
+//slider
+
+jQuery("#raffe-subluck-slider").on('change',function(){
+    var test = (<HTMLInputElement>document.getElementById("raffe-subluck-slider")).value;
+    console.log('slider' + test + ' ' +test);
+    var test = (<HTMLInputElement>document.getElementById("raffe-subluck-slider")).value;
+    document.getElementById("sub-luck-muliplayer-dispaly").innerHTML = 'x' + test;
+    raffle.subscriberLuck = parseInt(test);
+});
+
+document.getElementById("raffle-roll-button").addEventListener('click', function(e){
+    raffle.raffle_active = false;
+    raffle.drawWinner();
+});
+
+
+function updateRaffleList(userstate: any){
+    if(typeof userstate != 'undefined'){
+        let list_elem = document.createElement('li');
+        let displayname_span = document.createElement('span');
+        let user_type_icon_span = document.createElement('span');
+        if(userstate['subscriber']){
+            user_type_icon_span.setAttribute('class', 'fa fa-usd fa-fw');
+        }else{
+            user_type_icon_span.setAttribute('class', 'fa fa-user-o fa-fw');
+        }
+        displayname_span.innerHTML = userstate['display-name'];
+    
+        list_elem.appendChild(user_type_icon_span);
+        list_elem.appendChild(displayname_span);
+        document.getElementById("raffle-part-list-ul").appendChild(list_elem);
+    } 
 }

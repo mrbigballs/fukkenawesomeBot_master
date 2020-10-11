@@ -5,9 +5,11 @@ export class Raffle{
     keyword: string;
     raffle_active: boolean = false;
     subscriberOnly: boolean;
+    subscriberLuck: number = 0;
     timer: number = 300000; //5 min
     winner: string;
     participants: any[] = [];
+    drawlist: any[] = [];
     raffleItems: any[];
     automaticWhisperWinner: boolean = false;
     announceWinnerInChat: boolean = false;
@@ -73,7 +75,24 @@ export class Raffle{
     }
 
     drawWinner(){
-        let winner = this.participants[Math.floor(Math.random() * this.participants.length)];
+        let winner: any;
+        this.drawlist = [];
+        if(this.subscriberLuck == 0){
+            winner = this.participants[Math.floor(Math.random() * this.participants.length)];
+        }else{
+            for(var i = 0; i < this.participants.length; i++){
+                if(this.participants[i]['subscriber']){
+                    for(var j = 0; j < this.subscriberLuck; j++){
+                        this.drawlist.push(this.participants[i]);
+                    }
+                }else{
+                    this.drawlist.push(this.participants[i]); 
+                }
+            }
+            console.log(JSON.stringify(this.drawlist));
+            winner = this.drawlist[Math.floor(Math.random() * this.drawlist.length)];
+        }
+        console.log(winner['display-name']);
         if(this.announceWinnerInChat){
 
         }

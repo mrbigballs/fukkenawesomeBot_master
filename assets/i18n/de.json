@@ -46,5 +46,6 @@
 	"stream-title-label": "Titel",
 	"raffle-roll-button-text": "Auslosen",
 	"raffle-autoroll-button-text": "Autom. Auslosung",
-	"raffle-subonly-chekbox-text": "Nur für Abbonennten"
+	"raffle-subonly-chekbox-text": "Nur für Abonennten",
+	"raffle-subluck-text": "Abonennten Glück Multiplikator"
 }

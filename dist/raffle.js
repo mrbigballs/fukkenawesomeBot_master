@@ -5,8 +5,10 @@ var Raffle = /** @class */ (function () {
     //load or init settings
     function Raffle(localStore, tmiClient) {
         this.raffle_active = false;
+        this.subscriberLuck = 0;
         this.timer = 300000; //5 min
         this.participants = [];
+        this.drawlist = [];
         this.automaticWhisperWinner = false;
         this.announceWinnerInChat = false;
         this.raffleSettings = {
@@ -57,7 +59,26 @@ var Raffle = /** @class */ (function () {
     Raffle.prototype.updateUIList = function () {
     };
     Raffle.prototype.drawWinner = function () {
-        var winner = this.participants[Math.floor(Math.random() * this.participants.length)];
+        var winner;
+        this.drawlist = [];
+        if (this.subscriberLuck == 0) {
+            winner = this.participants[Math.floor(Math.random() * this.participants.length)];
+        }
+        else {
+            for (var i = 0; i < this.participants.length; i++) {
+                if (this.participants[i]['subscriber']) {
+                    for (var j = 0; j < this.subscriberLuck; j++) {
+                        this.drawlist.push(this.participants[i]);
+                    }
+                }
+                else {
+                    this.drawlist.push(this.participants[i]);
+                }
+            }
+            console.log(JSON.stringify(this.drawlist));
+            winner = this.drawlist[Math.floor(Math.random() * this.drawlist.length)];
+        }
+        console.log(winner['display-name']);
         if (this.announceWinnerInChat) {
         }
         if (this.automaticWhisperWinner) {

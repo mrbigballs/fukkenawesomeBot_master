@@ -232,7 +232,7 @@ function initTmi() {
                     chatMessageFormatter.scrollChat();
                     simpleCommand(message);
                     if (raffle.raffle_active) {
-                        if (message == raffle.keyword) {
+                        if (message.toLocaleLowerCase() == raffle.keyword.toLocaleLowerCase()) {
                             updateRaffleList(raffle.addParticipant(userstate));
                         }
                     }
@@ -646,26 +646,65 @@ document.getElementById("stream-update-button-button").addEventListener('click',
 //RAFFLE UI
 document.getElementById("raffle-set-button").addEventListener('click', function (e) {
     raffle.setKeyword(document.getElementById("raffle-keyword-input").value);
+    document.getElementById("raffle-lock-icon").setAttribute('class', 'fa fa-lock fa-lg');
+    jQuery('#raffle-set-button').prop('disabled', true);
+    jQuery('#raffle-clear-button').prop('disabled', false);
+    jQuery('#raffle-keyword-input').addClass('locked');
+    jQuery('#raffle-keyword-input').prop('disabled', true);
+    jQuery('#raffle-subonly-checkbox').prop('disabled', true);
     raffle.raffle_active = true;
 });
 document.getElementById("raffle-clear-button").addEventListener('click', function (e) {
     raffle.raffle_active = false;
     document.getElementById("raffle-part-list-ul").innerHTML = '';
+    document.getElementById("raffle-lock-icon").setAttribute('class', 'fa fa-unlock fa-lg');
+    jQuery('#raffle-set-button').prop('disabled', false);
+    jQuery('#raffle-clear-button').prop('disabled', true);
+    jQuery('#raffle-keyword-input').removeClass('locked');
+    jQuery('#raffle-keyword-input').prop('disabled', false);
+    jQuery('#raffle-subonly-checkbox').prop('disabled', false);
     raffle.clearparticipants();
 });
-function updateRaffleList(userstate) {
-    var list_elem = document.createElement('li');
-    var displayname_span = document.createElement('span');
-    var user_type_icon_span = document.createElement('span');
-    if (userstate['subscriber']) {
-        user_type_icon_span.setAttribute('class', 'fa fa-usd');
+//sub only checkbox
+document.getElementById("raffle-subonly-checkbox").addEventListener('change', function () {
+    if (this.checked) {
+        raffle.subscriberOnly = true;
+        jQuery('#raffe-subluck-slider').prop('disabled', true);
+        jQuery('#sub-luck-muliplayer-dispaly').css('visibility', 'hidden');
     }
     else {
-        user_type_icon_span.setAttribute('class', 'fa fa-user-o');
+        raffle.subscriberOnly = false;
+        jQuery('#raffe-subluck-slider').prop('disabled', false);
+        jQuery('#sub-luck-muliplayer-dispaly').css('visibility', 'visible');
     }
-    displayname_span.innerHTML = userstate['display-name'];
-    list_elem.appendChild(user_type_icon_span);
-    list_elem.appendChild(displayname_span);
-    document.getElementById("raffle-part-list-ul").appendChild(list_elem);
+});
+//slider
+jQuery("#raffe-subluck-slider").on('change', function () {
+    var test = document.getElementById("raffe-subluck-slider").value;
+    console.log('slider' + test + ' ' + test);
+    var test = document.getElementById("raffe-subluck-slider").value;
+    document.getElementById("sub-luck-muliplayer-dispaly").innerHTML = 'x' + test;
+    raffle.subscriberLuck = parseInt(test);
+});
+document.getElementById("raffle-roll-button").addEventListener('click', function (e) {
+    raffle.raffle_active = false;
+    raffle.drawWinner();
+});
+function updateRaffleList(userstate) {
+    if (typeof userstate != 'undefined') {
+        var list_elem = document.createElement('li');
+        var displayname_span = document.createElement('span');
+        var user_type_icon_span = document.createElement('span');
+        if (userstate['subscriber']) {
+            user_type_icon_span.setAttribute('class', 'fa fa-usd fa-fw');
+        }
+        else {
+            user_type_icon_span.setAttribute('class', 'fa fa-user-o fa-fw');
+        }
+        displayname_span.innerHTML = userstate['display-name'];
+        list_elem.appendChild(user_type_icon_span);
+        list_elem.appendChild(displayname_span);
+        document.getElementById("raffle-part-list-ul").appendChild(list_elem);
+    }
 }
 //# sourceMappingURL=awesomebot.js.map

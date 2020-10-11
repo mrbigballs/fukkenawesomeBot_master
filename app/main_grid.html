@@ -195,10 +195,10 @@
                     <div class="raffle-set-clear">  
                         <div>
                             <button class="btn btn-outline-secondary" type="button" id="raffle-set-button" >
-                                <span class="fa fa-lock fa-lg" aria-hidden="true" id="raffle-lock-icon"></span>
+                                <span class="fa fa-unlock fa-lg" aria-hidden="true" id="raffle-lock-icon"></span>
                             </button>
-                            <button class="btn btn-outline-secondary" type="button" id="raffle-clear-button" >
-                                <span class="fa fa-times fa-lg" aria-hidden="true" id="raffle-clear-icon"></span>
+                            <button class="btn btn-outline-secondary" type="button" id="raffle-clear-button" disabled>
+                                <span class="fa fa-times fa-lg" aria-hidden="true" id="raffle-clear-icon" ></span>
                             </button>
                         </div>
                     </div>
@@ -223,14 +223,21 @@
                     <div class="raffle-costs"></div>
                     <div class="raffle-subluck-slider">
                         <div class="slidecontainer">
-                            <input type="range" min="0" max="5" value="0" class="slider" id="raffe-subluck-slider">
+                            <span data-i18n="raffle-subluck-text">default text</span><span id="sub-luck-muliplayer-dispaly">x0</span>
+                            <input type="range" min="0" max="5" value="0" class="slider" id="raffe-subluck-slider" />
                           </div>
                     </div>
                     <div class="raffle-timer-min">
-
+                        <div class="rtimer-min">
+                            <div class="rminutes">15</div>
+                            <div>:</div>
+                        </div>
                     </div>
                     <div class="raffle-timer-sec">
-
+                        <div class="rtimer-sec">
+                            <div class="rseconds">00</div>
+                            
+                        </div>
                     </div>
                     <div class="raffle-price-tab"></div>
                     <div class="raffle-participant-list">

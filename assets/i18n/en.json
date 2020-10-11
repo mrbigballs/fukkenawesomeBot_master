@@ -46,5 +46,6 @@
 	"stream-title-label": "Titel",
 	"raffle-roll-button-text": "Roll",
 	"raffle-autoroll-button-text": "Autom. Roll",
-	"raffle-subonly-chekbox-text": "Subscriber only"
+	"raffle-subonly-chekbox-text": "Subscriber only",
+	"raffle-subluck-text": "Subscriber Luck Multiplier"
 }
