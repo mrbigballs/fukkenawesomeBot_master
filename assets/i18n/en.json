@@ -45,7 +45,9 @@
 	"game-title-label": "Game",
 	"stream-title-label": "Titel",
 	"raffle-roll-button-text": "Roll",
-	"raffle-autoroll-button-text": "Autom. Roll",
+	"raffle-manual-button-text": "Manual Raffle",
+	"raffle-autoroll-button-text": "Autom. Raffle",
+	"raffle-clear-button-text": "Clear",
 	"raffle-subonly-chekbox-text": "Subscriber only",
 	"raffle-subluck-text": "Subscriber Luck Multiplier"
 }

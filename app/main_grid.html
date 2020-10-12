@@ -190,35 +190,40 @@
                 <!--Lottery-->
                 <div id="lotteryDiv" class="raffle-main" style="display: none;">
                     <div class="raffle-keyword">
-                        <input id="raffle-keyword-input"  type="text" class="form-control input-sm" placeholder="Keyword.."/>
-                    </div>
-                    <div class="raffle-set-clear">  
+                        <div class="keyword-wrapper">
+                            <input id="raffle-keyword-input"  type="text" class="form-control input-sm" placeholder="Keyword.."/>
+                        </div>
                         <div>
-                            <button class="btn btn-outline-secondary" type="button" id="raffle-set-button" >
-                                <span class="fa fa-unlock fa-lg" aria-hidden="true" id="raffle-lock-icon"></span>
-                            </button>
                             <button class="btn btn-outline-secondary" type="button" id="raffle-clear-button" disabled>
-                                <span class="fa fa-times fa-lg" aria-hidden="true" id="raffle-clear-icon" ></span>
+                                <span data-i18n="raffle-clear-button-text">Clear</span>&nbsp;&nbsp;<span class="fa fa-times fa-lg" aria-hidden="true" id="raffle-clear-icon" ></span>
                             </button>
                         </div>
                     </div>
-                    <div class="raffle-roll">
-                        <button class="btn btn-outline-secondary" type="button" id="raffle-roll-button" >
-                            <span data-i18n="raffle-roll-button-text">Roll</span>&nbsp;&nbsp;<span class="fa fa-check fa-lg" aria-hidden="true" id="raffle-lock-icon"></span>
+                    <div class="raffle-set-clear">  
+                       
+                    </div>
+                    <div class="raffle-manualroll">
+                        <button class="btn btn-outline-secondary" type="button" id="raffle-set-button" >
+                            <span data-i18n="raffle-manual-button-text">Manual Roll</span>&nbsp;&nbsp;<span class="fa fa-unlock fa-lg" aria-hidden="true" id="raffle-lock-icon"></span>
                         </button>
                     </div>
                     <div class="raffle-autoroll">
                         <button class="btn btn-outline-secondary" type="button" id="raffle-autoroll-button" >
-                            <span data-i18n="raffle-autoroll-button-text">Auto Roll</span>&nbsp;&nbsp;<span class="fa fa-refresh fa-lg" aria-hidden="true" id="raffle-lock-icon"></span>
+                            <span data-i18n="raffle-autoroll-button-text">Auto Roll</span>&nbsp;&nbsp;<span class="fa fa-refresh fa-lg" aria-hidden="true" id="raffle-auto-icon"></span>
+                        </button>
+                    </div>
+                    <div class="raffle-roll">
+                        <button class="btn btn-outline-secondary" type="button" id="raffle-roll-button" disabled>
+                            <span data-i18n="raffle-roll-button-text">Roll</span>&nbsp;&nbsp;<span class="fa fa-check fa-lg" aria-hidden="true" id="raffle-roll-icon"></span>
                         </button>
                     </div>
                     <div class="raffle-subonly">
-                        <div class="form-check">
+                        <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" value="" id="raffle-subonly-checkbox">
                             <label class="form-check-label" for="raffle-subonly-checkbox" data-i18n="raffle-subonly-chekbox-text">
                               Default checkbox
                             </label>
-                          </div>
+                        </div>
                     </div>
                     <div class="raffle-costs"></div>
                     <div class="raffle-subluck-slider">
@@ -229,15 +234,19 @@
                     </div>
                     <div class="raffle-timer-min">
                         <div class="rtimer-min">
-                            <div class="rminutes">15</div>
+                            <div class="rminutes" id="raffle-count-min" contentEditable="true">15</div>
                             <div>:</div>
                         </div>
                     </div>
                     <div class="raffle-timer-sec">
                         <div class="rtimer-sec">
-                            <div class="rseconds">00</div>
-                            
+                            <div class="rseconds" id="raffle-count-sec" contentEditable="true">00</div>
                         </div>
+                    </div>
+                    <div class="raffle-winner">
+                        <div class="rwinner-logo"></div>
+                        <div class="rwinner-name"></div>
+                        <div class="rwinner-message"></div>
                     </div>
                     <div class="raffle-price-tab"></div>
                     <div class="raffle-participant-list">

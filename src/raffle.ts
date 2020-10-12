@@ -5,7 +5,7 @@ export class Raffle{
     keyword: string;
     raffle_active: boolean = false;
     subscriberOnly: boolean;
-    subscriberLuck: number = 0;
+    subscriberLuck = 0;
     timer: number = 300000; //5 min
     winner: string;
     participants: any[] = [];
@@ -77,7 +77,8 @@ export class Raffle{
     drawWinner(){
         let winner: any;
         this.drawlist = [];
-        if(this.subscriberLuck == 0){
+        console.log('lock' + this.subscriberLuck);
+        if(typeof this.subscriberLuck == 'undefined' || this.subscriberLuck == 0){
             winner = this.participants[Math.floor(Math.random() * this.participants.length)];
         }else{
             for(var i = 0; i < this.participants.length; i++){
@@ -92,7 +93,7 @@ export class Raffle{
             console.log(JSON.stringify(this.drawlist));
             winner = this.drawlist[Math.floor(Math.random() * this.drawlist.length)];
         }
-        console.log(winner['display-name']);
+        console.log('WINNER::: ' + winner['display-name']);
         if(this.announceWinnerInChat){
 
         }
@@ -108,10 +109,7 @@ export class Raffle{
     
 
     startTimedRaffle(){
-        this.timed_raffle_timeout = setTimeout(function(){
-            console.log('timed raffle');
-            this.drawWinner();
-        }, this.timer);
+        this.timed_raffle_timeout = setTimeout(this.drawWinner, this.timer);
     }
 
     stopTimedRaffle(){

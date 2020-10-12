@@ -430,24 +430,36 @@ img.emoticon {
 .raffle-main{
   display: grid;
   grid-template-columns: 1fr 1fr 200px;
-  grid-template-rows: 55px 55px 55px 60px 150px 1fr;
+  grid-template-rows: 55px 55px 55px 45px 60px 100px 80px 1fr;
   gap: 1px 0px;
   grid-template-areas:
-    "raffle-keyword raffle-set-clear raffle-participant-list"
-    "raffle-roll raffle-autoroll raffle-participant-list"
+    "raffle-keyword raffle-keyword raffle-participant-list"
+    "raffle-manualroll raffle-autoroll raffle-participant-list"
+    "raffle-roll raffle-roll raffle-participant-list"
     "raffle-subonly raffle-costs raffle-participant-list"
     "raffle-subluck-slider raffle-subluck-slider raffle-participant-list"
     "raffle-timer-min raffle-timer-sec raffle-participant-list"
+    "raffle-winner raffle-winner raffle-participant-list"
     "raffle-price-tab raffle-price-tab raffle-participant-list";
+    height: 100%;
 }
 
+
+/*
 .raffle-set-clear { 
   grid-area: raffle-set-clear;
   padding: 15px;
 }
+*/
 .raffle-keyword { 
   grid-area: raffle-keyword;
   padding: 10px;
+  display: flex;
+  width: 100%;
+}
+
+.keyword-wrapper{
+  width: 100%;
 }
 
 #raffle-keyword-input.locked{
@@ -458,22 +470,44 @@ img.emoticon {
   
 }
 
+.glow{
+  background: radial-gradient(circle, rgba(81, 218, 184, 0.645) 28%, rgba(4, 215, 243, 0.432) 100%);
+}
+
 .raffle-roll { 
   grid-area: raffle-roll; 
   padding: 10px;
+  display: block;
+  width: 100%;
 }
+
+.raffle-roll button{
+  width: 50%;
+  margin-left: 25%;
+}
+
+.raffle-manualroll{
+  grid-area: raffle-manualroll;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+
 .raffle-autoroll {
    grid-area: raffle-autoroll; 
    padding: 10px;
+   display: flex;
+  justify-content: center;
   }
 .raffle-subonly { 
   grid-area: raffle-subonly; 
   padding-left: 35px;
+  
 }
 .raffle-costs { grid-area: raffle-costs; }
 .raffle-subluck-slider { 
   grid-area: raffle-subluck-slider; 
-  padding: 15px;
+  padding-left: 5px;
 }
 .raffle-timer-min { grid-area: raffle-timer-min; }
 
@@ -481,6 +515,19 @@ img.emoticon {
   display: flex;
   justify-content : flex-end;
   font-size: 5em;
+  
+}
+
+/*
+* Damit es editierbar bleibt und nicht width: 0 ist wenn leer
+*/
+.rminutes:empty{
+  display: inline-block;
+  min-width: 120px;
+}
+.rseconds:empty{
+  display: inline-block;
+  min-width: 120px;
 }
 
 .rtimer-sec{
@@ -488,8 +535,22 @@ img.emoticon {
   justify-content : flex-start;
   font-size: 5em;
 }
+
+.blink-one {
+  animation: blinker-one 1s linear infinite;
+}
+@keyframes blinker-one {  
+  0% { opacity: 0; }
+}
+
 .raffle-timer-sec { grid-area: raffle-timer-sec; }
 .raffle-price-tab { grid-area: raffle-price-tab; }
+
+.raffle-winner{
+  grid-area: raffle-winner;
+  display: flex;
+}
+
 .raffle-participant-list { 
   grid-area: raffle-participant-list;
   padding-top: 15px;
@@ -559,4 +620,18 @@ input[type=range]:disabled::-webkit-slider-thumb {
   border-radius: 50%;
   background: #0b31d8;
   cursor: pointer;
+}
+
+.form-check-label{
+  padding-left: 0 !important;
+}
+
+.form-check-input{
+  position: relative;
+ 
+  /*padding-left: 0 !important;*/
+}
+
+label{
+  display: inline !important;
 }

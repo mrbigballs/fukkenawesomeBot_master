@@ -45,7 +45,9 @@
 	"game-title-label": "Spiel",
 	"stream-title-label": "Titel",
 	"raffle-roll-button-text": "Auslosen",
+	"raffle-manual-button-text": "Manuele Auslosung",
 	"raffle-autoroll-button-text": "Autom. Auslosung",
-	"raffle-subonly-chekbox-text": "Nur für Abonennten",
-	"raffle-subluck-text": "Abonennten Glück Multiplikator"
+	"raffle-clear-button-text": "Zurücksetzten",
+	"raffle-subonly-chekbox-text": "Nur für Abonnenten",
+	"raffle-subluck-text": "Abonnenten Glück Multi"
 }

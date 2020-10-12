@@ -32,7 +32,10 @@ var game_info;
 var channel_info;
 var stream_info;
 var searchedGames;
+var min;
+var sec;
 var intervalRequests = [];
+var raffleInterval;
 settingsmodule.loadSettings();
 var server = require('http').createServer(expressApp);
 var io = require('socket.io')(server);
@@ -647,23 +650,107 @@ document.getElementById("stream-update-button-button").addEventListener('click',
 document.getElementById("raffle-set-button").addEventListener('click', function (e) {
     raffle.setKeyword(document.getElementById("raffle-keyword-input").value);
     document.getElementById("raffle-lock-icon").setAttribute('class', 'fa fa-lock fa-lg');
+    document.getElementById("raffle-set-button").setAttribute('class', 'btn btn-outline-secondary glow');
     jQuery('#raffle-set-button').prop('disabled', true);
     jQuery('#raffle-clear-button').prop('disabled', false);
     jQuery('#raffle-keyword-input').addClass('locked');
     jQuery('#raffle-keyword-input').prop('disabled', true);
     jQuery('#raffle-subonly-checkbox').prop('disabled', true);
+    jQuery('#raffle-autoroll-button').prop('disabled', true);
+    jQuery('#raffle-roll-button').prop('disabled', false);
     raffle.raffle_active = true;
+});
+document.getElementById("raffle-autoroll-button").addEventListener('click', function (e) {
+    raffle.setKeyword(document.getElementById("raffle-keyword-input").value);
+    document.getElementById("raffle-auto-icon").setAttribute('class', 'fa fa-refresh fa-spin fa-lg');
+    document.getElementById("raffle-autoroll-button").setAttribute('class', 'btn btn-outline-secondary glow');
+    //manual roll button
+    jQuery('#raffle-set-button').prop('disabled', true);
+    jQuery('#raffle-keyword-input').addClass('locked');
+    jQuery('#raffle-keyword-input').prop('disabled', true);
+    jQuery('#raffle-subonly-checkbox').prop('disabled', true);
+    jQuery('#raffle-roll-button').prop('disabled', true);
+    jQuery('#raffle-clear-button').prop('disabled', false);
+    raffle.raffle_active = true;
+    min = document.getElementById("raffle-count-min").innerHTML;
+    var set_min = min == '' ? 0 : parseInt(min);
+    sec = document.getElementById("raffle-count-sec").innerHTML;
+    var set_sec = sec == '' ? 0 : parseInt(sec);
+    var min_in_milli = set_min * 60000;
+    var sec_in_milli = set_sec * 1000;
+    var combined = min_in_milli + sec_in_milli;
+    //set timer in raffle class
+    raffle.timer = combined;
+    //raffle.startTimedRaffle();
+    var countDownDate = new Date(new Date().getTime() + combined).getTime();
+    raffleInterval = setInterval(function () {
+        // Get today's date and time
+        var now = new Date().getTime();
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+        // Time calculations for days, hours, minutes and seconds
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        // Display the result in the element with id="demo"
+        //document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+        //+ minutes + "m " + seconds + "s ";
+        if (minutes <= 0) {
+            document.getElementById("raffle-count-min").innerHTML = '00';
+        }
+        else {
+            document.getElementById("raffle-count-min").innerHTML = minutes < 10 ? '0' + minutes : '' + minutes;
+        }
+        if (seconds <= 0) {
+            document.getElementById("raffle-count-sec").innerHTML = '00';
+        }
+        else {
+            document.getElementById("raffle-count-sec").innerHTML = seconds < 10 ? '0' + seconds : '' + seconds;
+        }
+        // If the count down is finished, write some text
+        if (distance < 0) {
+            clearInterval(raffleInterval);
+            raffle.raffle_active = false;
+            raffle.drawWinner();
+            document.getElementById("raffle-part-list-ul").innerHTML = '';
+            document.getElementById("raffle-lock-icon").setAttribute('class', 'fa fa-unlock fa-lg');
+            document.getElementById("raffle-set-button").setAttribute('class', 'btn btn-outline-secondary');
+            document.getElementById("raffle-auto-icon").setAttribute('class', 'fa fa-refresh fa-lg');
+            document.getElementById("raffle-autoroll-button").setAttribute('class', 'btn btn-outline-secondary');
+            jQuery('#raffle-set-button').prop('disabled', false);
+            jQuery('#raffle-clear-button').prop('disabled', true);
+            jQuery('#raffle-keyword-input').removeClass('locked');
+            jQuery('#raffle-keyword-input').prop('disabled', false);
+            jQuery('#raffle-subonly-checkbox').prop('disabled', false);
+            jQuery('#raffle-autoroll-button').prop('disabled', false);
+            jQuery('#raffle-roll-button').prop('disabled', true);
+            raffle.clearparticipants();
+            document.getElementById("raffle-count-min").innerHTML = min;
+            document.getElementById("raffle-count-sec").innerHTML = sec;
+        }
+    }, 500);
 });
 document.getElementById("raffle-clear-button").addEventListener('click', function (e) {
     raffle.raffle_active = false;
     document.getElementById("raffle-part-list-ul").innerHTML = '';
     document.getElementById("raffle-lock-icon").setAttribute('class', 'fa fa-unlock fa-lg');
+    document.getElementById("raffle-set-button").setAttribute('class', 'btn btn-outline-secondary');
+    document.getElementById("raffle-auto-icon").setAttribute('class', 'fa fa-refresh fa-lg');
+    document.getElementById("raffle-autoroll-button").setAttribute('class', 'btn btn-outline-secondary');
     jQuery('#raffle-set-button').prop('disabled', false);
     jQuery('#raffle-clear-button').prop('disabled', true);
     jQuery('#raffle-keyword-input').removeClass('locked');
     jQuery('#raffle-keyword-input').prop('disabled', false);
     jQuery('#raffle-subonly-checkbox').prop('disabled', false);
+    jQuery('#raffle-autoroll-button').prop('disabled', false);
+    jQuery('#raffle-roll-button').prop('disabled', true);
     raffle.clearparticipants();
+    document.getElementById("raffle-count-min").innerHTML = min;
+    document.getElementById("raffle-count-sec").innerHTML = sec;
+    try {
+        clearInterval(raffleInterval);
+        raffle.stopTimedRaffle();
+    }
+    catch (e) { }
 });
 //sub only checkbox
 document.getElementById("raffle-subonly-checkbox").addEventListener('change', function () {
@@ -689,6 +776,39 @@ jQuery("#raffe-subluck-slider").on('change', function () {
 document.getElementById("raffle-roll-button").addEventListener('click', function (e) {
     raffle.raffle_active = false;
     raffle.drawWinner();
+});
+// prevent entering more then 2 digits in timers
+jQuery('.rminutes').on('keydown', function (e) {
+    var regex = /[0-9]|\./;
+    //console.log(checkNumeric(e));
+    if (!regex.test(String.fromCharCode(e.keyCode)) && e.keyCode != 8 && e.keyCode != 37 && e.keyCode != 39) {
+        e.preventDefault();
+    }
+    ;
+    if (jQuery('.rminutes').html().length >= 2) {
+        var regex = /[0-9]|\./;
+        if (e.keyCode != 8 && e.keyCode != 37 && e.keyCode != 39) {
+            e.preventDefault();
+        }
+        else {
+        }
+    }
+});
+jQuery('.rseconds').on('keydown', function (e) {
+    var regex = /[0-9]|\./;
+    //console.log(checkNumeric(e));
+    if (!regex.test(String.fromCharCode(e.keyCode)) && e.keyCode != 8 && e.keyCode != 37 && e.keyCode != 39) {
+        e.preventDefault();
+    }
+    ;
+    if (jQuery('.rminutes').html().length >= 2) {
+        var regex = /[0-9]|\./;
+        if (e.keyCode != 8 && e.keyCode != 37 && e.keyCode != 39) {
+            e.preventDefault();
+        }
+        else {
+        }
+    }
 });
 function updateRaffleList(userstate) {
     if (typeof userstate != 'undefined') {

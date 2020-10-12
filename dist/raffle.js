@@ -61,7 +61,8 @@ var Raffle = /** @class */ (function () {
     Raffle.prototype.drawWinner = function () {
         var winner;
         this.drawlist = [];
-        if (this.subscriberLuck == 0) {
+        console.log('lock' + this.subscriberLuck);
+        if (typeof this.subscriberLuck == 'undefined' || this.subscriberLuck == 0) {
             winner = this.participants[Math.floor(Math.random() * this.participants.length)];
         }
         else {
@@ -78,7 +79,7 @@ var Raffle = /** @class */ (function () {
             console.log(JSON.stringify(this.drawlist));
             winner = this.drawlist[Math.floor(Math.random() * this.drawlist.length)];
         }
-        console.log(winner['display-name']);
+        console.log('WINNER::: ' + winner['display-name']);
         if (this.announceWinnerInChat) {
         }
         if (this.automaticWhisperWinner) {
@@ -88,10 +89,7 @@ var Raffle = /** @class */ (function () {
         this.keyword = keyword;
     };
     Raffle.prototype.startTimedRaffle = function () {
-        this.timed_raffle_timeout = setTimeout(function () {
-            console.log('timed raffle');
-            this.drawWinner();
-        }, this.timer);
+        this.timed_raffle_timeout = setTimeout(this.drawWinner, this.timer);
     };
     Raffle.prototype.stopTimedRaffle = function () {
         clearTimeout(this.timed_raffle_timeout);
