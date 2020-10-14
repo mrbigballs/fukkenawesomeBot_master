@@ -746,6 +746,9 @@ document.getElementById("raffle-clear-button").addEventListener('click', functio
     raffle.clearparticipants();
     document.getElementById("raffle-count-min").innerHTML = min;
     document.getElementById("raffle-count-sec").innerHTML = sec;
+    jQuery('#winner-user-thumbnail').attr("src", "");
+    jQuery('.rwinner-name').html('');
+    jQuery('#winner-envelope').css('visibility', 'hidden');
     try {
         clearInterval(raffleInterval);
         raffle.stopTimedRaffle();
@@ -775,7 +778,24 @@ jQuery("#raffe-subluck-slider").on('change', function () {
 });
 document.getElementById("raffle-roll-button").addEventListener('click', function (e) {
     raffle.raffle_active = false;
-    raffle.drawWinner();
+    var winner = raffle.drawWinner();
+    if (typeof winner != 'undefined') {
+        try {
+            var getUserInfo = twitchapi.callTwitchApiFetch(settingsmodule.settings.streamerOAuthkey, 'users?id=' + winner['user-id']);
+            getUserInfo.then(function (response) {
+                return response.json();
+            }).then(function (user) {
+                // var jgame = JSON.parse(games);
+                console.log(user.data[0]);
+                jQuery('#winner-user-thumbnail').attr("src", user.data[0].profile_image_url);
+                jQuery('.rwinner-name').html(winner['display-name']);
+                jQuery('#winner-envelope').css('visibility', 'visible');
+            });
+        }
+        catch (e) {
+            return;
+        }
+    }
 });
 // prevent entering more then 2 digits in timers
 jQuery('.rminutes').on('keydown', function (e) {

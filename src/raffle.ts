@@ -100,6 +100,7 @@ export class Raffle{
         if(this.automaticWhisperWinner){
 
         }
+        return winner;
     }
 
     setKeyword(keyword: string){

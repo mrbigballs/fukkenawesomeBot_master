@@ -430,7 +430,7 @@ img.emoticon {
 .raffle-main{
   display: grid;
   grid-template-columns: 1fr 1fr 200px;
-  grid-template-rows: 55px 55px 55px 45px 60px 100px 80px 1fr;
+  grid-template-rows: 55px 55px 55px 45px 60px 85px 80px 1fr;
   gap: 1px 0px;
   grid-template-areas:
     "raffle-keyword raffle-keyword raffle-participant-list"
@@ -515,7 +515,7 @@ img.emoticon {
   display: flex;
   justify-content : flex-end;
   font-size: 5em;
-  
+  margin-top: -20px;
 }
 
 /*
@@ -534,6 +534,7 @@ img.emoticon {
   display: flex;
   justify-content : flex-start;
   font-size: 5em;
+  margin-top: -20px;
 }
 
 .blink-one {
@@ -549,7 +550,22 @@ img.emoticon {
 .raffle-winner{
   grid-area: raffle-winner;
   display: flex;
+  justify-content: space-between;
+  align-items : center;
+ 
+  padding-left: 10px;
+  padding-right: 10px;
 }
+.rwinner-name{
+  font-size: 2.5em;
+}
+.raffle-winner img{
+  height: 50px;
+}
+#winner-envelope{
+  visibility: hidden;
+}
+
 
 .raffle-participant-list { 
   grid-area: raffle-participant-list;

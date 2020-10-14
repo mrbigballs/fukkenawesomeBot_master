@@ -84,6 +84,7 @@ var Raffle = /** @class */ (function () {
         }
         if (this.automaticWhisperWinner) {
         }
+        return winner;
     };
     Raffle.prototype.setKeyword = function (keyword) {
         this.keyword = keyword;

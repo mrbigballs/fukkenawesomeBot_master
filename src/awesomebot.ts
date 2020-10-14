@@ -849,11 +849,19 @@ document.getElementById("raffle-clear-button").addEventListener('click', functio
     jQuery('#raffle-autoroll-button').prop('disabled', false);
     jQuery('#raffle-roll-button').prop('disabled', true);
     raffle.clearparticipants();
-    document.getElementById("raffle-count-min").innerHTML = min;
-    document.getElementById("raffle-count-sec").innerHTML = sec;
+    if(document.getElementById("raffle-count-min").innerHTML == '00' && document.getElementById("raffle-count-sec").innerHTML == '00'){
+        document.getElementById("raffle-count-min").innerHTML = min;
+        document.getElementById("raffle-count-sec").innerHTML = sec;
+    }
+    
+
+    jQuery('#winner-user-thumbnail').attr("src", "");
+    jQuery('.rwinner-name').html('');
+    jQuery('#winner-envelope').css('visibility', 'hidden');
+
     try{
         clearInterval(raffleInterval);
-        raffle.stopTimedRaffle();
+        //raffle.stopTimedRaffle();
     }catch(e){}
 });
 
@@ -884,7 +892,24 @@ jQuery("#raffe-subluck-slider").on('change',function(){
 
 document.getElementById("raffle-roll-button").addEventListener('click', function(e){
     raffle.raffle_active = false;
-    raffle.drawWinner();
+    let winner = raffle.drawWinner();
+    if(typeof winner != 'undefined'){
+        try{
+            const getUserInfo = twitchapi.callTwitchApiFetch(settingsmodule.settings.streamerOAuthkey, 'users?id=' + winner['user-id']);
+            getUserInfo.then(response => {
+                return response.json();
+              }).then(user => {
+                 // var jgame = JSON.parse(games);
+                console.log(user.data[0]);
+                
+                jQuery('#winner-user-thumbnail').attr("src", user.data[0].profile_image_url);
+                jQuery('.rwinner-name').html(winner['display-name']);
+                jQuery('#winner-envelope').css('visibility', 'visible');
+               
+              });  
+        }catch(e){return;}
+    }
+    
 });
 
 // prevent entering more then 2 digits in timers
