@@ -30,6 +30,9 @@ var Raffle = /** @class */ (function () {
             //init raffle settings
             this.store.set('raffle_settings', JSON.stringify(this.raffleSettings));
         }
+        if (this.store.has('raffle_items')) {
+            this.raffleItems = JSON.parse(this.store.get('raffle_items'));
+        }
     }
     Raffle.prototype.addParticipant = function (userstate) {
         if (this.subscriberOnly) {
@@ -102,21 +105,27 @@ var Raffle = /** @class */ (function () {
     Raffle.prototype.clearparticipants = function () {
         this.participants = [];
     };
-    Raffle.prototype.addRaffleItem = function (game, raffleKeyword, gameKey, winner) {
+    Raffle.prototype.addRaffleItem = function (game, raffleKeyword, gameKey, winner, active, game_store) {
         var raffleItem = {
             raffle_item: game,
             raffle_keyword: raffleKeyword,
             game_key: gameKey,
-            raffle_winnder: winner
+            raffle_winnder: winner,
+            item_active: active,
+            store_type: game_store
         };
         this.raffleItems.push(raffleItem);
+        this.store.set('raffle_items', JSON.stringify(this.raffleItems));
     };
-    Raffle.prototype.updateRaffleItem = function (index, game, raffleKeyword, gameKey, winner) {
+    Raffle.prototype.updateRaffleItem = function (index, game, raffleKeyword, gameKey, winner, active, game_store) {
         if (typeof this.raffleItems[index] != 'undefined') {
-            this.raffleItems[index].raffleItem.raffle_item = game;
-            this.raffleItems[index].raffleItem.raffle_keyword = raffleKeyword;
-            this.raffleItems[index].raffleItem.game_key = gameKey;
-            this.raffleItems[index].raffleItem.raffle_winnder = winner;
+            this.raffleItems[index].raffle_item = game;
+            this.raffleItems[index].raffle_keyword = raffleKeyword;
+            this.raffleItems[index].game_key = gameKey;
+            this.raffleItems[index].raffle_winnder = winner;
+            this.raffleItems[index].item_active = active;
+            this.raffleItems[index].store_type = game_store;
+            this.store.set('raffle_items', JSON.stringify(this.raffleItems));
         }
         else {
             console.log('element ' + index + ' does not exist');

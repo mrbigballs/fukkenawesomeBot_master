@@ -191,7 +191,7 @@
                 <div id="lotteryDiv" class="raffle-main" style="display: none;">
                     <div class="raffle-keyword">
                         <div class="keyword-wrapper">
-                            <input id="raffle-keyword-input"  type="text" class="form-control input-sm" placeholder="Keyword.."/>
+                            <input id="raffle-keyword-input"  type="text" class="form-control input-sm" data-i18n="[placeholder]raffle-keyword-placeholder-mandatory"/>
                         </div>
                         <div>
                             <button class="btn btn-outline-secondary" type="button" id="raffle-clear-button" disabled>
@@ -248,7 +248,14 @@
                         <div class="rwinner-name"></div>
                         <div class="rwinner-message"><span class="fa fa-envelope fa-lg" aria-hidden="true" id="winner-envelope"></span></div>
                     </div>
-                    <div class="raffle-price-tab"></div>
+                    <div class="raffle-price-tab">
+                        <button class="btn btn-outline-secondary" type="button" id="raffle-add-price" data-toggle="modal" data-target="#rafflePrizeModal">
+                            <span class="fa fa-plus fa-lg" aria-hidden="true" id="raffle-add-price-icon" ></span>
+                        </button>
+                        <ul id="raffle-price-list-ul">
+                            
+                        </ul>
+                    </div>
                     <div class="raffle-participant-list">
                         <ul id="raffle-part-list-ul">
                             
@@ -324,54 +331,118 @@
             <div class="modal-content modal-awesome">
                 
                 <div class="modal-body">
-                    <div data-i18n="chat-settings-outline-selection">chat-settings-outline-selection</div>
-                    <br>
+                    <div class="chat-settings-translate">
+                        <div data-i18n="chat-settings-outline-selection">chat-settings-outline-selection</div>
+                        <br>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="outline" id="chat-set-radio-none" value="none" checked>
-                        <label class="form-check-label" for="chat-set-radio-none"  data-i18n="chat-settings-outline-none">
-                          none
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="outline" id="chat-set-radio-white" value="white">
-                        <label class="form-check-label" for="chat-set-radio-white" data-i18n="chat-settings-outline-white">
-                          white
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="outline" id="chat-set-radio-dynamic" value="dynamic">
-                        <label class="form-check-label" for="chat-set-radio-dynamic" data-i18n="chat-settings-outline-dynamic">
-                          dynamic
-                        </label>
-                    </div>
-                    <br>
-                      <div data-i18n="chat-settings-zebra-title">chat-settings-zebra</div>
-                      <br>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="chat-set-check-zebra">
-                        <label class="form-check-label" for="chat-set-check-zebra" data-i18n="chat-settings-zebra">
-                          Default checkbox
-                        </label>
-                      </div>
-                      <br>
-                      <div data-i18n="chat-settings-whis-title">chat-settings-whispser</div>
-                      <br>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="chat-set-check-whisper">
-                        <label class="form-check-label" for="chat-set-check-whisper" data-i18n="chat-settings-whisper">
-                          Default checkbox
-                        </label>
-                      </div>
-                      <br>
-                      <div data-i18n="chat-settings-highlight-keywords-label">highlight keywords</div>
-                        <div class="input-group mb-3">
-                            <textarea class="form-control" aria-label="With textarea" id="chat-set-highlight-textarea"></textarea>
-                           
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="outline" id="chat-set-radio-none" value="none" checked>
+                            <label class="form-check-label" for="chat-set-radio-none"  data-i18n="chat-settings-outline-none">
+                            none
+                            </label>
                         </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="outline" id="chat-set-radio-white" value="white">
+                            <label class="form-check-label" for="chat-set-radio-white" data-i18n="chat-settings-outline-white">
+                            white
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="outline" id="chat-set-radio-dynamic" value="dynamic">
+                            <label class="form-check-label" for="chat-set-radio-dynamic" data-i18n="chat-settings-outline-dynamic">
+                            dynamic
+                            </label>
+                        </div>
+                        <br>
+                        <div data-i18n="chat-settings-zebra-title">chat-settings-zebra</div>
+                        <br>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="chat-set-check-zebra">
+                            <label class="form-check-label" for="chat-set-check-zebra" data-i18n="chat-settings-zebra">
+                            Default checkbox
+                            </label>
+                        </div>
+                        <br>
+                        <div data-i18n="chat-settings-whis-title">chat-settings-whispser</div>
+                        <br>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="chat-set-check-whisper">
+                            <label class="form-check-label" for="chat-set-check-whisper" data-i18n="chat-settings-whisper">
+                            Default checkbox
+                            </label>
+                        </div>
+                        <br>
+                        <div data-i18n="chat-settings-highlight-keywords-label">highlight keywords</div>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" id="chat-set-highlight-textarea"></textarea>
+                            
+                            </div>
+                    </div>
                 </div>
                 
             </div>
+            </div>
+        </div>
+
+        <!-- Modal for Adding Raffle price -->
+        <div class="modal fade" id="rafflePrizeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content modal-awesome">
+                    <div class="modal-body">
+                        <div class="raff-prize-translate">
+                            <p data-i18n="raffle-prize-adding">Keys</p>
+                            <br>
+                            <input id="raffle-prize-game-name"  type="text" class="form-control input-sm" data-i18n="[placeholder]raffle-prize-game-placeholder"/>
+                            <br>
+                            <input id="raffle-prize-game-name"  type="text" class="form-control input-sm" data-i18n="[placeholder]raffle-keyword-placeholder-optional"/>
+                            <br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="raffle-prize-active-checkbox">
+                                <label class="form-check-label" for="raffle-prize-active-checkbox" data-i18n="raffle-prize-active-label">
+                                Default checkbox
+                                </label>
+                            </div>
+                            <br>
+                            <div class="game-brand-cheks">
+                                <input type="radio" name="emotion" id="radio-steam" class="store-type" />
+                                <label for="radio-steam">
+                                <img src="../assets/icons/game-stores/steam-48.png" alt="Steam" />
+                                </label>
+                                <input type="radio" name="emotion" id="radio-battlenet" class="store-type" />
+                                <label for="radio-steam">
+                                <img src="../assets/icons/game-stores/battle-net-48.png" alt="BattleNet" />
+                                </label>
+                                <input type="radio" name="emotion" id="radio-epic" class="store-type" />
+                                <label for="radio-steam">
+                                <img src="../assets/icons/game-stores/epic-games-48.png" alt="Epic Games" />
+                                </label>
+                                <input type="radio" name="emotion" id="radio-gog" class="store-type" />
+                                <label for="radio-steam">
+                                <img src="../assets/icons/game-stores/gog-galaxy-48.png" alt="GoG Galaxy" />
+                                </label>
+                                <input type="radio" name="emotion" id="radio-origin" class="store-type" />
+                                <label for="radio-steam">
+                                <img src="../assets/icons/game-stores/origin-48.png" alt="Origin" />
+                                </label>
+                                <input type="radio" name="emotion" id="radio-uplay" class="store-type" />
+                                <label for="radio-steam">
+                                <img src="../assets/icons/game-stores/uplay-48.png" alt="uPlay" />
+                                </label>
+                            </div>
+                            <br>
+                            <p data-i18n="raffle-prize-key-label">Keys</p>
+                            <textarea id="raffle-prize-key-area" rows="8" cols="40">
+                            
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="raff-prize-footer-translate">
+                            <button type="button" class="btn btn-outline-primary" data-i18n="dialog-save-button">Save changes</button>
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-i18n="dialog-cancel-button">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -399,7 +470,9 @@
             $( '.navigationNormal' ).i18n();
             $( '#settingsDiv' ).i18n();
             $( '#lotteryDiv' ).i18n();
-            $( '.modal-body' ).i18n();
+            $( '.chat-settings-translate' ).i18n();
+            $( '.raff-prize-translate' ).i18n();
+            $( '.raff-prize-footer-translate' ).i18n();
             $( '.titlebar' ).i18n()
             $( '.mediamanager' ).i18n()
             

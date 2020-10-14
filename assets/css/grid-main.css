@@ -537,15 +537,39 @@ img.emoticon {
   margin-top: -20px;
 }
 
-.blink-one {
-  animation: blinker-one 1s linear infinite;
-}
-@keyframes blinker-one {  
-  0% { opacity: 0; }
-}
 
 .raffle-timer-sec { grid-area: raffle-timer-sec; }
 .raffle-price-tab { grid-area: raffle-price-tab; }
+
+.raffle-price-list ul{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+/*
+*Add Price mondal
+*/
+
+.game-brand-cheks{
+  display: flex;
+  align-items : center;
+}
+
+.game-brand-cheks img{
+  height: 35px;
+  margin-right: 12px;
+}
+
+.game-brand-cheks input[type="radio"] {
+  -ms-transform: scale(1.2); /* IE 9 */
+  -webkit-transform: scale(1.2); /* Chrome, Safari, Opera */
+  transform: scale(1.2);
+  margin-right: 5px;
+}
 
 .raffle-winner{
   grid-area: raffle-winner;

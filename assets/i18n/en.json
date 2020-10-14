@@ -49,5 +49,13 @@
 	"raffle-autoroll-button-text": "Autom. Raffle",
 	"raffle-clear-button-text": "Clear",
 	"raffle-subonly-chekbox-text": "Subscriber only",
-	"raffle-subluck-text": "Subscriber Luck Multiplier"
+	"raffle-subluck-text": "Subscriber Luck Multiplier",
+	"raffle-price-adding": "Add prize:",
+	"raffle-prize-game-placeholder": "Game",
+	"raffle-keyword-placeholder-mandatory": "Keyword..",
+	"raffle-keyword-placeholder-optional": "Keyword (optional)",
+	"raffle-prize-active-label": "Active",
+	"raffle-prize-key-label": "Game-Key(s): (By adding multiple keys seperated by , or ; or a space character multiple prizes are added)",
+	"dialog-save-button": "Save",
+	"dialog-cancel-button": "Cancel"
 }

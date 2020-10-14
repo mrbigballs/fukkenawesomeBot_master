@@ -49,5 +49,13 @@
 	"raffle-autoroll-button-text": "Autom. Auslosung",
 	"raffle-clear-button-text": "Zurücksetzten",
 	"raffle-subonly-chekbox-text": "Nur für Abonnenten",
-	"raffle-subluck-text": "Abonnenten Glück Multi"
+	"raffle-subluck-text": "Abonnenten Glück Multi",
+	"raffle-prize-adding": "Preis hinzufügen",
+	"raffle-prize-game-placeholder": "Spiel",
+	"raffle-keyword-placeholder-mandatory": "Schlüsselwort..",
+	"raffle-keyword-placeholder-optional": "Schlüsselwort (optional)",
+	"raffle-prize-active-label": "Aktiv",
+	"raffle-prize-key-label": "Spiele-Key(s): (Durch hinzufügen von mehreren durch , oder ; oder Leerzeichen getrennte Keys werden mehrere Preise erzeugt)",
+	"dialog-save-button": "Speichern",
+	"dialog-cancel-button": "Abbrechen"
 }

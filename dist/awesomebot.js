@@ -744,14 +744,16 @@ document.getElementById("raffle-clear-button").addEventListener('click', functio
     jQuery('#raffle-autoroll-button').prop('disabled', false);
     jQuery('#raffle-roll-button').prop('disabled', true);
     raffle.clearparticipants();
-    document.getElementById("raffle-count-min").innerHTML = min;
-    document.getElementById("raffle-count-sec").innerHTML = sec;
+    if (document.getElementById("raffle-count-min").innerHTML == '00' && document.getElementById("raffle-count-sec").innerHTML == '00') {
+        document.getElementById("raffle-count-min").innerHTML = min;
+        document.getElementById("raffle-count-sec").innerHTML = sec;
+    }
     jQuery('#winner-user-thumbnail').attr("src", "");
     jQuery('.rwinner-name').html('');
     jQuery('#winner-envelope').css('visibility', 'hidden');
     try {
         clearInterval(raffleInterval);
-        raffle.stopTimedRaffle();
+        //raffle.stopTimedRaffle();
     }
     catch (e) { }
 });
