@@ -55,6 +55,7 @@
 	"raffle-keyword-placeholder-mandatory": "Keyword..",
 	"raffle-keyword-placeholder-optional": "Keyword (optional)",
 	"raffle-prize-active-label": "Active",
+	"raffle-radio-other": "Other:",
 	"raffle-prize-key-label": "Game-Key(s): (By adding multiple keys seperated by , or ; or a space character multiple prizes are added)",
 	"dialog-save-button": "Save",
 	"dialog-cancel-button": "Cancel"

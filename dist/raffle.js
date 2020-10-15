@@ -106,6 +106,9 @@ var Raffle = /** @class */ (function () {
         this.participants = [];
     };
     Raffle.prototype.addRaffleItem = function (game, raffleKeyword, gameKey, winner, active, game_store) {
+        if (typeof this.raffleItems == 'undefined') {
+            this.raffleItems = [];
+        }
         var raffleItem = {
             raffle_item: game,
             raffle_keyword: raffleKeyword,

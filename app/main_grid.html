@@ -252,7 +252,7 @@
                         <button class="btn btn-outline-secondary" type="button" id="raffle-add-price" data-toggle="modal" data-target="#rafflePrizeModal">
                             <span class="fa fa-plus fa-lg" aria-hidden="true" id="raffle-add-price-icon" ></span>
                         </button>
-                        <ul id="raffle-price-list-ul">
+                        <ul id="raffle-prize-list-ul" class="fuckyou">
                             
                         </ul>
                     </div>
@@ -394,7 +394,7 @@
                             <br>
                             <input id="raffle-prize-game-name"  type="text" class="form-control input-sm" data-i18n="[placeholder]raffle-prize-game-placeholder"/>
                             <br>
-                            <input id="raffle-prize-game-name"  type="text" class="form-control input-sm" data-i18n="[placeholder]raffle-keyword-placeholder-optional"/>
+                            <input id="raffle-prize-keyword"  type="text" class="form-control input-sm" data-i18n="[placeholder]raffle-keyword-placeholder-optional"/>
                             <br>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="raffle-prize-active-checkbox">
@@ -404,41 +404,41 @@
                             </div>
                             <br>
                             <div class="game-brand-cheks">
-                                <input type="radio" name="emotion" id="radio-steam" class="store-type" />
+                                <input type="radio"  id="radio-steam" name="store-platform" class="store-type" value="Steam" checked/>
                                 <label for="radio-steam">
                                 <img src="../assets/icons/game-stores/steam-48.png" alt="Steam" />
                                 </label>
-                                <input type="radio" name="emotion" id="radio-battlenet" class="store-type" />
-                                <label for="radio-steam">
+                                <input type="radio"  id="radio-battlenet" name="store-platform" class="store-type" value="Battle.net" />
+                                <label for="radio-battlenet">
                                 <img src="../assets/icons/game-stores/battle-net-48.png" alt="BattleNet" />
                                 </label>
-                                <input type="radio" name="emotion" id="radio-epic" class="store-type" />
-                                <label for="radio-steam">
+                                <input type="radio"  id="radio-epic" name="store-platform" class="store-type" value="Epic Games"/>
+                                <label for="radio-epic">
                                 <img src="../assets/icons/game-stores/epic-games-48.png" alt="Epic Games" />
                                 </label>
-                                <input type="radio" name="emotion" id="radio-gog" class="store-type" />
-                                <label for="radio-steam">
+                                <input type="radio"  id="radio-gog" name="store-platform" class="store-type" value="GoG Galaxy"/>
+                                <label for="radio-gog">
                                 <img src="../assets/icons/game-stores/gog-galaxy-48.png" alt="GoG Galaxy" />
                                 </label>
-                                <input type="radio" name="emotion" id="radio-origin" class="store-type" />
-                                <label for="radio-steam">
+                                <input type="radio"  id="radio-origin" name="store-platform" class="store-type" value="Origin"/>
+                                <label for="radio-origin">
                                 <img src="../assets/icons/game-stores/origin-48.png" alt="Origin" />
                                 </label>
-                                <input type="radio" name="emotion" id="radio-uplay" class="store-type" />
-                                <label for="radio-steam">
+                                <input type="radio" id="radio-uplay" name="store-platform" class="store-type" value="uPlay"/>
+                                <label for="radio-uplay">
                                 <img src="../assets/icons/game-stores/uplay-48.png" alt="uPlay" />
                                 </label>
+                                <span><input type="radio" id="radio-other" name="store-platform" class="store-type" value="other">
+                                <input type="text" id="radio-other-input" disabled/></span>
                             </div>
                             <br>
                             <p data-i18n="raffle-prize-key-label">Keys</p>
-                            <textarea id="raffle-prize-key-area" rows="8" cols="40">
-                            
-                            </textarea>
+                            <textarea id="raffle-prize-key-area" rows="8" cols="40"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <div class="raff-prize-footer-translate">
-                            <button type="button" class="btn btn-outline-primary" data-i18n="dialog-save-button">Save changes</button>
+                            <button type="button" class="btn btn-outline-primary" data-i18n="dialog-save-button" id="raffle-prize-save-button">Save changes</button>
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-i18n="dialog-cancel-button">Close</button>
                         </div>
                     </div>

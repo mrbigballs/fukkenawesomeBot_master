@@ -541,7 +541,7 @@ img.emoticon {
 .raffle-timer-sec { grid-area: raffle-timer-sec; }
 .raffle-price-tab { grid-area: raffle-price-tab; }
 
-.raffle-price-list ul{
+#raffle-prize-list-ul{
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -550,17 +550,25 @@ img.emoticon {
   overflow-x: auto;
 }
 
+#raffle-prize-list-ul li{
+  display: inline;
+}
+
 /*
 *Add Price mondal
 */
 
 .game-brand-cheks{
   display: flex;
+  flex-flow: row wrap;
   align-items : center;
 }
 
+#radio-other-input{
+  size: 10;
+}
 .game-brand-cheks img{
-  height: 35px;
+  height: 30px;
   margin-right: 12px;
 }
 

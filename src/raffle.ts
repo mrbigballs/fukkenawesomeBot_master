@@ -133,6 +133,9 @@ export class Raffle{
     }
 
     addRaffleItem(game: string, raffleKeyword: string, gameKey: string, winner: string, active: boolean, game_store: string){
+        if(typeof  this.raffleItems == 'undefined'){
+            this.raffleItems = [];
+        }
         let raffleItem = {
             raffle_item: game,
             raffle_keyword: raffleKeyword,

@@ -964,3 +964,85 @@ function updateRaffleList(userstate: any){
         document.getElementById("raffle-part-list-ul").appendChild(list_elem);
     } 
 }
+
+//raffle prize on change
+jQuery('.store-type').on('change', function(e){
+    //console.log('store tyyyepe ' +jQuery("input[name='store-platform']:checked").val());
+    if( jQuery("input[name='store-platform']:checked").val() == 'other'){
+        jQuery('#radio-other-input').prop('disabled', false);
+    }else{
+        jQuery('#radio-other-input').prop('disabled', true);
+    }
+});
+
+//save raffle prize
+document.getElementById("raffle-prize-save-button").addEventListener('click', function(e){
+    let prize_game_name = (<HTMLInputElement>document.getElementById("raffle-prize-game-name")).value;
+    let prize_keyword = (<HTMLInputElement>document.getElementById("raffle-prize-keyword")).value;
+    let prize_active = false;
+    if((<HTMLInputElement>document.getElementById("raffle-prize-active-checkbox")).checked){
+        prize_active = true;
+    }
+
+    let prize_platform =  $("input[name='store-platform']:checked").val();
+    prize_platform = prize_platform == 'other' ? (<HTMLInputElement>document.getElementById("radio-other-input")).value : prize_platform;
+
+    let prize_keys =  (<HTMLInputElement>document.getElementById("raffle-prize-key-area")).value.trim().split(/\s|,|;/g);
+
+    console.log(prize_game_name + prize_keyword + prize_active + prize_platform + prize_keys);
+
+    if(prize_game_name != ''){
+        let uniqueKeys = [];
+        const uniqueset = new Set(prize_keys);
+        uniqueKeys = Array.from(uniqueset);
+        console.log(uniqueKeys);
+        for(var i = 0; i < uniqueKeys.length; i++){
+            raffle.addRaffleItem(prize_game_name, prize_keyword,uniqueKeys[i], '', prize_active, '' + prize_platform);
+            
+        }
+        updateRafflePrizeListUI();
+        (<any>$('#rafflePrizeModal')).modal('hide');
+    }
+});
+
+function updateRafflePrizeListUI(){
+    
+    if(store.has('raffle_items')){
+        document.getElementById('raffle-prize-list-ul').innerHTML = '';
+        let prizes = JSON.parse(store.get('raffle_items'));
+        console.log(JSON.stringify(prizes));
+        //von hinten aufbauen
+        for(var i = prizes.length - 1 ; i > 0; i--){
+            let prizeli = document.createElement('li');
+            //prizeli.setAttribute('value', i);
+            let active_chekbox = document.createElement('input');
+            active_chekbox.setAttribute('type', 'checkbox');
+            active_chekbox.setAttribute('value', '' + i);
+            let game_name_span = document.createElement('span');
+            game_name_span.innerHTML = prizes[i].raffle_item;
+            let keyword_name_span = document.createElement('span');
+            keyword_name_span.innerHTML = prizes[i].raffle_keyword;
+            let store_span = document.createElement('span');
+            store_span.innerHTML = prizes[i].store_type;
+            let key_span = document.createElement('span');
+            let obscured_key = prizes[i].game_key;
+            let tempkey = prizes[i].game_key.substring(prizes[i].game_key.length - 3, 3);
+            obscured_key = prizes[i].game_key.replace(tempkey, 'XXXXXXXX')
+            key_span.innerHTML = obscured_key;
+            let winner_span = document.createElement('span');
+            winner_span.innerHTML = prizes[i].raffle_winnder;
+            let trash_can_span = document.createElement('span');
+            trash_can_span.setAttribute('class', 'fa fa-trash-o fa-fw');
+            trash_can_span.setAttribute('value', '' + i);
+            prizeli.appendChild(active_chekbox);
+            prizeli.appendChild(game_name_span);
+            prizeli.appendChild(keyword_name_span);
+            prizeli.appendChild(store_span);
+            prizeli.appendChild(key_span);
+            prizeli.appendChild(winner_span);
+            prizeli.appendChild(trash_can_span);
+            document.getElementById('raffle-prize-list-ul').appendChild(prizeli);
+        }
+    }
+    
+}
