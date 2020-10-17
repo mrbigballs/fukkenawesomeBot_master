@@ -161,4 +161,19 @@ export class Raffle{
             console.log('element ' + index + ' does not exist');
         }
     }
+
+    deleteRaffleItemByIndex(index: number){
+        console.log('index: ' +index);
+        if(typeof this.raffleItems[index] != 'undefined') {
+            this.raffleItems.splice(index, 1);
+            this.store.set('raffle_items', JSON.stringify(this.raffleItems));  
+        }
+    }
+
+    updateActiveStateByIndex(index: number, active: boolean){
+        if(typeof this.raffleItems[index] != 'undefined') {
+            this.raffleItems[index].item_active = active;
+            this.store.set('raffle_items', JSON.stringify(this.raffleItems)); 
+        }
+    }
 } 

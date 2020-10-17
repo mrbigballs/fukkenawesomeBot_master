@@ -430,7 +430,7 @@ img.emoticon {
 .raffle-main{
   display: grid;
   grid-template-columns: 1fr 1fr 200px;
-  grid-template-rows: 55px 55px 55px 45px 60px 85px 80px 1fr;
+  grid-template-rows: 55px 55px 55px 45px 60px 85px 80px 25px 1fr;
   gap: 1px 0px;
   grid-template-areas:
     "raffle-keyword raffle-keyword raffle-participant-list"
@@ -440,6 +440,7 @@ img.emoticon {
     "raffle-subluck-slider raffle-subluck-slider raffle-participant-list"
     "raffle-timer-min raffle-timer-sec raffle-participant-list"
     "raffle-winner raffle-winner raffle-participant-list"
+    "raffle-price-add-button raffle-price-add-button raffle-participant-list"
     "raffle-price-tab raffle-price-tab raffle-participant-list";
     height: 100%;
 }
@@ -541,18 +542,129 @@ img.emoticon {
 .raffle-timer-sec { grid-area: raffle-timer-sec; }
 .raffle-price-tab { grid-area: raffle-price-tab; }
 
+.raffle-price-add-button {
+  grid-area: raffle-price-add-button;
+}
+#raffle-add-price{
+      padding: 2px;
+}
+
 #raffle-prize-list-ul{
   list-style-type: none;
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow-y: auto;
-  overflow-x: auto;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
 
-#raffle-prize-list-ul li{
-  display: inline;
+.raffle-price-tab{
+  overflow-y:hidden;/*added*/
+  
 }
+
+
+#raffle-prize-list-ul li{
+  
+  display: block;
+  color: rgb(96, 170, 212) !important;
+  padding: 8px 16px;
+  text-decoration: none;
+  
+}
+
+#raffle-prize-list-ul li div{
+  background-color: #5c5c5c;
+  display: flex;
+  border-radius: 5px;
+  justify-content : space-between;
+  align-items : center;
+}
+
+
+#raffle-prize-list-ul li div span{
+  padding: 4px;
+  max-width: 80px;
+  min-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prize-list-check-label{
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.prize-list-check-label input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: -3px;
+  left: 5px;
+  height: 20px;
+  width: 20px !important;
+  min-width: 20px !important;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.prize-list-check-label:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.prize-list-check-label input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.prize-list-check-label input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.prize-list-check-label .checkmark:after {
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.trashcan{
+  width: 20px !important;
+  min-width: 20px !important;
+}
+
 
 /*
 *Add Price mondal

@@ -183,7 +183,8 @@ function initApplication(){
 
     //ini ui comps
     initChatSettingsUIComponents();
-
+    updateRafflePrizeListUI();
+    //initTMi
     initTmi();
    
     
@@ -1012,13 +1013,34 @@ function updateRafflePrizeListUI(){
         let prizes = JSON.parse(store.get('raffle_items'));
         console.log(JSON.stringify(prizes));
         //von hinten aufbauen
-        for(var i = prizes.length - 1 ; i > 0; i--){
+        for(var i = prizes.length - 1 ; i >= 0; i--){
             let prizeli = document.createElement('li');
+            let wrapper_div = document.createElement('div');
             //prizeli.setAttribute('value', i);
             let active_chekbox = document.createElement('input');
             active_chekbox.setAttribute('type', 'checkbox');
             active_chekbox.setAttribute('value', '' + i);
+            active_chekbox.setAttribute('id', 'active-prize');
+            active_chekbox.setAttribute('class', 'prize-list-checkbox');
+            active_chekbox.addEventListener ('click', function (eve) {
+                // Der Index i kann hier nicht benutzt werden
+                console.log ("this " +  this);
+                console.log ("event " +  eve);
+                setPrizeActiveInactive (this);
+            });
+            let active_label = document.createElement('label');
+            if(prizes[i].item_active){
+                active_chekbox.checked = true;
+            }else{
+                active_chekbox.checked = false;
+            }
+            active_label.setAttribute('class', 'prize-list-check-label');
+            active_label.appendChild(active_chekbox);
+            let checkbox_span = document.createElement('span');
+            checkbox_span.setAttribute('class', 'checkmark');
+            active_label.appendChild(checkbox_span);
             let game_name_span = document.createElement('span');
+           
             game_name_span.innerHTML = prizes[i].raffle_item;
             let keyword_name_span = document.createElement('span');
             keyword_name_span.innerHTML = prizes[i].raffle_keyword;
@@ -1032,17 +1054,42 @@ function updateRafflePrizeListUI(){
             let winner_span = document.createElement('span');
             winner_span.innerHTML = prizes[i].raffle_winnder;
             let trash_can_span = document.createElement('span');
-            trash_can_span.setAttribute('class', 'fa fa-trash-o fa-fw');
+            trash_can_span.setAttribute('class', 'fa fa-trash trashcan');
             trash_can_span.setAttribute('value', '' + i);
-            prizeli.appendChild(active_chekbox);
-            prizeli.appendChild(game_name_span);
-            prizeli.appendChild(keyword_name_span);
-            prizeli.appendChild(store_span);
-            prizeli.appendChild(key_span);
-            prizeli.appendChild(winner_span);
-            prizeli.appendChild(trash_can_span);
+            trash_can_span.addEventListener ('click', function (eve) {
+                // Der Index i kann hier nicht benutzt werden
+                console.log ("this " +  this);
+                console.log ("event " +  eve);
+                deletePrizeFromList (this);
+            });
+            //wrapper_div.appendChild(active_chekbox);
+            wrapper_div.appendChild( active_label);
+            wrapper_div.appendChild(trash_can_span);
+            wrapper_div.appendChild(game_name_span);
+            wrapper_div.appendChild(keyword_name_span);
+            wrapper_div.appendChild(store_span);
+            wrapper_div.appendChild(key_span);
+            wrapper_div.appendChild(winner_span);
+            prizeli.appendChild(wrapper_div);
             document.getElementById('raffle-prize-list-ul').appendChild(prizeli);
         }
     }
     
+}
+
+function deletePrizeFromList(elem: HTMLSpanElement){
+    console.log('delete ' + elem.getAttribute('value'));
+    let id = parseInt(elem.getAttribute('value'));
+    console.log('id ' + id);
+    raffle.deleteRaffleItemByIndex(id);
+    updateRafflePrizeListUI();
+}
+
+function setPrizeActiveInactive(elem: HTMLInputElement){
+    console.log('delete ' + elem.checked);
+    let active = elem.checked;
+    let id = parseInt(elem.getAttribute('value'));
+
+    raffle.updateActiveStateByIndex(id, active);
+    updateRafflePrizeListUI();
 }

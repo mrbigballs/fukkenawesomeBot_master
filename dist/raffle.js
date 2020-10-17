@@ -134,6 +134,19 @@ var Raffle = /** @class */ (function () {
             console.log('element ' + index + ' does not exist');
         }
     };
+    Raffle.prototype.deleteRaffleItemByIndex = function (index) {
+        console.log('index: ' + index);
+        if (typeof this.raffleItems[index] != 'undefined') {
+            this.raffleItems.splice(index, 1);
+            this.store.set('raffle_items', JSON.stringify(this.raffleItems));
+        }
+    };
+    Raffle.prototype.updateActiveStateByIndex = function (index, active) {
+        if (typeof this.raffleItems[index] != 'undefined') {
+            this.raffleItems[index].item_active = active;
+            this.store.set('raffle_items', JSON.stringify(this.raffleItems));
+        }
+    };
     return Raffle;
 }());
 exports.Raffle = Raffle;
