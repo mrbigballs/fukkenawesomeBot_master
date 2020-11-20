@@ -67,5 +67,13 @@
 	"raffle-notification-start-timed": "Additional info for timed raffles",
 	"raff-notification-reminder-label": "Raffle reminder chat notification",
 	"raff-notification-winner-label": "Raffle Winner chat notification",
-	"raff-whisper-winner-label": "Raffle winner whisper notification (game key etc.)"
+	"raff-whisper-winner-label": "Raffle winner whisper notification (game key etc.)",
+	"ripcounter-modal-heading": "Death Counter Settings & Notifications",
+	"ripcounter-active-label": "Death Counter Active",
+	"ripcounter-rip-aliases-label": "Aliases for !rip Command (comma , seperated):",
+	"ripcounter-rip-message-label": "Death Counter Chat Message",
+	"ripcounter-addrip-aliases-label": "Aliases for !addrip Command:",
+	"ripcounter-addrip-message-label": "Increase Death Counter Chat Message",
+	"ripcounter-addgrip-aliases-label": "Aliases for !addgrip Command:",
+	"ripcounter-addgrrip-message-label": "Increase Gravity Death Counter Chat Message"
 }

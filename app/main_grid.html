@@ -276,8 +276,33 @@
                 </div>
 
                 <!-- Ripcounter Div -->
-                <div id="ripcounterDiv" style="display: none;">
-                    
+                <div id="ripcounterDiv" class="ripcounter-main" style="display: none;">
+                   
+                    <div class="global_rips"></div>
+                    <div class="global_grips"></div>
+                    <div class="riptable">
+                        <div class="ripcounter-settings-wrapper">
+                            <button class="btn btn-outline-secondary" type="button" id="ripcounter-settings-button" data-toggle="modal" data-target="#ripcounterSettNotiModal">
+                                <span class="fa fa-bell-o" aria-hidden="true"></span>&nbsp;<span class="fa fa-cog" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <table class="table table-striped">
+                            <thead>
+                              <tr>
+                                <th scope="col" data-i18n="ripcount-table-head-game">Game</th>
+                                <th scope="col" data-i18n="ripcount-table-head-rip">Deaths</th>
+                                <th scope="col" data-i18n="ripcount-table-head-grip">Gravity Deaths</th>
+                              </tr>
+                            </thead>
+                            <tbody id="ripcounter-table-tbody">
+                              <tr>
+                                <th scope="row">Uncharted</th>
+                                <td>45</td>
+                                <td>12</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                    </div>
                 </div>
 
             </div>
@@ -484,7 +509,7 @@
                             <div class="input-group mb-3">
                                 <textarea class="form-control" aria-label="With textarea" rows="4" id="raff-notification-start-textarea"></textarea>
                             </div>
-                            <span><i class="fa fa-clock-o"></i><span data-i18n="raffle-notification-start-timed">Additional Info on timed raffles</span> </span>
+                            <span><i class="fa fa-clock-o"></i>&nbsp;<span data-i18n="raffle-notification-start-timed">Additional Info on timed raffles</span> </span>
                             <div class="input-group mb-3">
                                 <textarea class="form-control" aria-label="With textarea" rows="4" id="raff-notification-start-timed-textarea"></textarea>
                             </div>
@@ -530,6 +555,57 @@
             </div>
         </div>
 
+        <!-- Modal for RipCounter Settings & Notifications -->
+        <div class="modal fade" id="ripcounterSettNotiModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content modal-awesome">
+                    <div class="modal-body">
+                        <div class="ripcounter-notification-translate">
+                            <p data-i18n="ripcounter-modal-heading">Death Counter Settings & Notifocations</p>
+                            <br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="ripcounter-active">
+                                <label class="form-check-label" for="ripcounter-active" data-i18n="ripcounter-active-label">
+                                    Death Counter Active
+                                </label>
+                            </div>
+                            <span><i class="fa fa-terminal"></i>&nbsp;<span data-i18n="ripcounter-rip-aliases-label">Aliases for !rip Command:</span> </span>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" rows="1" id="ripcounter-rip-aliases-textarea"></textarea>
+                            </div>
+                            <span><i class="fa fa-commenting-o"></i>&nbsp;<span data-i18n="ripcounter-rip-message-label">Death Counter Chat Message</span> </span>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" rows="4" id="ripcounter-rip-message-textarea"></textarea>
+                            </div>
+
+                            <br>
+                            <span><i class="fa fa-terminal"></i>&nbsp;<span data-i18n="ripcounter-addrip-aliases-label">Aliases for !addrip Command:</span> </span>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" rows="1" id="ripcounter-addrip-aliases-textarea"></textarea>
+                            </div>
+                            <span><i class="fa fa-commenting-o"></i>&nbsp;<span data-i18n="ripcounter-addrip-message-label">Add Death Chat Message</span> </span>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" rows="4" id="ripcounter-addrip-message-textarea"></textarea>
+                            </div>
+
+                            <br>
+                            <span><i class="fa fa-terminal"></i>&nbsp;<span data-i18n="ripcounter-addgrip-aliases-label">Aliases for !addgrip Command:</span> </span>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" rows="1" id="ripcounter-addgrip-aliases-textarea"></textarea>
+                            </div>
+                            <span><i class="fa fa-commenting-o"></i>&nbsp;<span data-i18n="ripcounter-addgrrip-message-label">Add Gravity Death Chat Message</span> </span>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" rows="4" id="ripcounter-addgrip-message-textarea"></textarea>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
         <script>
             //require('electron-titlebar');
             // 1. Require the installed module
@@ -560,6 +636,7 @@
             $( '.raff-prize-translate' ).i18n();
             $( '.raff-prize-footer-translate' ).i18n();
             $( '.raff-notification-translate' ).i18n();
+            $( '.ripcounter-notification-translate' ).i18n();
             $( '.titlebar' ).i18n()
             $( '.mediamanager' ).i18n()
             

@@ -821,3 +821,23 @@ label{
 * RIP COUNTER Section
 */
 
+.ripcounter-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 150px 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "global_rips global_grips"
+    "riptable riptable";
+}
+.global_rips { grid-area: global_rips; }
+.global_grips { grid-area: global_grips; }
+.riptable { 
+  grid-area: riptable; 
+  overflow-x: auto;
+}
+
+.ripcounter-settings-wrapper{
+  display: flex;
+  justify-content : flex-end;
+}

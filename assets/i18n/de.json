@@ -67,5 +67,13 @@
 	"raffle-notification-start-timed": "Zusatzinfos bei automatischen Verlosungen",
 	"raff-notification-reminder-label": "Verlosungserinnerung Chatbenachrichtigung",
 	"raff-notification-winner-label": "Verlosungsgewinner Chatbenachrichtigung",
-	"raff-whisper-winner-label": "Verlosungsgewinner Flüsterbenachrichtigung (Gamekey etc.)"
+	"raff-whisper-winner-label": "Verlosungsgewinner Flüsterbenachrichtigung (Gamekey etc.)",
+	"ripcounter-modal-heading": "Todes Counter Einstellungen & Benachritigungen",
+	"ripcounter-active-label": "Todes Counter Aktiv",
+	"ripcounter-rip-aliases-label": "Alternativcommands für !rip: (Komma , getrennt)",
+	"ripcounter-rip-message-label": "Todes Counter Ausgabe Chatnachricht",
+	"ripcounter-addrip-aliases-label": "Alternativcommands für !addrip:",
+	"ripcounter-addrip-message-label": "Todes Counter erhöht Chatnachricht",
+	"ripcounter-addgrip-aliases-label": "Alternativcommands für !addgrip:",
+	"ripcounter-addgrrip-message-label": "Falltode Counter erhör Chatnachricht"
 }

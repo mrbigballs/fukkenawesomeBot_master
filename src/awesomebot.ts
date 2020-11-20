@@ -16,6 +16,7 @@ import { Wikipedia } from './wikipedia';
 import { TwitchAPI } from './twitch_api';
 import { StoreLocal } from './storelocal';
 import { Raffle } from './raffle';
+import { RipCounter } from './ripcounter';
 import { MainNavigation } from './ui/navigation';
 
 
@@ -30,6 +31,7 @@ const twitchapi = new TwitchAPI();
 const mainNavigation = new MainNavigation();
 const win = remote.getCurrentWindow();
 let raffle: Raffle;
+let ripcounter: RipCounter;
 
 
 let mainChatMessageWindow = document.getElementById('chatWindow');
@@ -193,8 +195,9 @@ function initApplication(){
     updateRafflePrizeListUI();
     //initTMi
     initTmi();
-   
-   
+    //Ripcounter
+    ripcounter = new RipCounter(store);
+    initRipcounterSettingsUIComponents();
     
     
 }
@@ -284,17 +287,31 @@ function initTmi(){
                     console.log(message);
                     mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames, 'chat-normal'));
                     chatMessageFormatter.scrollChat();
-                    simpleCommand(message);
-                    if(raffle.raffle_active){
-                        if(message.toLocaleLowerCase() == raffle.keyword.toLocaleLowerCase()){
-                            updateRaffleList(raffle.addParticipant(userstate));
+                    //ripcounter
+                    if (!self){
+                        ripcounterCheckRips(message, userstate);
+                        //commands
+                        simpleCommand(message);
+                        //raffle
+                        if(raffle.raffle_active){
+                            if(message.toLocaleLowerCase() == raffle.keyword.toLocaleLowerCase()){
+                                updateRaffleList(raffle.addParticipant(userstate));
+                            }
                         }
                     }
+                    
                     break;
                 case "whisper":
                     console.log(message);
                     mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames, 'whisper'));
                     chatMessageFormatter.scrollChat();
+
+                    if (!self){
+                        ripcounterCheckRips(message, userstate);
+                        //commands
+                        simpleCommand(message);
+                        
+                    }
                     break;
                 default:
                     // Something else ?
@@ -407,9 +424,11 @@ function initIntervals(){
                 channel_info = channels.data[0];
                 //console.log(games.data[0].name);
                 store.set('channel_info', JSON.stringify(channel_info));
-               
-                setStreamingTitleUI(channel_info.title);
-                getGameInfo();
+                //only update mediamanager title & game when not currently in focus
+                if(!jQuery("#mediamanager-game-title").is(":focus") && !jQuery("#mediamanager-stream-title").is(":focus")){
+                    setStreamingTitleUI(channel_info.title);
+                    getGameInfo();
+                }
                 console.log("channel_info_updated");
               });  
         }catch(e){return;}
@@ -568,6 +587,8 @@ function getGameInfo(){
                 clearInterval(gameInfoSet);
                 game_info = JSON.parse(store.get('game_info'));
                 (<HTMLInputElement>document.getElementById("mediamanager-game-title")).value = game_info.name;
+                //setcurrent game
+                currentGame = game_info.name;
                 changeBoxArt(game_info.box_art_url);
             }
         }catch(e){return;}
@@ -738,6 +759,8 @@ document.getElementById("stream-update-button-button").addEventListener('click',
     updateGameAndTitlePromise.then(response => {
         if(response.ok){
             document.getElementById("update-title-icon").setAttribute('class', 'fa fa-refresh fa-lg');
+            //set current game
+            currentGame = game_title;
         }
     });
     
@@ -1464,6 +1487,63 @@ function updatePrizePositionInList(elem: JQuery<HTMLElement>, moveToIndex: numbe
     console.log('id ' + id);
     raffle.updateRaffleItemPositionByIndex(id, moveToIndex);
     updateRafflePrizeListUI();
+}
+
+//Ripcounter functions
+
+function ripcounterCheckRips(message: string, userstate: any){
+    if(ripcounter.ripcounterSettings.active){
+        let rip_message = ripcounter.checkRipCommand(message, userstate, currentGame == '' ? 'Chicken Police' : currentGame);
+
+        if(rip_message != ''){
+            if(client != 'undefined'){
+                client.say(options.channels[0], rip_message);
+            }
+        }
+        
+    }
+}
+
+function initRipcounterSettingsUIComponents(){
+
+    if(ripcounter.ripcounterSettings.active){
+        (<HTMLInputElement>document.getElementById("ripcounter-active")).checked = true;
+    }else{
+        (<HTMLInputElement>document.getElementById("ripcounter-active")).checked = false;
+    }
+
+    //Aliases
+    (<HTMLInputElement>document.getElementById("ripcounter-rip-aliases-textarea")).value = ripcounter.ripcounterSettings.rip_command_alias.toString();;
+    (<HTMLInputElement>document.getElementById("ripcounter-addrip-aliases-textarea")).value = ripcounter.ripcounterSettings.addrip_command_alias.toString();
+    (<HTMLInputElement>document.getElementById("ripcounter-addgrip-aliases-textarea")).value = ripcounter.ripcounterSettings.addgrip_command_alias.toString();
+    //Command Messages
+    (<HTMLInputElement>document.getElementById("ripcounter-rip-message-textarea")).value = ripcounter.ripcounterSettings.rip_message;
+    (<HTMLInputElement>document.getElementById("ripcounter-addrip-message-textarea")).value = ripcounter.ripcounterSettings.addrip_message;
+    (<HTMLInputElement>document.getElementById("ripcounter-addgrip-message-textarea")).value = ripcounter.ripcounterSettings.addgrip_message;
+    
+}
+
+jQuery('#ripcounterSettNotiModal').on('hidden.bs.modal', function () {
+    //active
+    ripcounter.ripcounterSettings.active = (<HTMLInputElement>document.getElementById("ripcounter-active")).checked;
+    //Aliases
+    ripcounter.ripcounterSettings.rip_command_alias = (<HTMLInputElement>document.getElementById("ripcounter-rip-aliases-textarea")).value.split(',');
+    ripcounter.ripcounterSettings.addrip_command_alias = (<HTMLInputElement>document.getElementById("ripcounter-addrip-aliases-textarea")).value.split(',');
+    ripcounter.ripcounterSettings.addgrip_command_alias = (<HTMLInputElement>document.getElementById("ripcounter-addgrip-aliases-textarea")).value.split(',');
+    //Messages
+    ripcounter.ripcounterSettings.rip_message = (<HTMLInputElement>document.getElementById("ripcounter-rip-message-textarea")).value;
+    ripcounter.ripcounterSettings.addrip_message = (<HTMLInputElement>document.getElementById("ripcounter-addrip-message-textarea")).value;
+    ripcounter.ripcounterSettings.addgrip_message = (<HTMLInputElement>document.getElementById("ripcounter-addgrip-message-textarea")).value;
+
+    ripcounter.updateRipcounterSettingsSimple();
+
+});
+
+function updateRipcounterTable(){
+    let ripcounterMap = ripcounter.RipCounterMap;
+    ripcounterMap.forEach((value: any, key: any) => {
+        console.log('key: ' + key + ' value: ' + value.toString());
+    });
 }
 
 //Twitch PubSub Bit functions

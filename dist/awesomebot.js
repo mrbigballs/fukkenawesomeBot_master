@@ -14,6 +14,7 @@ var wikipedia_1 = require("./wikipedia");
 var twitch_api_1 = require("./twitch_api");
 var storelocal_1 = require("./storelocal");
 var raffle_1 = require("./raffle");
+var ripcounter_1 = require("./ripcounter");
 var navigation_1 = require("./ui/navigation");
 var store = new storelocal_1.StoreLocal().getLocalStore();
 var credentials = new credentials_1.Credentials();
@@ -24,6 +25,7 @@ var twitchapi = new twitch_api_1.TwitchAPI();
 var mainNavigation = new navigation_1.MainNavigation();
 var win = remote.getCurrentWindow();
 var raffle;
+var ripcounter;
 var mainChatMessageWindow = document.getElementById('chatWindow');
 document.getElementById("settingsGetOAuthkeyButton").addEventListener("click", function (e) { return credentials.getOAuthkeyFor('streamer'); });
 document.getElementById("settingsGetOAuthkeyButtonBot").addEventListener("click", function (e) { return credentials.getOAuthkeyFor('bot'); });
@@ -165,6 +167,9 @@ function initApplication() {
     updateRafflePrizeListUI();
     //initTMi
     initTmi();
+    //Ripcounter
+    ripcounter = new ripcounter_1.RipCounter(store);
+    initRipcounterSettingsUIComponents();
 }
 function initTmi() {
     if (client != null) {
@@ -245,10 +250,16 @@ function initTmi() {
                     console.log(message);
                     mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames, 'chat-normal'));
                     chatMessageFormatter.scrollChat();
-                    simpleCommand(message);
-                    if (raffle.raffle_active) {
-                        if (message.toLocaleLowerCase() == raffle.keyword.toLocaleLowerCase()) {
-                            updateRaffleList(raffle.addParticipant(userstate));
+                    //ripcounter
+                    if (!self) {
+                        ripcounterCheckRips(message, userstate);
+                        //commands
+                        simpleCommand(message);
+                        //raffle
+                        if (raffle.raffle_active) {
+                            if (message.toLocaleLowerCase() == raffle.keyword.toLocaleLowerCase()) {
+                                updateRaffleList(raffle.addParticipant(userstate));
+                            }
                         }
                     }
                     break;
@@ -256,6 +267,11 @@ function initTmi() {
                     console.log(message);
                     mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames, 'whisper'));
                     chatMessageFormatter.scrollChat();
+                    if (!self) {
+                        ripcounterCheckRips(message, userstate);
+                        //commands
+                        simpleCommand(message);
+                    }
                     break;
                 default:
                     // Something else ?
@@ -351,8 +367,11 @@ function initIntervals() {
                 channel_info = channels.data[0];
                 //console.log(games.data[0].name);
                 store.set('channel_info', JSON.stringify(channel_info));
-                setStreamingTitleUI(channel_info.title);
-                getGameInfo();
+                //only update mediamanager title & game when not currently in focus
+                if (!jQuery("#mediamanager-game-title").is(":focus") && !jQuery("#mediamanager-stream-title").is(":focus")) {
+                    setStreamingTitleUI(channel_info.title);
+                    getGameInfo();
+                }
                 console.log("channel_info_updated");
             });
         }
@@ -491,6 +510,8 @@ function getGameInfo() {
                     clearInterval(gameInfoSet);
                     game_info = JSON.parse(store.get('game_info'));
                     document.getElementById("mediamanager-game-title").value = game_info.name;
+                    //setcurrent game
+                    currentGame = game_info.name;
                     changeBoxArt(game_info.box_art_url);
                 }
             }
@@ -654,6 +675,8 @@ document.getElementById("stream-update-button-button").addEventListener('click',
     updateGameAndTitlePromise.then(function (response) {
         if (response.ok) {
             document.getElementById("update-title-icon").setAttribute('class', 'fa fa-refresh fa-lg');
+            //set current game
+            currentGame = game_title;
         }
     });
 });
@@ -1275,6 +1298,53 @@ function updatePrizePositionInList(elem, moveToIndex) {
     console.log('id ' + id);
     raffle.updateRaffleItemPositionByIndex(id, moveToIndex);
     updateRafflePrizeListUI();
+}
+//Ripcounter functions
+function ripcounterCheckRips(message, userstate) {
+    if (ripcounter.ripcounterSettings.active) {
+        var rip_message = ripcounter.checkRipCommand(message, userstate, currentGame == '' ? 'Chicken Police' : currentGame);
+        if (rip_message != '') {
+            if (client != 'undefined') {
+                client.say(options.channels[0], rip_message);
+            }
+        }
+    }
+}
+function initRipcounterSettingsUIComponents() {
+    if (ripcounter.ripcounterSettings.active) {
+        document.getElementById("ripcounter-active").checked = true;
+    }
+    else {
+        document.getElementById("ripcounter-active").checked = false;
+    }
+    //Aliases
+    document.getElementById("ripcounter-rip-aliases-textarea").value = ripcounter.ripcounterSettings.rip_command_alias.toString();
+    ;
+    document.getElementById("ripcounter-addrip-aliases-textarea").value = ripcounter.ripcounterSettings.addrip_command_alias.toString();
+    document.getElementById("ripcounter-addgrip-aliases-textarea").value = ripcounter.ripcounterSettings.addgrip_command_alias.toString();
+    //Command Messages
+    document.getElementById("ripcounter-rip-message-textarea").value = ripcounter.ripcounterSettings.rip_message;
+    document.getElementById("ripcounter-addrip-message-textarea").value = ripcounter.ripcounterSettings.addrip_message;
+    document.getElementById("ripcounter-addgrip-message-textarea").value = ripcounter.ripcounterSettings.addgrip_message;
+}
+jQuery('#ripcounterSettNotiModal').on('hidden.bs.modal', function () {
+    //active
+    ripcounter.ripcounterSettings.active = document.getElementById("ripcounter-active").checked;
+    //Aliases
+    ripcounter.ripcounterSettings.rip_command_alias = document.getElementById("ripcounter-rip-aliases-textarea").value.split(',');
+    ripcounter.ripcounterSettings.addrip_command_alias = document.getElementById("ripcounter-addrip-aliases-textarea").value.split(',');
+    ripcounter.ripcounterSettings.addgrip_command_alias = document.getElementById("ripcounter-addgrip-aliases-textarea").value.split(',');
+    //Messages
+    ripcounter.ripcounterSettings.rip_message = document.getElementById("ripcounter-rip-message-textarea").value;
+    ripcounter.ripcounterSettings.addrip_message = document.getElementById("ripcounter-addrip-message-textarea").value;
+    ripcounter.ripcounterSettings.addgrip_message = document.getElementById("ripcounter-addgrip-message-textarea").value;
+    ripcounter.updateRipcounterSettingsSimple();
+});
+function updateRipcounterTable() {
+    var ripcounterMap = ripcounter.RipCounterMap;
+    ripcounterMap.forEach(function (value, key) {
+        console.log('key: ' + key + ' value: ' + value.toString());
+    });
 }
 //Twitch PubSub Bit functions
 function pubsubfunctions(oauth, channel_id) {
