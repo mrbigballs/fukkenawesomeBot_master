@@ -2,11 +2,12 @@
   "name": "fukkenawesomebot_master",
   "version": "1.0.0",
   "description": "Lightweight Desktop Twitch.tv Chatbot build in JavaScript, runs on your system and not on someone elses server ;-)",
-  "main": "main.js",
+  "main": "./dist/main.js",
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build && electron ./dist/main.js"
+    "start": "npm run build && electron ./dist/main.js",
+    "package-win": "electron-packager ./ --overwrite --platform=win32 --arch=x64 --icon=assets/icons/bot_icon_no_background_128x128.ico --prune=true --out=release-builds --version-string.ProductName=\"fukkenawesomeBot\""
   },
   "keywords": [
     "twitch.tv",
@@ -39,6 +40,8 @@
     "tether": "^1.4.3",
     "tinycolor2": "^1.4.1",
     "tmi.js": "^1.5.0",
+    "twitch": "^4.2.7",
+    "twitch-pubsub-client": "^4.2.7",
     "yeelight-wifi": "^2.3.0"
   }
 }

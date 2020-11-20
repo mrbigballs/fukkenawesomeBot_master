@@ -5,7 +5,7 @@ var express = require('express');
 
 var {ipcRenderer, remote, } = require('electron');
 
-
+const { PubSubClient } = require('twitch-pubsub-client');
 const YeelightSearch = require('yeelight-wifi');
 
 import { Credentials } from "./credentials";
@@ -16,6 +16,7 @@ import { Wikipedia } from './wikipedia';
 import { TwitchAPI } from './twitch_api';
 import { StoreLocal } from './storelocal';
 import { Raffle } from './raffle';
+import { MainNavigation } from './ui/navigation';
 
 
 const store = new StoreLocal().getLocalStore();
@@ -26,6 +27,7 @@ const chatMessageFormatter = new ChatMessageFormatter();
 const settingsmodule = new SettingsModule();
 const wikipedia = new Wikipedia();
 const twitchapi = new TwitchAPI();
+const mainNavigation = new MainNavigation();
 const win = remote.getCurrentWindow();
 let raffle: Raffle;
 
@@ -49,10 +51,15 @@ let sec: string;
 let intervalRequests: NodeJS.Timer[] = [];
 let raffleInterval: any;
 
+let bits_topic: string = '';
+let channel_points_topic: string = '';
+
 settingsmodule.loadSettings();
 
 var server = require('http').createServer(expressApp);
 var io = require('socket.io')(server);
+
+let pub_ws = new WebSocket('wss://pubsub-edge.twitch.tv');
 
 //twitchapi.getStreamsInfo('lunalya');
 
@@ -187,6 +194,7 @@ function initApplication(){
     //initTMi
     initTmi();
    
+   
     
     
 }
@@ -228,6 +236,11 @@ function initTmi(){
             setStreamingTitleUI(channel_info.title);
             getGameInfo();
             initIntervals();
+
+             //init PubSub
+            //pubsubfunctions(settingsmodule.settings.streamerOAuthkey, channel_info.id);
+            initPubSubConnection(settingsmodule.settings.streamerOAuthkey, channel_info.id);
+
             }
         }catch(e){return;}
      }, 300);
@@ -239,7 +252,7 @@ function initTmi(){
         client.on("connected", function (address: string, port: number) {
             ipcRenderer.send('botConnected', 'connected yeah');
             raffle = new Raffle(store, client);
-            
+            initRaffleNotificationSettingsUIComponents();
         });
         
         //on chat message do
@@ -734,7 +747,7 @@ document.getElementById("stream-update-button-button").addEventListener('click',
 //RAFFLE UI
 
 document.getElementById("raffle-set-button").addEventListener('click', function(e){
-    raffle.setKeyword((<HTMLInputElement>document.getElementById("raffle-keyword-input")).value);
+    let current_keyword = generateRaffleKeyWord(null);
     document.getElementById("raffle-lock-icon").setAttribute('class', 'fa fa-lock fa-lg');
     document.getElementById("raffle-set-button").setAttribute('class', 'btn btn-outline-secondary glow');
     jQuery('#raffle-set-button').prop('disabled', true);
@@ -745,11 +758,150 @@ document.getElementById("raffle-set-button").addEventListener('click', function(
     jQuery('#raffle-autoroll-button').prop('disabled', true);
     jQuery('#raffle-roll-button').prop('disabled', false);
     raffle.raffle_active = true;
-
+    raffleNotifyChat(false, null, null, current_keyword);
 });
 
+function generateRaffleKeyWord(currentPrize: any){
+    if(currentPrize != null){
+        if( currentPrize.raffle_keyword != ''){
+            console.log('HERER');
+            raffle.setKeyword(currentPrize.raffle_keyword);
+            (<HTMLInputElement>document.getElementById("raffle-keyword-input")).value = currentPrize.raffle_keyword;
+            return currentPrize.raffle_keyword;
+        }else{//no keyword set in prize item
+            console.log('Over there');
+            var ranKey = raffle.getRandomKeyword();
+            raffle.setKeyword(ranKey);
+            (<HTMLInputElement>document.getElementById("raffle-keyword-input")).value = ranKey;
+            return ranKey;
+        }
+    }else{
+        if((<HTMLInputElement>document.getElementById("raffle-keyword-input")).value != ''){//keyword from keyword input
+            raffle.setKeyword((<HTMLInputElement>document.getElementById("raffle-keyword-input")).value);
+            return (<HTMLInputElement>document.getElementById("raffle-keyword-input")).value;
+        }else{//no keyword in keyword input get random from list
+            console.log('error??');
+            var ranKey = raffle.getRandomKeyword();
+            raffle.setKeyword(ranKey);
+            (<HTMLInputElement>document.getElementById("raffle-keyword-input")).value = ranKey;
+            return ranKey;
+        }
+    }
+}
+
+function raffleDrawWinner(winner: any){
+    raffleNotifyChatWinner(winner);
+    if(typeof winner != 'undefined'){
+        try{
+            const getUserInfo = twitchapi.callTwitchApiFetch(settingsmodule.settings.streamerOAuthkey, 'users?id=' + winner['user-id']);
+            getUserInfo.then(response => {
+                return response.json();
+              }).then(user => {
+                 // var jgame = JSON.parse(games);
+                console.log(user.data[0]);
+                
+                jQuery('#winner-user-thumbnail').attr("src", user.data[0].profile_image_url);
+                jQuery('.rwinner-name').html(winner['display-name']);
+                jQuery('#winner-envelope').css('visibility', 'visible');
+               
+              });  
+        }catch(e){return;}
+    }
+}
+
+function sendKeyToWinner(winner: any, currentPrize: any){
+
+    if(raffle.raffleSettings.automaticWhisperWinner){
+        let chat_message = "";
+        let raffle_info_map: Map<string, string> = new Map();
+        raffle_info_map.set('prize', currentPrize.raffle_item);
+        raffle_info_map.set('prize_platform', currentPrize.store_type);
+        raffle_info_map.set('prize_key', currentPrize.game_key);
+        raffle_info_map.set('winner',  winner['display-name']);
+        chat_message = raffle.generateMessage(raffle.raffleSettings.raffle_notification_whisper, raffle_info_map);
+
+        if(client != 'undefined'){
+            client.say(options.channels[0], '/w ' + winner['display-name'] + ' ' +  chat_message);
+        }
+
+    }
+}
+
+function raffleNotifyChat(autoraffle: boolean, currentPrize: any, time: string, current_keyword: string){
+
+    if(raffle.raffleSettings.chatNotificationStart){
+        let chat_message = "";
+        let raffle_info_map: Map<string, string> = new Map();
+        
+        raffle_info_map.set('prize', currentPrize != null ? currentPrize.raffle_item : '¯\\_(ツ)_/¯');
+        raffle_info_map.set('prize_platform', currentPrize != null ? currentPrize.store_type : "");
+        raffle_info_map.set('keyword', current_keyword);
+        raffle_info_map.set('time', time != null ? time : "");
+        chat_message = raffle.generateMessage(raffle.raffleSettings.raffle_notification_chat_start, raffle_info_map);
+        if(autoraffle){
+            chat_message += ' ' + raffle.generateMessage(raffle.raffleSettings.raffle_notification_chat_start_timed, raffle_info_map);
+        }
+
+        if(client != 'undefined'){
+            client.say(options.channels[0], chat_message);
+        }
+    }
+    
+}
+
+function raffleNotifyChatReminder(currentPrize: any, time: string, current_keyword: string){
+
+    if(raffle.raffleSettings.chatNotificationStart){
+        let chat_message = "";
+        let raffle_info_map: Map<string, string> = new Map();
+        
+        raffle_info_map.set('prize', currentPrize != null ? currentPrize.raffle_item : '¯\\_(ツ)_/¯');
+        raffle_info_map.set('prize_platform', currentPrize != null ? currentPrize.store_type : "");
+        raffle_info_map.set('keyword', current_keyword);
+        raffle_info_map.set('time', time != null ? time : "");
+        chat_message = raffle.generateMessage(raffle.raffleSettings.raffle_notification_chat_reminder, raffle_info_map);
+       
+        if(client != 'undefined'){
+            client.say(options.channels[0], chat_message);
+        }
+    }
+}
+
+function raffleNotifyChatWinner(winner: any){
+
+    if(raffle.raffleSettings.announceWinnerInChat){
+        let chat_message = "";
+        let raffle_info_map: Map<string, string> = new Map();
+        
+        raffle_info_map.set('winner',  winner['display-name']);
+        chat_message = raffle.generateMessage(raffle.raffleSettings.raffle_notification_chat_winner, raffle_info_map);
+
+        if(client != 'undefined'){
+            client.say(options.channels[0], chat_message);
+        }
+    }
+}
+
 document.getElementById("raffle-autoroll-button").addEventListener('click', function(e){
-    raffle.setKeyword((<HTMLInputElement>document.getElementById("raffle-keyword-input")).value);
+    let currentPrize: any = null;
+    var index = 0;
+    if(store.has('raffle_items')){
+        let prizes = JSON.parse(store.get('raffle_items'));
+        console.log(JSON.stringify(prizes));
+        //von hinten aufbauen
+        index = 0;
+        for(var i = prizes.length - 1 ; i >= 0; i--){
+            console.log('rpizes_ : ' + JSON.stringify(prizes[i]));
+            if(prizes[i].item_active){
+                currentPrize = prizes[i];
+                index = i;
+                break;
+            }
+        }
+    }
+
+    let current_keyword = generateRaffleKeyWord(currentPrize);
+    
     document.getElementById("raffle-auto-icon").setAttribute('class', 'fa fa-refresh fa-spin fa-lg');
     document.getElementById("raffle-autoroll-button").setAttribute('class', 'btn btn-outline-secondary glow');
 
@@ -769,11 +921,15 @@ document.getElementById("raffle-autoroll-button").addEventListener('click', func
 
     var min_in_milli = set_min*60000;
     var sec_in_milli = set_sec*1000;
-    var combined = min_in_milli + sec_in_milli
+    var combined = min_in_milli + sec_in_milli;
     //set timer in raffle class
     raffle.timer = combined;
     //raffle.startTimedRaffle();
     var countDownDate = new Date(new Date().getTime() + combined).getTime();
+    var reminderTimes = combined / 3;
+
+    //notify chat
+    raffleNotifyChat(true, currentPrize, '' + min + ':' + sec + '', current_keyword);
 
     raffleInterval = setInterval(function(){
         // Get today's date and time
@@ -782,11 +938,12 @@ document.getElementById("raffle-autoroll-button").addEventListener('click', func
         // Find the distance between now and the count down date
         var distance = countDownDate - now;
 
+
         // Time calculations for days, hours, minutes and seconds
-        
-       
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        
 
         // Display the result in the element with id="demo"
         //document.getElementById("demo").innerHTML = days + "d " + hours + "h "
@@ -803,11 +960,34 @@ document.getElementById("raffle-autoroll-button").addEventListener('click', func
             document.getElementById("raffle-count-sec").innerHTML = seconds < 10 ? '0' + seconds : '' + seconds;
         }
 
+        //check for reminder time / 3
+        if(raffle.raffleSettings.chatNotificationReminder){
+            let reminder_dis = (combined - reminderTimes*2);
+            let reminder_min1 =  Math.floor((reminder_dis % (1000 * 60 * 60)) / (1000 * 60));
+            let reminder_sec1 =  Math.floor((reminder_dis % (1000 * 60)) / 1000);
+            if(minutes == reminder_min1 && seconds == reminder_sec1){
+                raffleNotifyChatReminder(currentPrize, '' + minutes + ':' + seconds + '', current_keyword);
+            }
+            let reminder_dis2 = (combined - reminderTimes);
+            let reminder_min2 =  Math.floor((reminder_dis2 % (1000 * 60 * 60)) / (1000 * 60));
+            let reminder_sec2 =  Math.floor((reminder_dis2 % (1000 * 60)) / 1000);
+            if(minutes == reminder_min2 && seconds == reminder_sec2){
+                raffleNotifyChatReminder(currentPrize, '' + minutes + ':' + seconds + '', current_keyword);
+            }
+        }
+
+
+
         // If the count down is finished, write some text
         if (distance < 0) {
+            
             clearInterval(raffleInterval);
             raffle.raffle_active = false;
-            raffle.drawWinner();
+            //draw winner
+            let winner = raffle.drawWinner();
+            raffleDrawWinner(winner);
+            //send key to winner
+            sendKeyToWinner(winner, currentPrize);
             document.getElementById("raffle-part-list-ul").innerHTML = '';
             document.getElementById("raffle-lock-icon").setAttribute('class', 'fa fa-unlock fa-lg');
             document.getElementById("raffle-set-button").setAttribute('class', 'btn btn-outline-secondary');
@@ -825,9 +1005,13 @@ document.getElementById("raffle-autoroll-button").addEventListener('click', func
             raffle.clearparticipants();
             document.getElementById("raffle-count-min").innerHTML = min;
             document.getElementById("raffle-count-sec").innerHTML = sec;
+            //set prize inactive and update list
+            raffle.updateActiveStateByRaffleItem(currentPrize, false);
+            raffle.updateWinnerByCurrentRaffleItem(currentPrize, winner['display-name']);
+            updateRafflePrizeListUI();
         }
 
-    }, 500);
+    }, 1000);
 
 });
 
@@ -850,7 +1034,8 @@ document.getElementById("raffle-clear-button").addEventListener('click', functio
     jQuery('#raffle-autoroll-button').prop('disabled', false);
     jQuery('#raffle-roll-button').prop('disabled', true);
     raffle.clearparticipants();
-    if(document.getElementById("raffle-count-min").innerHTML == '00' && document.getElementById("raffle-count-sec").innerHTML == '00'){
+    
+    if(typeof min != 'undefined'){
         document.getElementById("raffle-count-min").innerHTML = min;
         document.getElementById("raffle-count-sec").innerHTML = sec;
     }
@@ -891,25 +1076,12 @@ jQuery("#raffe-subluck-slider").on('change',function(){
     raffle.subscriberLuck = parseInt(test);
 });
 
+
+
 document.getElementById("raffle-roll-button").addEventListener('click', function(e){
     raffle.raffle_active = false;
     let winner = raffle.drawWinner();
-    if(typeof winner != 'undefined'){
-        try{
-            const getUserInfo = twitchapi.callTwitchApiFetch(settingsmodule.settings.streamerOAuthkey, 'users?id=' + winner['user-id']);
-            getUserInfo.then(response => {
-                return response.json();
-              }).then(user => {
-                 // var jgame = JSON.parse(games);
-                console.log(user.data[0]);
-                
-                jQuery('#winner-user-thumbnail').attr("src", user.data[0].profile_image_url);
-                jQuery('.rwinner-name').html(winner['display-name']);
-                jQuery('#winner-envelope').css('visibility', 'visible');
-               
-              });  
-        }catch(e){return;}
-    }
+    raffleDrawWinner(winner);
     
 });
 
@@ -978,6 +1150,32 @@ jQuery('.store-type').on('change', function(e){
 
 //save raffle prize
 document.getElementById("raffle-prize-save-button").addEventListener('click', function(e){
+    let raffle_prize_id =  jQuery("#raffle-prize-id-from-list").text();
+    if(raffle_prize_id != ''){//edit mode
+        let prize_game_name = (<HTMLInputElement>document.getElementById("raffle-prize-game-name")).value;
+        let prize_keyword = (<HTMLInputElement>document.getElementById("raffle-prize-keyword")).value;
+        let prize_active = false;
+        if((<HTMLInputElement>document.getElementById("raffle-prize-active-checkbox")).checked){
+            prize_active = true;
+        }
+
+        let prize_platform =  $("input[name='store-platform']:checked").val();
+        prize_platform = prize_platform == 'other' ? (<HTMLInputElement>document.getElementById("radio-other-input")).value : prize_platform;
+
+        let prize_key =  (<HTMLInputElement>document.getElementById("raffle-prize-key-area")).value;
+
+        raffle.updateRaffleItem(parseInt(raffle_prize_id), prize_game_name, prize_keyword, prize_key, prize_active, ''+prize_platform);
+        updateRafflePrizeListUI();
+        (<any>$('#rafflePrizeModal')).modal('hide');
+    }
+    if(jQuery("#raffle-prize-adding-title").is(":visible")){
+        saveNewRafflePrize();
+    }else{
+
+    }
+});
+
+function saveNewRafflePrize(){
     let prize_game_name = (<HTMLInputElement>document.getElementById("raffle-prize-game-name")).value;
     let prize_keyword = (<HTMLInputElement>document.getElementById("raffle-prize-keyword")).value;
     let prize_active = false;
@@ -1004,7 +1202,7 @@ document.getElementById("raffle-prize-save-button").addEventListener('click', fu
         updateRafflePrizeListUI();
         (<any>$('#rafflePrizeModal')).modal('hide');
     }
-});
+}
 
 function updateRafflePrizeListUI(){
     
@@ -1015,6 +1213,8 @@ function updateRafflePrizeListUI(){
         //von hinten aufbauen
         for(var i = prizes.length - 1 ; i >= 0; i--){
             let prizeli = document.createElement('li');
+            //prizeli.setAttribute('draggable', 'true');
+            prizeli.setAttribute('value', '' + i);
             let wrapper_div = document.createElement('div');
             //prizeli.setAttribute('value', i);
             let active_chekbox = document.createElement('input');
@@ -1052,9 +1252,9 @@ function updateRafflePrizeListUI(){
             obscured_key = prizes[i].game_key.replace(tempkey, 'XXXXXXXX')
             key_span.innerHTML = obscured_key;
             let winner_span = document.createElement('span');
-            winner_span.innerHTML = prizes[i].raffle_winnder;
+            winner_span.innerHTML = prizes[i].raffle_winner;
             let trash_can_span = document.createElement('span');
-            trash_can_span.setAttribute('class', 'fa fa-trash trashcan');
+            trash_can_span.setAttribute('class', 'fa fa-trash prizelist-icon');
             trash_can_span.setAttribute('value', '' + i);
             trash_can_span.addEventListener ('click', function (eve) {
                 // Der Index i kann hier nicht benutzt werden
@@ -1062,8 +1262,18 @@ function updateRafflePrizeListUI(){
                 console.log ("event " +  eve);
                 deletePrizeFromList (this);
             });
+            let edit_span = document.createElement('span');
+            edit_span.setAttribute('class', 'fa fa-pencil prizelist-icon');
+            edit_span.setAttribute('value', '' + i);
+            edit_span.addEventListener ('click', function (eve) {
+                // Der Index i kann hier nicht benutzt werden
+                console.log ("this " +  this);
+                console.log ("event " +  eve);
+                editPrizeItem (this);
+            });
             //wrapper_div.appendChild(active_chekbox);
             wrapper_div.appendChild( active_label);
+            wrapper_div.appendChild(edit_span);
             wrapper_div.appendChild(trash_can_span);
             wrapper_div.appendChild(game_name_span);
             wrapper_div.appendChild(keyword_name_span);
@@ -1077,12 +1287,85 @@ function updateRafflePrizeListUI(){
     
 }
 
+//delete or reset content from prize add tab on closing
+
+jQuery('#rafflePrizeModal').on('hidden.bs.modal', function () {
+
+    (<HTMLInputElement>document.getElementById("raffle-prize-game-name")).value = '';
+    (<HTMLInputElement>document.getElementById("raffle-prize-keyword")).value = '';
+    
+    (<HTMLInputElement>document.getElementById("raffle-prize-active-checkbox")).checked = false;
+    
+    (<HTMLInputElement>document.getElementById("radio-steam")).checked = true;
+
+    (<HTMLInputElement>document.getElementById("radio-other-input")).value = '';
+    (<HTMLInputElement>document.getElementById("radio-other-input")).disabled = true;
+
+    (<HTMLInputElement>document.getElementById("raffle-prize-key-area")).value = '';
+
+});
+
+$('#raffle-add-price').on('click', function (e) {
+    //title
+    jQuery("#raffle-prize-edit-title").hide();
+    jQuery("#raffle-prize-adding-title").show();
+  });
+
+
+
 function deletePrizeFromList(elem: HTMLSpanElement){
     console.log('delete ' + elem.getAttribute('value'));
     let id = parseInt(elem.getAttribute('value'));
     console.log('id ' + id);
     raffle.deleteRaffleItemByIndex(id);
     updateRafflePrizeListUI();
+}
+
+function editPrizeItem(elem: HTMLSpanElement){
+    let id = parseInt(elem.getAttribute('value'));
+    console.log('id ' + id);
+
+    let prizes = JSON.parse(store.get('raffle_items'));
+    //console.log(JSON.stringify(prizes));
+
+    //title
+    jQuery("#raffle-prize-edit-title").show();
+    jQuery("#raffle-prize-adding-title").hide();
+    //add id to modal
+    jQuery("#raffle-prize-id-from-list").text(''+id);
+
+    if(prizes[id].raffle_winner != ''){
+        jQuery("#raffle-prize-winner-display").show();
+        jQuery("#raffle-prize-winner-display-name").text(prizes[id].raffle_winner);
+    }
+    
+
+    (<HTMLInputElement>document.getElementById("raffle-prize-game-name")).value = prizes[id].raffle_item;
+    (<HTMLInputElement>document.getElementById("raffle-prize-keyword")).value = prizes[id].raffle_keyword;
+    
+    (<HTMLInputElement>document.getElementById("raffle-prize-active-checkbox")).checked = prizes[id].item_active;
+    let platform = prizes[id].store_type;
+    if(platform == 'Steam'){
+        (<HTMLInputElement>document.getElementById("radio-steam")).checked = true;
+    }else if(platform == 'Battle.net'){
+        (<HTMLInputElement>document.getElementById("radio-battlenet")).checked = true;
+    }else if(platform == 'Epic Games'){
+        (<HTMLInputElement>document.getElementById("radio-epic")).checked = true;
+    }else if(platform == 'GoG Galaxy'){
+        (<HTMLInputElement>document.getElementById("radio-gog")).checked = true;
+    }else if(platform == 'Origin'){
+        (<HTMLInputElement>document.getElementById("radio-origin")).checked = true;
+    }else if(platform == 'uPlay'){
+        (<HTMLInputElement>document.getElementById("radio-uplay")).checked = true;
+    }else{
+        (<HTMLInputElement>document.getElementById("radio-other")).checked = true;
+        (<HTMLInputElement>document.getElementById("radio-other-input")).value = platform;
+        (<HTMLInputElement>document.getElementById("radio-other-input")).disabled = false;
+    }
+    
+    (<HTMLInputElement>document.getElementById("raffle-prize-key-area")).value = prizes[id].game_key;
+
+    (<any>$('#rafflePrizeModal')).modal();
 }
 
 function setPrizeActiveInactive(elem: HTMLInputElement){
@@ -1092,4 +1375,196 @@ function setPrizeActiveInactive(elem: HTMLInputElement){
 
     raffle.updateActiveStateByIndex(id, active);
     updateRafflePrizeListUI();
+}
+
+//send message to winner
+document.getElementById("winner-envelope").addEventListener('click', function(e){
+    var winnerName = jQuery(".rwinner-name").html();
+    if(winnerName != ''){
+        (<HTMLInputElement>document.getElementById("chatMessageInput")).value = '/w ' + winnerName + ' ';
+        mainNavigation.navigationSelectWindow('navChat');
+    }
+});
+
+//save & load raffle notification settings
+
+function initRaffleNotificationSettingsUIComponents(){
+
+    if(raffle.raffleSettings.chatNotificationStart){
+        (<HTMLInputElement>document.getElementById("raffle-notification-start-active")).checked = true;
+    }else{
+        (<HTMLInputElement>document.getElementById("raffle-notification-start-active")).checked = false;
+    }
+
+    if(raffle.raffleSettings.chatNotificationReminder){
+        (<HTMLInputElement>document.getElementById("raffle-notification-reminder-active")).checked = true;
+    }else{
+        (<HTMLInputElement>document.getElementById("raffle-notification-reminder-active")).checked = false;
+    }
+
+    if(raffle.raffleSettings.announceWinnerInChat){
+        (<HTMLInputElement>document.getElementById("raffle-notification-winner-active")).checked = true;
+    }else{
+        (<HTMLInputElement>document.getElementById("raffle-notification-winner-active")).checked = false;
+    }
+
+    if(raffle.raffleSettings.automaticWhisperWinner){
+        (<HTMLInputElement>document.getElementById("raffle-whisper-winner-active")).checked = true;
+    }else{
+        (<HTMLInputElement>document.getElementById("raffle-whisper-winner-active")).checked = false;
+    }
+      
+    (<HTMLInputElement>document.getElementById("raff-notification-start-textarea")).value = raffle.raffleSettings.raffle_notification_chat_start;
+    (<HTMLInputElement>document.getElementById("raff-notification-start-timed-textarea")).value = raffle.raffleSettings.raffle_notification_chat_start_timed;
+    (<HTMLInputElement>document.getElementById("raff-notification-reminder-textarea")).value = raffle.raffleSettings.raffle_notification_chat_reminder;
+    (<HTMLInputElement>document.getElementById("raff-notification-winner-textarea")).value = raffle.raffleSettings.raffle_notification_chat_winner;
+    (<HTMLInputElement>document.getElementById("raff-whisper-winner-textarea")).value = raffle.raffleSettings.raffle_notification_whisper;
+    
+
+
+}
+
+jQuery('#raffleNotificationsModal').on('hidden.bs.modal', function () {
+    
+    raffle.raffleSettings.chatNotificationStart = (<HTMLInputElement>document.getElementById("raffle-notification-start-active")).checked;
+    raffle.raffleSettings.chatNotificationReminder = (<HTMLInputElement>document.getElementById("raffle-notification-reminder-active")).checked;
+    raffle.raffleSettings.announceWinnerInChat =  (<HTMLInputElement>document.getElementById("raffle-notification-winner-active")).checked;
+    raffle.raffleSettings.automaticWhisperWinner =  (<HTMLInputElement>document.getElementById("raffle-whisper-winner-active")).checked;
+
+    raffle.raffleSettings.raffle_notification_chat_start = (<HTMLInputElement>document.getElementById("raff-notification-start-textarea")).value;
+    raffle.raffleSettings.raffle_notification_chat_start_timed =  (<HTMLInputElement>document.getElementById("raff-notification-start-timed-textarea")).value;
+    raffle.raffleSettings.raffle_notification_chat_reminder = (<HTMLInputElement>document.getElementById("raff-notification-reminder-textarea")).value;
+    raffle.raffleSettings.raffle_notification_chat_winner = (<HTMLInputElement>document.getElementById("raff-notification-winner-textarea")).value;
+    raffle.raffleSettings.raffle_notification_whisper =  (<HTMLInputElement>document.getElementById("raff-whisper-winner-textarea")).value;
+
+    raffle.updateRaffleSettingsSimple();
+    
+});
+
+//Sort prizelist items
+
+jQuery('#raffle-prize-list-ul').sortable({
+    update: function( ) {
+        console.log('dropped something: ' + this);
+    },
+    stop: function(event, ui) {
+        console.log("New position: " + ui.item.index());
+        updatePrizePositionInList(ui.item, ui.item.index());
+    },
+    placeholder: "drag-drop-ui-state-highlight-placeholder",
+    opacity: 0.7
+});
+
+jQuery( '#raffle-prize-list-ul' ).disableSelection();
+
+function updatePrizePositionInList(elem: JQuery<HTMLElement>, moveToIndex: number){
+    console.dir(elem);
+    let id = parseInt(elem.attr('value'));
+    //console.log(elem.find());
+    console.log('id ' + id);
+    raffle.updateRaffleItemPositionByIndex(id, moveToIndex);
+    updateRafflePrizeListUI();
+}
+
+//Twitch PubSub Bit functions
+
+function pubsubfunctions(oauth: string, channel_id: string){
+
+    console.log('pubsub we are here 1');
+    let twitch_pubsub = new PubSubClient();
+    let bits_topic = 'channel-bits-events-v1.' + channel_id;
+    let channel_points_topic = 'channel-points-channel-v1.' + channel_id;
+    //listen to bits
+
+    twitch_pubsub.connect();
+    console.log('pubsub we are here 2');
+    twitch_pubsub.listen([bits_topic,channel_points_topic] , oauth, 'bits:read+channel:read:redemptions');
+    console.log('pubsub we are here 3');
+    twitch_pubsub.onConnect(() => { 
+        /* ... */ 
+        console.log('Connected to pubs sub'); 
+    });
+
+    twitch_pubsub.onMessage((topic: any, message: any) => { 
+        /* ... */ 
+        console.log('PUBSUB RECEIVED MESSAGE concerning topic: ' + topic + 'with message: ' + JSON.stringify(message));
+    });
+
+}
+
+function connectPubSub() {
+    var heartbeatInterval = 1000 * 60; //ms between PING's
+    var reconnectInterval = 1000 * 3; //ms to wait before reconnect
+    var heartbeatHandle: any;
+
+    pub_ws = new WebSocket('wss://pubsub-edge.twitch.tv');
+
+    pub_ws.onopen = function(event) {
+        console.log('INFO: Socket Opened\n');
+        heartbeat();
+        heartbeatHandle = setInterval(heartbeat, heartbeatInterval);
+        // listen to topics
+        listenOnTopic([bits_topic, channel_points_topic], settingsmodule.settings.streamerOAuthkey);
+    };
+
+    pub_ws.onerror = function(error) {
+        console.log('ERR:  ' + JSON.stringify(error) + '\n');
+    };
+
+    pub_ws.onmessage = function(event) {
+        let message = JSON.parse(event.data);
+        console.log('RECV: ' + JSON.stringify(message) + '\n');
+        if (message.type == 'RECONNECT') {
+            console.log('INFO: Reconnecting...\n');
+            setTimeout(connectPubSub, reconnectInterval);
+        }
+    };
+
+    pub_ws.onclose = function() {
+        console.log('INFO: Socket Closed\n');
+        clearInterval(heartbeatHandle);
+        console.log('INFO: Reconnecting...\n');
+        setTimeout(connectPubSub, reconnectInterval);
+    };
+
+}
+
+function heartbeat() {
+    let message = {
+        type: 'PING'
+    };
+    console.log('SENT: ' + JSON.stringify(message) + '\n');
+    pub_ws.send(JSON.stringify(message));
+}
+
+function nonce(length: number) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
+
+function listenOnTopic(topic: string[], oauth: string) {
+    let message = {
+        type: 'LISTEN',
+        nonce: nonce(15),
+        data: {
+            topics: topic,
+            auth_token: oauth
+        }
+    };
+    console.log('SENT: ' + JSON.stringify(message) + '\n');
+    pub_ws.send(JSON.stringify(message));
+}
+
+function initPubSubConnection(oauth: string, channel_id: string){
+    console.log('pubsub conn well see');
+    
+    bits_topic = 'channel-bits-events-v1.' + channel_id;
+    channel_points_topic = 'channel-points-channel-v1.' + channel_id;
+
+    connectPubSub();
+
 }

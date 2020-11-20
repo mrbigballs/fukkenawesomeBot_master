@@ -113,9 +113,9 @@
                                 <span id="navCurrencyGamesText" data-i18n="nav-currencyGames">Settings</span></a>
                         </li>
                         <li>
-                            <a href="#"  id="navMediaplayer" >
-                                <i class="fa fa-play fa-fw" aria-hidden="true" ></i> 
-                                <span id="navMediaplayerText" data-i18n="nav-mediaPlayer">Settings</span></a>
+                            <a href="#"  id="navRipcounter" >
+                                <i class="fa fa-heartbeat fa-fw" aria-hidden="true" ></i> 
+                                <span id="navRipcounterText" data-i18n="nav-ripcounter">Settings</span></a>
                         </li>
                         <li>
                             <a href="#"  id="navSettings" >
@@ -246,13 +246,22 @@
                     <div class="raffle-winner">
                         <div class="rwinner-logo"><img src="" id="winner-user-thumbnail"/></div>
                         <div class="rwinner-name"></div>
-                        <div class="rwinner-message"><span class="fa fa-envelope fa-lg" aria-hidden="true" id="winner-envelope"></span></div>
+                        <div class="rwinner-message">
+                            <button class="btn btn-outline-secondary" type="button" id="winner-envelope">
+                                <span class="fa fa-envelope fa-lg" aria-hidden="true"></span>&nbsp;<span class="fa fa-share fa-lg" aria-hidden="true" id="raffle-add-price-icon" ></span>
+                            </button>
+                            
+                        </div>
                     </div>
                     <div class="raffle-price-add-button">
-                        <button class="btn btn-outline-secondary btn-xs" type="button" id="raffle-add-price" data-toggle="modal" data-target="#rafflePrizeModal">
+                        <button class="btn btn-outline-secondary btn-xs raffle-settings-buttons" type="button" id="raffle-add-price" data-toggle="modal" data-target="#rafflePrizeModal">
                             <span class="fa fa-gift" aria-hidden="true"></span>&nbsp;<span class="fa fa-plus" aria-hidden="true" id="raffle-add-price-icon" ></span>
                         </button>
+                        <button class="btn btn-outline-secondary btn-xs raffle-settings-buttons" type="button" id="raffle-notification-settings" data-toggle="modal" data-target="#raffleNotificationsModal">
+                            <span class="fa fa-bell-o" aria-hidden="true"></span>&nbsp;<span class="fa fa-cog" aria-hidden="true" ></span>
+                        </button>
                     </div>
+                   
                     <div class="raffle-price-tab">
                         
                         <ul id="raffle-prize-list-ul" class="fuckyou">
@@ -264,6 +273,11 @@
                             
                         </ul>
                     </div>
+                </div>
+
+                <!-- Ripcounter Div -->
+                <div id="ripcounterDiv" style="display: none;">
+                    
                 </div>
 
             </div>
@@ -393,7 +407,9 @@
                 <div class="modal-content modal-awesome">
                     <div class="modal-body">
                         <div class="raff-prize-translate">
-                            <p data-i18n="raffle-prize-adding">Keys</p>
+                            <p data-i18n="raffle-prize-adding" id="raffle-prize-adding-title">Keys</p>
+                            <p data-i18n="raffle-prize-edit" id="raffle-prize-edit-title">Keys</p>
+                            <div id="raffle-prize-id-from-list" style="display: none;"></div>
                             <br>
                             <input id="raffle-prize-game-name"  type="text" class="form-control input-sm" data-i18n="[placeholder]raffle-prize-game-placeholder"/>
                             <br>
@@ -405,6 +421,7 @@
                                 Default checkbox
                                 </label>
                             </div>
+                            <div id="raffle-prize-winner-display" style="display: none;"><span data-i18n="raffle-prize-winner-label">Winner:</span> &nbsp; <span id="raffle-prize-winner-display-name"></span></div>
                             <br>
                             <div class="game-brand-cheks">
                                 <input type="radio"  id="radio-steam" name="store-platform" class="store-type" value="Steam" checked/>
@@ -436,7 +453,7 @@
                             </div>
                             <br>
                             <p data-i18n="raffle-prize-key-label">Keys</p>
-                            <textarea id="raffle-prize-key-area" rows="8" cols="40"></textarea>
+                            <textarea id="raffle-prize-key-area" rows="6" cols="40"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -445,6 +462,70 @@
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" data-i18n="dialog-cancel-button">Close</button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal for Raffle Notifications -->
+        <div class="modal fade" id="raffleNotificationsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content modal-awesome">
+                    <div class="modal-body">
+                        <div class="raff-notification-translate">
+                            <p data-i18n="raff-notification">Raffle Notifocations</p>
+                            <br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="raffle-notification-start-active">
+                                <label class="form-check-label" for="raffle-prize-active-checkbox" data-i18n="raff-notification-start-label">
+                                    Raffle Start Chat Notification
+                                </label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" rows="4" id="raff-notification-start-textarea"></textarea>
+                            </div>
+                            <span><i class="fa fa-clock-o"></i><span data-i18n="raffle-notification-start-timed">Additional Info on timed raffles</span> </span>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" rows="4" id="raff-notification-start-timed-textarea"></textarea>
+                            </div>
+
+                            <br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="raffle-notification-reminder-active">
+                                <label class="form-check-label" for="raffle-prize-active-checkbox" data-i18n="raff-notification-reminder-label">
+                                    Raffle Reminder Chat Notification (On timed Raffles)
+                                </label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" rows="4" id="raff-notification-reminder-textarea"></textarea>
+                            </div>
+
+                            <br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="raffle-notification-winner-active">
+                                <label class="form-check-label" for="raffle-prize-active-checkbox" data-i18n="raff-notification-winner-label">
+                                    Raffle Winner Chat Notification
+                                </label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" rows="4" id="raff-notification-winner-textarea"></textarea>
+                            </div>
+
+                            <br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="raffle-whisper-winner-active">
+                                <label class="form-check-label" for="raffle-prize-active-checkbox" data-i18n="raff-whisper-winner-label">
+                                    Raffle Winner Whsiper Notification
+                                </label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="With textarea" rows="4" id="raff-whisper-winner-textarea"></textarea>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -466,9 +547,11 @@
             // 3. Update Titlebar text
             //MyTitleBar.updateTitle('Our Code World Tutorials Rock !');
             */
-            const awesome = require('../dist/awesomebot');
             /*ui stuff*/
-            require('../dist/ui/navigation');
+            //require('../dist/ui/navigation');
+
+            const awesome = require('../dist/awesomebot');
+           
     
             $( '.navigationNormal' ).i18n();
             $( '#settingsDiv' ).i18n();
@@ -476,6 +559,7 @@
             $( '.chat-settings-translate' ).i18n();
             $( '.raff-prize-translate' ).i18n();
             $( '.raff-prize-footer-translate' ).i18n();
+            $( '.raff-notification-translate' ).i18n();
             $( '.titlebar' ).i18n()
             $( '.mediamanager' ).i18n()
             
