@@ -20,6 +20,7 @@ import { RipCounter } from './ripcounter';
 import { MainNavigation } from './ui/navigation';
 
 
+
 const store = new StoreLocal().getLocalStore();
 
 
@@ -198,7 +199,7 @@ function initApplication(){
     //Ripcounter
     ripcounter = new RipCounter(store);
     initRipcounterSettingsUIComponents();
-    
+    updateRipcounterTable();
     
 }
 
@@ -1506,34 +1507,65 @@ function ripcounterCheckRips(message: string, userstate: any){
 
 function initRipcounterSettingsUIComponents(){
 
-    if(ripcounter.ripcounterSettings.active){
-        (<HTMLInputElement>document.getElementById("ripcounter-active")).checked = true;
-    }else{
-        (<HTMLInputElement>document.getElementById("ripcounter-active")).checked = false;
-    }
-
+    //Active Check
+    (<HTMLInputElement>document.getElementById("ripcounter-active")).checked = ripcounter.ripcounterSettings.active;
+    //cooldown
+    (<HTMLInputElement>document.getElementById("ripcounter-rip-cooldown")).value = ripcounter.ripcounterSettings.rip_cooldown.toString();
+    //Roles
+    (<HTMLInputElement>document.getElementById("rip-modonly-check")).checked = ripcounter.ripcounterSettings.rip_role_mod;
+    (<HTMLInputElement>document.getElementById("rip-subonly-check")).checked = ripcounter.ripcounterSettings.rip_role_sub;
+    (<HTMLInputElement>document.getElementById("addrip-modonly-check")).checked = ripcounter.ripcounterSettings.addrip_role_mod;
+    (<HTMLInputElement>document.getElementById("addrip-subonly-check")).checked = ripcounter.ripcounterSettings.addrip_role_sub;
+    (<HTMLInputElement>document.getElementById("addgrip-modonly-check")).checked = ripcounter.ripcounterSettings.addgrip_role_mod;
+    (<HTMLInputElement>document.getElementById("addgrip-subonly-check")).checked = ripcounter.ripcounterSettings.addgrip_role_sub;
+    (<HTMLInputElement>document.getElementById("setrip-modonly-check")).checked = ripcounter.ripcounterSettings.setrip_role_mod;
+    (<HTMLInputElement>document.getElementById("setrip-subonly-check")).checked = ripcounter.ripcounterSettings.setrip_role_sub;
+    (<HTMLInputElement>document.getElementById("setgrip-modonly-check")).checked = ripcounter.ripcounterSettings.setgrip_role_mod;
+    (<HTMLInputElement>document.getElementById("setgrip-subonly-check")).checked = ripcounter.ripcounterSettings.setgrip_role_sub;
     //Aliases
     (<HTMLInputElement>document.getElementById("ripcounter-rip-aliases-textarea")).value = ripcounter.ripcounterSettings.rip_command_alias.toString();;
     (<HTMLInputElement>document.getElementById("ripcounter-addrip-aliases-textarea")).value = ripcounter.ripcounterSettings.addrip_command_alias.toString();
     (<HTMLInputElement>document.getElementById("ripcounter-addgrip-aliases-textarea")).value = ripcounter.ripcounterSettings.addgrip_command_alias.toString();
+    (<HTMLInputElement>document.getElementById("ripcounter-setrip-aliases-textarea")).value = ripcounter.ripcounterSettings.setrip_command_alias.toString();
+    (<HTMLInputElement>document.getElementById("ripcounter-setgrip-aliases-textarea")).value = ripcounter.ripcounterSettings.setgrip_command_alias.toString();
     //Command Messages
     (<HTMLInputElement>document.getElementById("ripcounter-rip-message-textarea")).value = ripcounter.ripcounterSettings.rip_message;
     (<HTMLInputElement>document.getElementById("ripcounter-addrip-message-textarea")).value = ripcounter.ripcounterSettings.addrip_message;
     (<HTMLInputElement>document.getElementById("ripcounter-addgrip-message-textarea")).value = ripcounter.ripcounterSettings.addgrip_message;
+    (<HTMLInputElement>document.getElementById("ripcounter-setrip-message-textarea")).value = ripcounter.ripcounterSettings.setrip_message;
+    (<HTMLInputElement>document.getElementById("ripcounter-setgrip-message-textarea")).value = ripcounter.ripcounterSettings.setgrip_message;
     
 }
 
 jQuery('#ripcounterSettNotiModal').on('hidden.bs.modal', function () {
     //active
     ripcounter.ripcounterSettings.active = (<HTMLInputElement>document.getElementById("ripcounter-active")).checked;
+    //cooldown
+    let cooldowntime = (isNaN(parseInt((<HTMLInputElement>document.getElementById("ripcounter-rip-cooldown")).value)) ? 0 : parseInt((<HTMLInputElement>document.getElementById("ripcounter-rip-cooldown")).value));
+    ripcounter.ripcounterSettings.rip_cooldown = cooldowntime;
+    //roles
+    ripcounter.ripcounterSettings.rip_role_mod = (<HTMLInputElement>document.getElementById("rip-modonly-check")).checked;
+    ripcounter.ripcounterSettings.rip_role_sub = (<HTMLInputElement>document.getElementById("rip-subonly-check")).checked;
+    ripcounter.ripcounterSettings.addrip_role_mod = (<HTMLInputElement>document.getElementById("addrip-modonly-check")).checked;
+    ripcounter.ripcounterSettings.addrip_role_sub = (<HTMLInputElement>document.getElementById("addrip-subonly-check")).checked;
+    ripcounter.ripcounterSettings.addgrip_role_mod = (<HTMLInputElement>document.getElementById("addgrip-modonly-check")).checked;
+    ripcounter.ripcounterSettings.addgrip_role_sub = (<HTMLInputElement>document.getElementById("addgrip-subonly-check")).checked;
+    ripcounter.ripcounterSettings.setrip_role_mod = (<HTMLInputElement>document.getElementById("setrip-modonly-check")).checked;
+    ripcounter.ripcounterSettings.setrip_role_sub = (<HTMLInputElement>document.getElementById("setrip-subonly-check")).checked;
+    ripcounter.ripcounterSettings.setgrip_role_mod = (<HTMLInputElement>document.getElementById("setgrip-modonly-check")).checked;
+    ripcounter.ripcounterSettings.setgrip_role_sub = (<HTMLInputElement>document.getElementById("setgrip-subonly-check")).checked;
     //Aliases
     ripcounter.ripcounterSettings.rip_command_alias = (<HTMLInputElement>document.getElementById("ripcounter-rip-aliases-textarea")).value.split(',');
     ripcounter.ripcounterSettings.addrip_command_alias = (<HTMLInputElement>document.getElementById("ripcounter-addrip-aliases-textarea")).value.split(',');
     ripcounter.ripcounterSettings.addgrip_command_alias = (<HTMLInputElement>document.getElementById("ripcounter-addgrip-aliases-textarea")).value.split(',');
+    ripcounter.ripcounterSettings.setrip_command_alias = (<HTMLInputElement>document.getElementById("ripcounter-setrip-aliases-textarea")).value.split(',');
+    ripcounter.ripcounterSettings.setgrip_command_alias = (<HTMLInputElement>document.getElementById("ripcounter-setgrip-aliases-textarea")).value.split(',');
     //Messages
     ripcounter.ripcounterSettings.rip_message = (<HTMLInputElement>document.getElementById("ripcounter-rip-message-textarea")).value;
     ripcounter.ripcounterSettings.addrip_message = (<HTMLInputElement>document.getElementById("ripcounter-addrip-message-textarea")).value;
     ripcounter.ripcounterSettings.addgrip_message = (<HTMLInputElement>document.getElementById("ripcounter-addgrip-message-textarea")).value;
+    ripcounter.ripcounterSettings.setrip_message = (<HTMLInputElement>document.getElementById("ripcounter-setrip-message-textarea")).value;
+    ripcounter.ripcounterSettings.setgrip_message = (<HTMLInputElement>document.getElementById("ripcounter-setgrip-message-textarea")).value;
 
     ripcounter.updateRipcounterSettingsSimple();
 
@@ -1541,10 +1573,216 @@ jQuery('#ripcounterSettNotiModal').on('hidden.bs.modal', function () {
 
 function updateRipcounterTable(){
     let ripcounterMap = ripcounter.RipCounterMap;
+    let table_body = (<HTMLTableElement>document.getElementById("ripcounter-table-tbody"));
     ripcounterMap.forEach((value: any, key: any) => {
         console.log('key: ' + key + ' value: ' + value.toString());
+        let tr = document.createElement('tr');
+        let td_game = document.createElement('th');
+        td_game.setAttribute('class', 'ripcounter-head-game');
+        td_game.innerHTML = key;
+        let td_rip = document.createElement('td');
+        td_rip.setAttribute("contenteditable", "true");
+        td_rip.setAttribute('class', 'ripcounter-table-rips');
+        td_rip.innerHTML = value[0];
+        let td_grip = document.createElement('td');
+        td_grip.setAttribute("contenteditable", "true");
+        td_grip.setAttribute('class', 'ripcounter-table-grips');
+        td_grip.innerHTML = value[1];
+        let td_buttons = document.createElement('td');
+
+        let edit_button = document.createElement('button');
+        edit_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-edit');
+        edit_button.setAttribute('type', 'button');
+        let span_edit_icon = document.createElement('span');
+        span_edit_icon.setAttribute('class', 'fa fa-pencil');
+        span_edit_icon.setAttribute('aria-hidden', 'true');
+
+        let del_button = document.createElement('button');
+        del_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-del');
+        del_button.setAttribute('type', 'button');
+        let span_trash_icon = document.createElement('span');
+        span_trash_icon.setAttribute('class', 'fa fa-trash-o');
+        span_trash_icon.setAttribute('aria-hidden', 'true');
+
+        let save_button = document.createElement('button');
+        save_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-save');
+        save_button.setAttribute('type', 'button');
+        save_button.style.display = "none";
+        let span_save_icon = document.createElement('span');
+        span_save_icon.setAttribute('class', 'fa fa-floppy-o');
+        span_save_icon.setAttribute('aria-hidden', 'true');
+
+        let cancel_button = document.createElement('button');
+        cancel_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-cancel');
+        cancel_button.setAttribute('type', 'button');
+        cancel_button.style.display = "none";
+        let span_cancel_icon = document.createElement('span');
+        span_cancel_icon.setAttribute('class', 'fa fa-times');
+        span_cancel_icon.setAttribute('aria-hidden', 'true');
+        
+        del_button.appendChild(span_trash_icon);
+        edit_button.appendChild(span_edit_icon);
+        save_button.appendChild(span_save_icon);
+        cancel_button.appendChild(span_cancel_icon);
+
+        tr.appendChild(td_game);
+        tr.appendChild(td_rip);
+        tr.appendChild(td_grip);
+        td_buttons.appendChild(edit_button);
+        td_buttons.appendChild(del_button);
+        td_buttons.appendChild(save_button);
+        td_buttons.appendChild(cancel_button);
+        tr.appendChild(td_buttons);
+        table_body.appendChild(tr);
+
+        //eventlisteners
+        edit_button.addEventListener ('click', function (event) {
+            editRipCounterRow(tr);
+        });
+
+        save_button.addEventListener ('click', function (event) {
+            saveRipCounterRow(tr);
+        });
+
+        cancel_button.addEventListener ('click', function (event){
+            cancelEditRipCounterRow(tr);
+        });
+
+        del_button.addEventListener ('click', function (event){
+            deleteRipCounterRow(tr);
+        });
     });
 }
+
+jQuery('.ripcounter-table-rips').on("DOMSubtreeModified",function(event) {
+    console.log('focus out for: ' + event.target);
+});
+
+function editRipCounterRow(elem: HTMLTableRowElement){
+    //rip cell
+    var rip = elem.cells[1].innerText;
+    let rip_input = document.createElement('input');
+    //rip_input.setAttribute('maxlength', '10');
+    //rip_input.setAttribute('size', '10');
+    rip_input.setAttribute('type', 'number');
+    rip_input.setAttribute('class', 'form-control rip-table-input');
+    rip_input.value = rip;
+    elem.cells[1].innerHTML = "";
+    elem.cells[1].appendChild(rip_input);
+    //grip cell
+    var grip = elem.cells[2].innerText;
+    let grip_input = document.createElement('input');
+    //grip_input.setAttribute('maxlength', '10');
+    //grip_input.setAttribute('size', '10');
+    grip_input.setAttribute('type', 'number');
+    grip_input.setAttribute('class', 'form-control rip-table-input');
+    grip_input.value = grip;
+    elem.cells[2].innerHTML = "";
+    elem.cells[2].appendChild(grip_input);
+
+    //buttons
+    var buttons = elem.cells[3].getElementsByTagName("button");
+    for (var i = 0; i < buttons.length; i++) {
+        if(buttons[i].classList.contains('riprow-edit')){
+            buttons[i].style.display = 'none';
+        }
+        
+        if(buttons[i].classList.contains('riprow-del')) {
+            buttons[i].style.display = 'none';
+        }
+
+        if(buttons[i].classList.contains('riprow-save')) {
+            buttons[i].style.display = '';
+        }
+
+        if(buttons[i].classList.contains('riprow-cancel')) {
+            buttons[i].style.display = '';
+        }
+    }
+}
+
+function cancelEditRipCounterRow(elem: HTMLTableRowElement){
+    let rips = ripcounter.RipCounterMap.get(elem.cells[0].innerText);
+
+    elem.cells[1].innerHTML = '';
+    elem.cells[1].innerHTML = '' + rips[0];
+
+    elem.cells[2].innerHTML = '';
+    elem.cells[2].innerHTML = '' + rips[1];
+
+     //buttons
+     var buttons = elem.cells[3].getElementsByTagName("button");
+     for (var i = 0; i < buttons.length; i++) {
+         if(buttons[i].classList.contains('riprow-edit')){
+             buttons[i].style.display = '';
+         }
+         
+         if(buttons[i].classList.contains('riprow-del')) {
+             buttons[i].style.display = '';
+         }
+ 
+         if(buttons[i].classList.contains('riprow-save')) {
+             buttons[i].style.display = 'none';
+         }
+ 
+         if(buttons[i].classList.contains('riprow-cancel')) {
+             buttons[i].style.display = 'none';
+         }
+     }
+
+}
+
+function deleteRipCounterRow(elem: HTMLTableRowElement){
+    let table =  (<HTMLTableElement>document.getElementById("ripcounter-table"));
+    table.deleteRow(elem.rowIndex);
+
+    ripcounter.deleteEntryFromRipcounterMapByGame(elem.cells[0].innerText);    
+}
+
+function saveRipCounterRow(elem: HTMLTableRowElement){
+    var rip = parseInt(elem.cells[1].getElementsByTagName("input")[0].value);
+    var grip = parseInt(elem.cells[2].getElementsByTagName("input")[0].value);
+
+    elem.cells[1].innerHTML = '';
+    elem.cells[1].innerHTML = '' + rip;
+
+    elem.cells[2].innerHTML = '';
+    elem.cells[2].innerHTML = '' + grip;
+
+    ripcounter.updateRipcounterMapByGame(elem.cells[0].innerText, rip, grip);
+
+     //buttons
+     var buttons = elem.cells[3].getElementsByTagName("button");
+     for (var i = 0; i < buttons.length; i++) {
+         if(buttons[i].classList.contains('riprow-edit')){
+             buttons[i].style.display = '';
+         }
+         
+         if(buttons[i].classList.contains('riprow-del')) {
+             buttons[i].style.display = '';
+         }
+ 
+         if(buttons[i].classList.contains('riprow-save')) {
+             buttons[i].style.display = 'none';
+         }
+ 
+         if(buttons[i].classList.contains('riprow-cancel')) {
+             buttons[i].style.display = 'none';
+         }
+     }
+}
+
+jQuery('#ripcounter-global-rips').prop('Counter', 0).animate({
+    Counter: 200
+  }, {
+    duration: 10000,
+    easing: 'swing',
+    step: function(now) {
+      $(this).text(Math.ceil(now).toLocaleString('en'));
+    }
+  });
+
+
 
 //Twitch PubSub Bit functions
 

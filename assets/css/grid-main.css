@@ -830,14 +830,109 @@ label{
     "global_rips global_grips"
     "riptable riptable";
 }
-.global_rips { grid-area: global_rips; }
-.global_grips { grid-area: global_grips; }
+.global_rips { 
+  grid-area: global_rips; 
+  background-image: url("../icons/role-icons/twitch_poison_icon-690x680-opacity50.png");
+  background-repeat: no-repeat;
+  background-size: 75px auto;
+}
+
+/*
+.global_rips::after {
+  content: "";
+  background-image: url("../icons/role-icons/twitch_poison_icon-690x680.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+*/
+.global_grips { 
+  grid-area: global_grips; 
+  background-image: url("../icons/role-icons/falling_guy_icon-690x690-opacity50.png");
+  background-repeat: no-repeat;
+  background-size: 75px auto;
+}
+
+/*
+.global_grips::after {
+  content: "";
+  background-image: url("../icons/role-icons/falling_guy_icon-690x690.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+*/
+
 .riptable { 
   grid-area: riptable; 
   overflow-x: auto;
 }
 
+.ripcounter-head-game{
+  color: #2196F3;
+}
+
 .ripcounter-settings-wrapper{
   display: flex;
   justify-content : flex-end;
+}
+
+.ripcounter-roles{
+  display: flex;
+  flex-flow: row wrap;
+  align-items : center;
+  padding-left: 30px;
+}
+
+.ripcounter-roles label{
+  margin: 3px;
+}
+
+.ripcounter-roles img{
+  height: 20px;
+  margin-right: 12px;
+  transform:translateY(-2px);
+}
+
+.ripcounter-roles input[type="checkbox"] {
+  -ms-transform: scale(1.8); /* IE 9 */
+  -webkit-transform: scale(1.8); /* Chrome, Safari, Opera */
+  transform: scale(1.8);
+  margin-right: 1px;
+}
+
+.ripcounter-roles-wrapper{
+  padding-right: 20px;
+}
+
+.ripcounter-cooldown-wrapper{
+  transform: translateY(10px);
+}
+
+.ripcounter-cooldown-wrapper.input-group-text{
+  margin-right: 4px;
+}
+
+.riprow-del:hover{
+  background-color: #ec2828;
+}
+
+.riprow-save:hover{
+  background-color: #2196F3;
+}
+
+.riprow-cancel:hover{
+  background-color: #ec2828;
 }

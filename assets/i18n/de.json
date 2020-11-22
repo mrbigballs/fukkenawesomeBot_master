@@ -70,10 +70,19 @@
 	"raff-whisper-winner-label": "Verlosungsgewinner Flüsterbenachrichtigung (Gamekey etc.)",
 	"ripcounter-modal-heading": "Todes Counter Einstellungen & Benachritigungen",
 	"ripcounter-active-label": "Todes Counter Aktiv",
-	"ripcounter-rip-aliases-label": "Alternativcommands für !rip: (Komma , getrennt)",
+	"ripcounter-rip-aliases-label": "Alternativcommand(s) für !rip: (Komma , getrennt)",
 	"ripcounter-rip-message-label": "Todes Counter Ausgabe Chatnachricht",
-	"ripcounter-addrip-aliases-label": "Alternativcommands für !addrip:",
+	"ripcounter-addrip-aliases-label": "Alternativcommand(s) für !addrip:",
 	"ripcounter-addrip-message-label": "Todes Counter erhöht Chatnachricht",
-	"ripcounter-addgrip-aliases-label": "Alternativcommands für !addgrip:",
-	"ripcounter-addgrrip-message-label": "Falltode Counter erhör Chatnachricht"
+	"ripcounter-addgrip-aliases-label": "Alternativcommand(s) für !addgrip:",
+	"ripcounter-addgrrip-message-label": "Falltode Counter erhör Chatnachricht",
+	"ripcounter-setrip-aliases-label": "Alternativcommand(s) für !setrip:",
+	"ripcounter-setrip-message-label": "Todes Counter Setzen Chatnachricht",
+	"ripcounter-setgrip-aliases-label": "Alternativcommand(s) für !setgrip:",
+	"ripcounter-setgrip-message-label": "Falltode Counter Setzen Chatnachricht",
+	"ripcounter-rip-cooldown-label": "Abklingzeit(sek) ",
+	"ripcount-table-head-game": "Spiel",
+	"ripcount-table-head-rip": "Tode",
+	"ripcount-table-head-grip": "Schwerkraft Tode",
+	"ripcount-table-head-del": "Editieren"
 }

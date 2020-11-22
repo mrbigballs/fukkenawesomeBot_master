@@ -75,5 +75,14 @@
 	"ripcounter-addrip-aliases-label": "Aliases for !addrip Command:",
 	"ripcounter-addrip-message-label": "Increase Death Counter Chat Message",
 	"ripcounter-addgrip-aliases-label": "Aliases for !addgrip Command:",
-	"ripcounter-addgrrip-message-label": "Increase Gravity Death Counter Chat Message"
+	"ripcounter-addgrrip-message-label": "Increase Gravity Death Counter Chat Message",
+	"ripcounter-setrip-aliases-label": "Aliases for !setrip Command:",
+	"ripcounter-setrip-message-label": "Setting Death Counter Chat Message",
+	"ripcounter-setgrip-aliases-label": "Aliases for !setgrip Command:",
+	"ripcounter-setgrip-message-label": "Setting Gravity Death Counter Chat Message",
+	"ripcounter-rip-cooldown-label": "Cooldown(sec) ",
+	"ripcount-table-head-game": "Game",
+	"ripcount-table-head-rip": "Deaths",
+	"ripcount-table-head-grip": "Gravity Caused Deaths",
+	"ripcount-table-head-del": "Edit"
 }
