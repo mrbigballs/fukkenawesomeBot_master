@@ -109,6 +109,18 @@ var RipCounter = /** @class */ (function () {
     RipCounter.prototype.getRipcounterMap = function () {
         return this.RipCounterMap;
     };
+    RipCounter.prototype.getAllRips = function (type) {
+        var all_rips = 0;
+        this.RipCounterMap.forEach(function (value, key) {
+            if (type == 'grip') {
+                all_rips += value[1];
+            }
+            else {
+                all_rips += value[0];
+            }
+        });
+        return all_rips;
+    };
     RipCounter.prototype.updateRipcounterMapByGame = function (game, rip, grip) {
         //console.log('game: ' + game + ' rip: ' + rip + ' grip: ' + grip);
         if (this.RipCounterMap.has(game)) {
@@ -131,8 +143,8 @@ var RipCounter = /** @class */ (function () {
             }, this.ripcounterSettings.rip_cooldown * 1000);
         }
     };
-    RipCounter.prototype.canUse = function (userstate, mod_only, sub_only, isrip) {
-        //console.log(userstate);
+    RipCounter.prototype.canUse = function (userstate, mod_only, sub_only, isrip, isWhisper) {
+        console.log(userstate);
         var badges = userstate.badges;
         console.log('can _USE: mod:' + mod_only + ' sub:' + sub_only + ' isrip:' + isrip + ' sooldown:' + this.cooldown);
         if (badges != null) { //check if broadaster
@@ -150,6 +162,9 @@ var RipCounter = /** @class */ (function () {
             return true;
         }
         else if (!mod_only && !sub_only && !this.cooldown) {
+            return true;
+        }
+        else if (!mod_only && !sub_only && this.cooldown && isWhisper) {
             return true;
         }
         else if (!mod_only && !sub_only && !isrip) {
@@ -229,7 +244,7 @@ var RipCounter = /** @class */ (function () {
         });
         this.store.set('ripcounter_map', JSON.stringify(rip_map_save));
     };
-    RipCounter.prototype.checkRipCommand = function (message, userstate, currentGame) {
+    RipCounter.prototype.checkRipCommand = function (message, userstate, currentGame, isWhisper) {
         var rip_info_map = new Map();
         rip_info_map.set('game', currentGame);
         rip_info_map.set('sender', userstate['display-name']);
@@ -242,58 +257,58 @@ var RipCounter = /** @class */ (function () {
             this.ripcounterSettings.setgrip_command_alias.push('!setgrip');
             if (this.ripcounterSettings.rip_command_alias.includes(message.toLowerCase())) { //RIP
                 console.log('checkcommand rip IF');
-                if (this.canUse(userstate, this.ripcounterSettings.rip_role_mod, this.ripcounterSettings.rip_role_sub, true)) { //check if roles match & cooldown is false
+                if (this.canUse(userstate, this.ripcounterSettings.rip_role_mod, this.ripcounterSettings.rip_role_sub, true, isWhisper)) { //check if roles match & cooldown is false
                     var rips = this.getRip(currentGame);
                     console.log('lets test that ' + rips[0]);
                     rip_info_map.set('rip_count', '' + rips[0]);
                     rip_info_map.set('grip_count', '' + rips[1]);
-                    if (!userstate['mod']) {
+                    if (!userstate['mod'] && !isWhisper) {
                         this.activateCooldown();
                     }
-                    return this.generateMessage(this.ripcounterSettings.rip_message, rip_info_map);
+                    return (this.ripcounterSettings.rip_message != '') ? this.generateMessage(this.ripcounterSettings.rip_message, rip_info_map) : '';
                 }
             }
             else if (this.ripcounterSettings.addrip_command_alias.includes(message.toLowerCase())) { //ADD RIP
                 console.log('checkcommand addrip IF');
-                if (this.canUse(userstate, this.ripcounterSettings.addrip_role_mod, this.ripcounterSettings.addrip_role_sub, false)) { //check if roles match
+                if (this.canUse(userstate, this.ripcounterSettings.addrip_role_mod, this.ripcounterSettings.addrip_role_sub, false, isWhisper)) { //check if roles match
                     this.addRip(currentGame, 'rip');
                     var rips = this.getRip(currentGame);
                     rip_info_map.set('rip_count', '' + rips[0]);
                     rip_info_map.set('grip_count', '' + rips[1]);
-                    return this.generateMessage(this.ripcounterSettings.addrip_message, rip_info_map);
+                    return (this.ripcounterSettings.addrip_message != '') ? this.generateMessage(this.ripcounterSettings.addrip_message, rip_info_map) : '';
                 }
             }
             else if (this.ripcounterSettings.addgrip_command_alias.includes(message.toLowerCase())) { //ADD GRAVITY RIP
                 console.log('checkcommand addgrip IF');
-                if (this.canUse(userstate, this.ripcounterSettings.addgrip_role_mod, this.ripcounterSettings.addgrip_role_sub, false)) { //check if roles match
+                if (this.canUse(userstate, this.ripcounterSettings.addgrip_role_mod, this.ripcounterSettings.addgrip_role_sub, false, isWhisper)) { //check if roles match
                     this.addRip(currentGame, 'grip');
                     var rips = this.getRip(currentGame);
                     rip_info_map.set('rip_count', '' + rips[0]);
                     rip_info_map.set('grip_count', '' + rips[1]);
-                    return this.generateMessage(this.ripcounterSettings.addgrip_message, rip_info_map);
+                    return (this.ripcounterSettings.addgrip_message != '') ? this.generateMessage(this.ripcounterSettings.addgrip_message, rip_info_map) : '';
                 }
             }
             else if (this.ripcounterSettings.setrip_command_alias.includes(message.toLowerCase().split(' ')[0])) { //ADD RIP
                 if (message.toLowerCase().split(' ')[1] != 'undefined' && !isNaN(parseInt(message.toLowerCase().split(' ')[1]))) { //check if !setrip has parameter & parameter is number
-                    if (this.canUse(userstate, this.ripcounterSettings.setrip_role_mod, this.ripcounterSettings.setrip_role_sub, false)) { //check if roles match
+                    if (this.canUse(userstate, this.ripcounterSettings.setrip_role_mod, this.ripcounterSettings.setrip_role_sub, false, isWhisper)) { //check if roles match
                         var new_rip_count = parseInt(message.toLowerCase().split(' ')[1]);
                         this.setRip(currentGame, 'rip', new_rip_count);
                         var rips = this.getRip(currentGame);
                         rip_info_map.set('rip_count', '' + rips[0]);
                         rip_info_map.set('grip_count', '' + rips[1]);
-                        return this.generateMessage(this.ripcounterSettings.setrip_message, rip_info_map);
+                        return (this.ripcounterSettings.setrip_message != '') ? this.generateMessage(this.ripcounterSettings.setrip_message, rip_info_map) : '';
                     }
                 }
             }
             else if (this.ripcounterSettings.setgrip_command_alias.includes(message.toLowerCase().split(' ')[0])) { //ADD RIP
                 if (message.toLowerCase().split(' ')[1] != 'undefined' && !isNaN(parseInt(message.toLowerCase().split(' ')[1]))) { //check if !setrip has parameter & parameter is number
-                    if (this.canUse(userstate, this.ripcounterSettings.setgrip_role_mod, this.ripcounterSettings.setgrip_role_sub, false)) { //check if roles match
+                    if (this.canUse(userstate, this.ripcounterSettings.setgrip_role_mod, this.ripcounterSettings.setgrip_role_sub, false, isWhisper)) { //check if roles match
                         var new_rip_count = parseInt(message.toLowerCase().split(' ')[1]);
                         this.setRip(currentGame, 'grip', new_rip_count);
                         var rips = this.getRip(currentGame);
                         rip_info_map.set('rip_count', '' + rips[0]);
                         rip_info_map.set('grip_count', '' + rips[1]);
-                        return this.generateMessage(this.ripcounterSettings.setgrip_message, rip_info_map);
+                        return (this.ripcounterSettings.setgrip_message != '') ? this.generateMessage(this.ripcounterSettings.setgrip_message, rip_info_map) : '';
                     }
                 }
             }

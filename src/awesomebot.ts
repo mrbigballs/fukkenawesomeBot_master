@@ -290,7 +290,7 @@ function initTmi(){
                     chatMessageFormatter.scrollChat();
                     //ripcounter
                     if (!self){
-                        ripcounterCheckRips(message, userstate);
+                        ripcounterCheckRips(message, userstate, false);
                         //commands
                         simpleCommand(message);
                         //raffle
@@ -308,7 +308,7 @@ function initTmi(){
                     chatMessageFormatter.scrollChat();
 
                     if (!self){
-                        ripcounterCheckRips(message, userstate);
+                        ripcounterCheckRips(message, userstate, true);
                         //commands
                         simpleCommand(message);
                         
@@ -1492,13 +1492,18 @@ function updatePrizePositionInList(elem: JQuery<HTMLElement>, moveToIndex: numbe
 
 //Ripcounter functions
 
-function ripcounterCheckRips(message: string, userstate: any){
+function ripcounterCheckRips(message: string, userstate: any, isWhisper: boolean){
     if(ripcounter.ripcounterSettings.active){
-        let rip_message = ripcounter.checkRipCommand(message, userstate, currentGame == '' ? 'Chicken Police' : currentGame);
-
+        let rip_message = ripcounter.checkRipCommand(message, userstate, currentGame == '' ? 'Chicken Police' : currentGame, isWhisper);
+        updateRipCounterUITable();
         if(rip_message != ''){
             if(client != 'undefined'){
-                client.say(options.channels[0], rip_message);
+                if(!isWhisper){
+                    client.say(options.channels[0], rip_message);
+                }else{
+                    client.say(options.channels[0], '/w ' + userstate['display-name'] + ' ' + rip_message);
+                }
+                
             }
         }
         
@@ -1652,6 +1657,9 @@ function updateRipcounterTable(){
             deleteRipCounterRow(tr);
         });
     });
+
+    //update global counter
+    updateGlobalRipCounter();
 }
 
 jQuery('.ripcounter-table-rips').on("DOMSubtreeModified",function(event) {
@@ -1736,7 +1744,10 @@ function deleteRipCounterRow(elem: HTMLTableRowElement){
     let table =  (<HTMLTableElement>document.getElementById("ripcounter-table"));
     table.deleteRow(elem.rowIndex);
 
-    ripcounter.deleteEntryFromRipcounterMapByGame(elem.cells[0].innerText);    
+    ripcounter.deleteEntryFromRipcounterMapByGame(elem.cells[0].innerText);  
+    
+    //update global counter
+    updateGlobalRipCounter();
 }
 
 function saveRipCounterRow(elem: HTMLTableRowElement){
@@ -1770,17 +1781,129 @@ function saveRipCounterRow(elem: HTMLTableRowElement){
              buttons[i].style.display = 'none';
          }
      }
+
+     //update global counter
+    updateGlobalRipCounter();
 }
 
-jQuery('#ripcounter-global-rips').prop('Counter', 0).animate({
-    Counter: 200
-  }, {
-    duration: 10000,
-    easing: 'swing',
-    step: function(now) {
-      $(this).text(Math.ceil(now).toLocaleString('en'));
+function updateRipCounterUITable(){
+    let table =  (<HTMLTableElement>document.getElementById("ripcounter-table"));
+    let rips_map = ripcounter.RipCounterMap;
+    let table_games_helper_array:string[] = [];
+
+    for(var i = 0; i < table.rows.length; i++){
+        let row = (<HTMLTableRowElement>table.rows[i]);
+        table_games_helper_array.push(row.cells[0].innerText);
     }
-  });
+
+    let rip_key_itr = rips_map.keys();
+
+    let result = rip_key_itr.next();
+    while (!result.done) {
+        console.log(result.value); // 1 3 5 7 9
+       if(table_games_helper_array.includes(result.value)){//game already on list update
+            for(var i = 0; i < table.rows.length; i++){
+                let row = (<HTMLTableRowElement>table.rows[i]);
+                if(rips_map.has(row.cells[0].innerText)){
+                    //update cells
+                    row.cells[1].innerText = '' + rips_map.get(row.cells[0].innerText)[0];
+                    row.cells[2].innerText = '' + rips_map.get(row.cells[0].innerText)[1];
+                }
+            }
+            //update global counter
+            updateGlobalRipCounter();
+       }else{//new game add to table
+            let tr = table.insertRow(1);
+            //let tr = document.createElement('tr');
+            let td_game = document.createElement('th');
+            td_game.setAttribute('class', 'ripcounter-head-game');
+            td_game.innerHTML = result.value;
+            let td_rip = document.createElement('td');
+            td_rip.setAttribute("contenteditable", "true");
+            td_rip.setAttribute('class', 'ripcounter-table-rips');
+            td_rip.innerHTML = '' +rips_map.get(result.value)[0];
+            let td_grip = document.createElement('td');
+            td_grip.setAttribute("contenteditable", "true");
+            td_grip.setAttribute('class', 'ripcounter-table-grips');
+            td_grip.innerHTML = '' + rips_map.get(result.value)[1];
+            let td_buttons = document.createElement('td');
+
+            let edit_button = document.createElement('button');
+            edit_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-edit');
+            edit_button.setAttribute('type', 'button');
+            let span_edit_icon = document.createElement('span');
+            span_edit_icon.setAttribute('class', 'fa fa-pencil');
+            span_edit_icon.setAttribute('aria-hidden', 'true');
+
+            let del_button = document.createElement('button');
+            del_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-del');
+            del_button.setAttribute('type', 'button');
+            let span_trash_icon = document.createElement('span');
+            span_trash_icon.setAttribute('class', 'fa fa-trash-o');
+            span_trash_icon.setAttribute('aria-hidden', 'true');
+
+            let save_button = document.createElement('button');
+            save_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-save');
+            save_button.setAttribute('type', 'button');
+            save_button.style.display = "none";
+            let span_save_icon = document.createElement('span');
+            span_save_icon.setAttribute('class', 'fa fa-floppy-o');
+            span_save_icon.setAttribute('aria-hidden', 'true');
+
+            let cancel_button = document.createElement('button');
+            cancel_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-cancel');
+            cancel_button.setAttribute('type', 'button');
+            cancel_button.style.display = "none";
+            let span_cancel_icon = document.createElement('span');
+            span_cancel_icon.setAttribute('class', 'fa fa-times');
+            span_cancel_icon.setAttribute('aria-hidden', 'true');
+            
+            del_button.appendChild(span_trash_icon);
+            edit_button.appendChild(span_edit_icon);
+            save_button.appendChild(span_save_icon);
+            cancel_button.appendChild(span_cancel_icon);
+
+            tr.appendChild(td_game);
+            tr.appendChild(td_rip);
+            tr.appendChild(td_grip);
+            td_buttons.appendChild(edit_button);
+            td_buttons.appendChild(del_button);
+            td_buttons.appendChild(save_button);
+            td_buttons.appendChild(cancel_button);
+            tr.appendChild(td_buttons);
+            
+
+            //eventlisteners
+            edit_button.addEventListener ('click', function (event) {
+                editRipCounterRow(tr);
+            });
+
+            save_button.addEventListener ('click', function (event) {
+                saveRipCounterRow(tr);
+            });
+
+            cancel_button.addEventListener ('click', function (event){
+                cancelEditRipCounterRow(tr);
+            });
+
+            del_button.addEventListener ('click', function (event){
+                deleteRipCounterRow(tr);
+            }); 
+
+            //update global counter
+            updateGlobalRipCounter();
+       }
+       result = rip_key_itr.next();
+    }   
+}
+
+function updateGlobalRipCounter(){
+    jQuery('#ripcounter-global-rips').text(ripcounter.getAllRips('rip'));
+    jQuery('#ripcounter-global-grips').text(ripcounter.getAllRips('grip'));
+}
+
+   
+  
 
 
 

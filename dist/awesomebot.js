@@ -253,7 +253,7 @@ function initTmi() {
                     chatMessageFormatter.scrollChat();
                     //ripcounter
                     if (!self) {
-                        ripcounterCheckRips(message, userstate);
+                        ripcounterCheckRips(message, userstate, false);
                         //commands
                         simpleCommand(message);
                         //raffle
@@ -269,7 +269,7 @@ function initTmi() {
                     mainChatMessageWindow.appendChild(chatMessageFormatter.generateChatMessageElement(userstate, message, settingsmodule.settings.chatHighlightNames, 'whisper'));
                     chatMessageFormatter.scrollChat();
                     if (!self) {
-                        ripcounterCheckRips(message, userstate);
+                        ripcounterCheckRips(message, userstate, true);
                         //commands
                         simpleCommand(message);
                     }
@@ -1301,12 +1301,18 @@ function updatePrizePositionInList(elem, moveToIndex) {
     updateRafflePrizeListUI();
 }
 //Ripcounter functions
-function ripcounterCheckRips(message, userstate) {
+function ripcounterCheckRips(message, userstate, isWhisper) {
     if (ripcounter.ripcounterSettings.active) {
-        var rip_message = ripcounter.checkRipCommand(message, userstate, currentGame == '' ? 'Chicken Police' : currentGame);
+        var rip_message = ripcounter.checkRipCommand(message, userstate, currentGame == '' ? 'Chicken Police' : currentGame, isWhisper);
+        updateRipCounterUITable();
         if (rip_message != '') {
             if (client != 'undefined') {
-                client.say(options.channels[0], rip_message);
+                if (!isWhisper) {
+                    client.say(options.channels[0], rip_message);
+                }
+                else {
+                    client.say(options.channels[0], '/w ' + userstate['display-name'] + ' ' + rip_message);
+                }
             }
         }
     }
@@ -1443,6 +1449,8 @@ function updateRipcounterTable() {
             deleteRipCounterRow(tr);
         });
     });
+    //update global counter
+    updateGlobalRipCounter();
 }
 jQuery('.ripcounter-table-rips').on("DOMSubtreeModified", function (event) {
     console.log('focus out for: ' + event.target);
@@ -1512,6 +1520,8 @@ function deleteRipCounterRow(elem) {
     var table = document.getElementById("ripcounter-table");
     table.deleteRow(elem.rowIndex);
     ripcounter.deleteEntryFromRipcounterMapByGame(elem.cells[0].innerText);
+    //update global counter
+    updateGlobalRipCounter();
 }
 function saveRipCounterRow(elem) {
     var rip = parseInt(elem.cells[1].getElementsByTagName("input")[0].value);
@@ -1537,16 +1547,112 @@ function saveRipCounterRow(elem) {
             buttons[i].style.display = 'none';
         }
     }
+    //update global counter
+    updateGlobalRipCounter();
 }
-jQuery('#ripcounter-global-rips').prop('Counter', 0).animate({
-    Counter: 200
-}, {
-    duration: 10000,
-    easing: 'swing',
-    step: function (now) {
-        $(this).text(Math.ceil(now).toLocaleString('en'));
+function updateRipCounterUITable() {
+    var table = document.getElementById("ripcounter-table");
+    var rips_map = ripcounter.RipCounterMap;
+    var table_games_helper_array = [];
+    for (var i = 0; i < table.rows.length; i++) {
+        var row = table.rows[i];
+        table_games_helper_array.push(row.cells[0].innerText);
     }
-});
+    var rip_key_itr = rips_map.keys();
+    var result = rip_key_itr.next();
+    var _loop_1 = function () {
+        console.log(result.value); // 1 3 5 7 9
+        if (table_games_helper_array.includes(result.value)) { //game already on list update
+            for (var i = 0; i < table.rows.length; i++) {
+                var row = table.rows[i];
+                if (rips_map.has(row.cells[0].innerText)) {
+                    //update cells
+                    row.cells[1].innerText = '' + rips_map.get(row.cells[0].innerText)[0];
+                    row.cells[2].innerText = '' + rips_map.get(row.cells[0].innerText)[1];
+                }
+            }
+            //update global counter
+            updateGlobalRipCounter();
+        }
+        else { //new game add to table
+            var tr_1 = table.insertRow(1);
+            //let tr = document.createElement('tr');
+            var td_game = document.createElement('th');
+            td_game.setAttribute('class', 'ripcounter-head-game');
+            td_game.innerHTML = result.value;
+            var td_rip = document.createElement('td');
+            td_rip.setAttribute("contenteditable", "true");
+            td_rip.setAttribute('class', 'ripcounter-table-rips');
+            td_rip.innerHTML = '' + rips_map.get(result.value)[0];
+            var td_grip = document.createElement('td');
+            td_grip.setAttribute("contenteditable", "true");
+            td_grip.setAttribute('class', 'ripcounter-table-grips');
+            td_grip.innerHTML = '' + rips_map.get(result.value)[1];
+            var td_buttons = document.createElement('td');
+            var edit_button = document.createElement('button');
+            edit_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-edit');
+            edit_button.setAttribute('type', 'button');
+            var span_edit_icon = document.createElement('span');
+            span_edit_icon.setAttribute('class', 'fa fa-pencil');
+            span_edit_icon.setAttribute('aria-hidden', 'true');
+            var del_button = document.createElement('button');
+            del_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-del');
+            del_button.setAttribute('type', 'button');
+            var span_trash_icon = document.createElement('span');
+            span_trash_icon.setAttribute('class', 'fa fa-trash-o');
+            span_trash_icon.setAttribute('aria-hidden', 'true');
+            var save_button = document.createElement('button');
+            save_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-save');
+            save_button.setAttribute('type', 'button');
+            save_button.style.display = "none";
+            var span_save_icon = document.createElement('span');
+            span_save_icon.setAttribute('class', 'fa fa-floppy-o');
+            span_save_icon.setAttribute('aria-hidden', 'true');
+            var cancel_button = document.createElement('button');
+            cancel_button.setAttribute('class', 'btn btn-outline-secondary btn-sm riprow-cancel');
+            cancel_button.setAttribute('type', 'button');
+            cancel_button.style.display = "none";
+            var span_cancel_icon = document.createElement('span');
+            span_cancel_icon.setAttribute('class', 'fa fa-times');
+            span_cancel_icon.setAttribute('aria-hidden', 'true');
+            del_button.appendChild(span_trash_icon);
+            edit_button.appendChild(span_edit_icon);
+            save_button.appendChild(span_save_icon);
+            cancel_button.appendChild(span_cancel_icon);
+            tr_1.appendChild(td_game);
+            tr_1.appendChild(td_rip);
+            tr_1.appendChild(td_grip);
+            td_buttons.appendChild(edit_button);
+            td_buttons.appendChild(del_button);
+            td_buttons.appendChild(save_button);
+            td_buttons.appendChild(cancel_button);
+            tr_1.appendChild(td_buttons);
+            //eventlisteners
+            edit_button.addEventListener('click', function (event) {
+                editRipCounterRow(tr_1);
+            });
+            save_button.addEventListener('click', function (event) {
+                saveRipCounterRow(tr_1);
+            });
+            cancel_button.addEventListener('click', function (event) {
+                cancelEditRipCounterRow(tr_1);
+            });
+            del_button.addEventListener('click', function (event) {
+                deleteRipCounterRow(tr_1);
+            });
+            //update global counter
+            updateGlobalRipCounter();
+        }
+        result = rip_key_itr.next();
+    };
+    while (!result.done) {
+        _loop_1();
+    }
+}
+function updateGlobalRipCounter() {
+    jQuery('#ripcounter-global-rips').text(ripcounter.getAllRips('rip'));
+    jQuery('#ripcounter-global-grips').text(ripcounter.getAllRips('grip'));
+}
 //Twitch PubSub Bit functions
 function pubsubfunctions(oauth, channel_id) {
     console.log('pubsub we are here 1');
