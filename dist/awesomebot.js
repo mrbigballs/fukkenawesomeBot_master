@@ -1190,6 +1190,9 @@ function editPrizeItem(elem) {
         jQuery("#raffle-prize-winner-display").show();
         jQuery("#raffle-prize-winner-display-name").text(prizes[id].raffle_winner);
     }
+    else {
+        jQuery("#raffle-prize-winner-display").hide();
+    }
     document.getElementById("raffle-prize-game-name").value = prizes[id].raffle_item;
     document.getElementById("raffle-prize-keyword").value = prizes[id].raffle_keyword;
     document.getElementById("raffle-prize-active-checkbox").checked = prizes[id].item_active;
@@ -1303,15 +1306,17 @@ function updatePrizePositionInList(elem, moveToIndex) {
 //Ripcounter functions
 function ripcounterCheckRips(message, userstate, isWhisper) {
     if (ripcounter.ripcounterSettings.active) {
-        var rip_message = ripcounter.checkRipCommand(message, userstate, currentGame == '' ? 'Chicken Police' : currentGame, isWhisper);
-        updateRipCounterUITable();
-        if (rip_message != '') {
+        var rip_reply = ripcounter.checkRipCommand(message, userstate, currentGame == '' ? 'Chicken Police' : currentGame, isWhisper);
+        if (rip_reply.updateui) {
+            updateRipCounterUITable();
+        }
+        if (rip_reply.message != '' && rip_reply.message != 'Error') {
             if (client != 'undefined') {
                 if (!isWhisper) {
-                    client.say(options.channels[0], rip_message);
+                    client.say(options.channels[0], rip_reply.message);
                 }
                 else {
-                    client.say(options.channels[0], '/w ' + userstate['display-name'] + ' ' + rip_message);
+                    client.say(options.channels[0], '/w ' + userstate['display-name'] + ' ' + rip_reply.message);
                 }
             }
         }

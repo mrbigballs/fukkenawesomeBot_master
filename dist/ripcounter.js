@@ -265,7 +265,11 @@ var RipCounter = /** @class */ (function () {
                     if (!userstate['mod'] && !isWhisper) {
                         this.activateCooldown();
                     }
-                    return (this.ripcounterSettings.rip_message != '') ? this.generateMessage(this.ripcounterSettings.rip_message, rip_info_map) : '';
+                    var command_reply = {
+                        message: this.generateMessage(this.ripcounterSettings.rip_message, rip_info_map),
+                        updateui: false
+                    };
+                    return command_reply;
                 }
             }
             else if (this.ripcounterSettings.addrip_command_alias.includes(message.toLowerCase())) { //ADD RIP
@@ -275,7 +279,11 @@ var RipCounter = /** @class */ (function () {
                     var rips = this.getRip(currentGame);
                     rip_info_map.set('rip_count', '' + rips[0]);
                     rip_info_map.set('grip_count', '' + rips[1]);
-                    return (this.ripcounterSettings.addrip_message != '') ? this.generateMessage(this.ripcounterSettings.addrip_message, rip_info_map) : '';
+                    var command_reply = {
+                        message: this.generateMessage(this.ripcounterSettings.addrip_message, rip_info_map),
+                        updateui: true
+                    };
+                    return command_reply;
                 }
             }
             else if (this.ripcounterSettings.addgrip_command_alias.includes(message.toLowerCase())) { //ADD GRAVITY RIP
@@ -285,7 +293,11 @@ var RipCounter = /** @class */ (function () {
                     var rips = this.getRip(currentGame);
                     rip_info_map.set('rip_count', '' + rips[0]);
                     rip_info_map.set('grip_count', '' + rips[1]);
-                    return (this.ripcounterSettings.addgrip_message != '') ? this.generateMessage(this.ripcounterSettings.addgrip_message, rip_info_map) : '';
+                    var command_reply = {
+                        message: this.generateMessage(this.ripcounterSettings.addgrip_message, rip_info_map),
+                        updateui: true
+                    };
+                    return command_reply;
                 }
             }
             else if (this.ripcounterSettings.setrip_command_alias.includes(message.toLowerCase().split(' ')[0])) { //ADD RIP
@@ -296,7 +308,11 @@ var RipCounter = /** @class */ (function () {
                         var rips = this.getRip(currentGame);
                         rip_info_map.set('rip_count', '' + rips[0]);
                         rip_info_map.set('grip_count', '' + rips[1]);
-                        return (this.ripcounterSettings.setrip_message != '') ? this.generateMessage(this.ripcounterSettings.setrip_message, rip_info_map) : '';
+                        var command_reply = {
+                            message: this.generateMessage(this.ripcounterSettings.setrip_message, rip_info_map),
+                            updateui: true
+                        };
+                        return command_reply;
                     }
                 }
             }
@@ -308,13 +324,21 @@ var RipCounter = /** @class */ (function () {
                         var rips = this.getRip(currentGame);
                         rip_info_map.set('rip_count', '' + rips[0]);
                         rip_info_map.set('grip_count', '' + rips[1]);
-                        return (this.ripcounterSettings.setgrip_message != '') ? this.generateMessage(this.ripcounterSettings.setgrip_message, rip_info_map) : '';
+                        var command_reply = {
+                            message: this.generateMessage(this.ripcounterSettings.setgrip_message, rip_info_map),
+                            updateui: true
+                        };
+                        return command_reply;
                     }
                 }
             }
             else {
                 console.log('checkcommand ELSE');
-                return "";
+                var command_reply = {
+                    message: "Error",
+                    updateui: false
+                };
+                return command_reply;
             }
         }
     };

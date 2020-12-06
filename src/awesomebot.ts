@@ -1361,6 +1361,8 @@ function editPrizeItem(elem: HTMLSpanElement){
     if(prizes[id].raffle_winner != ''){
         jQuery("#raffle-prize-winner-display").show();
         jQuery("#raffle-prize-winner-display-name").text(prizes[id].raffle_winner);
+    }else{
+        jQuery("#raffle-prize-winner-display").hide();
     }
     
 
@@ -1494,14 +1496,18 @@ function updatePrizePositionInList(elem: JQuery<HTMLElement>, moveToIndex: numbe
 
 function ripcounterCheckRips(message: string, userstate: any, isWhisper: boolean){
     if(ripcounter.ripcounterSettings.active){
-        let rip_message = ripcounter.checkRipCommand(message, userstate, currentGame == '' ? 'Chicken Police' : currentGame, isWhisper);
-        updateRipCounterUITable();
-        if(rip_message != ''){
+        let rip_reply = ripcounter.checkRipCommand(message, userstate, currentGame == '' ? 'Chicken Police' : currentGame, isWhisper);
+        
+        if(rip_reply.updateui){
+            updateRipCounterUITable();
+        }
+        
+        if(rip_reply.message != '' && rip_reply.message != 'Error'){
             if(client != 'undefined'){
                 if(!isWhisper){
-                    client.say(options.channels[0], rip_message);
+                    client.say(options.channels[0], rip_reply.message);
                 }else{
-                    client.say(options.channels[0], '/w ' + userstate['display-name'] + ' ' + rip_message);
+                    client.say(options.channels[0], '/w ' + userstate['display-name'] + ' ' + rip_reply.message);
                 }
                 
             }
