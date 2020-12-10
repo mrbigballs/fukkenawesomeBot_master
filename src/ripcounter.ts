@@ -62,51 +62,52 @@ export class RipCounter{
         
         if(this.store.has('ripcounter_settings')){
             console.log('ripcounter_SETTINGS found');
+
+            let ripsettings_json = JSON.parse(this.store.get('ripcounter_settings'));
             
-            this.ripcounterSettings.active = JSON.parse(this.store.get('ripcounter_settings')).active;
+            this.ripcounterSettings.active = ripsettings_json.active;
 
             console.log('ripcounter active?: ' + this.ripcounterSettings.active);
             //roles
             //rip
-            this.ripcounterSettings.rip_role_mod = JSON.parse(this.store.get('ripcounter_settings')).rip_role_mod;
-            this.ripcounterSettings.rip_role_sub = JSON.parse(this.store.get('ripcounter_settings')).rip_role_sub;
-            this.ripcounterSettings.rip_role_super = JSON.parse(this.store.get('ripcounter_settings')).rip_role_super;
+            this.ripcounterSettings.rip_role_mod = ripsettings_json.rip_role_mod;
+            this.ripcounterSettings.rip_role_sub = ripsettings_json.rip_role_sub;
+            this.ripcounterSettings.rip_role_super = ripsettings_json.rip_role_super;
             //addrip
-            this.ripcounterSettings.addrip_role_mod = JSON.parse(this.store.get('ripcounter_settings')).addrip_role_mod;
-            this.ripcounterSettings.addrip_role_sub = JSON.parse(this.store.get('ripcounter_settings')).addrip_role_sub;
-            this.ripcounterSettings.addrip_role_super = JSON.parse(this.store.get('ripcounter_settings')).addrip_role_super;
+            this.ripcounterSettings.addrip_role_mod = ripsettings_json.addrip_role_mod;
+            this.ripcounterSettings.addrip_role_sub = ripsettings_json.addrip_role_sub;
+            this.ripcounterSettings.addrip_role_super = ripsettings_json.addrip_role_super;
             //addgrip
-            this.ripcounterSettings.addgrip_role_mod = JSON.parse(this.store.get('ripcounter_settings')).addgrip_role_mod;
-            this.ripcounterSettings.addgrip_role_sub = JSON.parse(this.store.get('ripcounter_settings')).addgrip_role_sub;
-            this.ripcounterSettings.addgrip_role_super = JSON.parse(this.store.get('ripcounter_settings')).addgrip_role_super;
+            this.ripcounterSettings.addgrip_role_mod = ripsettings_json.addgrip_role_mod;
+            this.ripcounterSettings.addgrip_role_sub = ripsettings_json.addgrip_role_sub;
+            this.ripcounterSettings.addgrip_role_super = ripsettings_json.addgrip_role_super;
             //setgrip
-            this.ripcounterSettings.setrip_role_mod = JSON.parse(this.store.get('ripcounter_settings')).setrip_role_mod;
-            this.ripcounterSettings.setrip_role_sub = JSON.parse(this.store.get('ripcounter_settings')).setrip_role_sub;
-            this.ripcounterSettings.setrip_role_super = JSON.parse(this.store.get('ripcounter_settings')).setrip_role_super;
+            this.ripcounterSettings.setrip_role_mod = ripsettings_json.setrip_role_mod;
+            this.ripcounterSettings.setrip_role_sub = ripsettings_json.setrip_role_sub;
+            this.ripcounterSettings.setrip_role_super = ripsettings_json.setrip_role_super;
             //setgrip
-            this.ripcounterSettings.setgrip_role_mod = JSON.parse(this.store.get('ripcounter_settings')).setgrip_role_mod;
-            this.ripcounterSettings.setgrip_role_sub = JSON.parse(this.store.get('ripcounter_settings')).setgrip_role_sub;
-            this.ripcounterSettings.setgrip_role_super = JSON.parse(this.store.get('ripcounter_settings')).setgrip_role_super;
+            this.ripcounterSettings.setgrip_role_mod = ripsettings_json.setgrip_role_mod;
+            this.ripcounterSettings.setgrip_role_sub = ripsettings_json.setgrip_role_sub;
+            this.ripcounterSettings.setgrip_role_super = ripsettings_json.setgrip_role_super;
             //aliases
-            this.ripcounterSettings.rip_command_alias = JSON.parse(this.store.get('ripcounter_settings')).rip_command_alias;
-            this.ripcounterSettings.addrip_command_alias = JSON.parse(this.store.get('ripcounter_settings')).addrip_command_alias;
-            this.ripcounterSettings.addgrip_command_alias = JSON.parse(this.store.get('ripcounter_settings')).addgrip_command_alias;
-            this.ripcounterSettings.setrip_command_alias = JSON.parse(this.store.get('ripcounter_settings')).setrip_command_alias;
-            this.ripcounterSettings.setgrip_command_alias = JSON.parse(this.store.get('ripcounter_settings')).setgrip_command_alias;
+            this.ripcounterSettings.rip_command_alias = ripsettings_json.rip_command_alias;
+            this.ripcounterSettings.addrip_command_alias = ripsettings_json.addrip_command_alias;
+            this.ripcounterSettings.addgrip_command_alias = ripsettings_json.addgrip_command_alias;
+            this.ripcounterSettings.setrip_command_alias = ripsettings_json.setrip_command_alias;
+            this.ripcounterSettings.setgrip_command_alias = ripsettings_json.setgrip_command_alias;
             //messages
-            this.ripcounterSettings.rip_message = JSON.parse(this.store.get('ripcounter_settings')).rip_message;
-            this.ripcounterSettings.addrip_message = JSON.parse(this.store.get('ripcounter_settings')).addrip_message;
-            this.ripcounterSettings.addgrip_message = JSON.parse(this.store.get('ripcounter_settings')).addgrip_message;
-            this.ripcounterSettings.setrip_message = JSON.parse(this.store.get('ripcounter_settings')).setrip_message;
-            this.ripcounterSettings.setgrip_message = JSON.parse(this.store.get('ripcounter_settings')).setgrip_message;
+            this.ripcounterSettings.rip_message = ripsettings_json.rip_message;
+            this.ripcounterSettings.addrip_message = ripsettings_json.addrip_message;
+            this.ripcounterSettings.addgrip_message = ripsettings_json.addgrip_message;
+            this.ripcounterSettings.setrip_message = ripsettings_json.setrip_message;
+            this.ripcounterSettings.setgrip_message = ripsettings_json.setgrip_message;
             //cooldown
-            this.ripcounterSettings.rip_cooldown = JSON.parse(this.store.get('ripcounter_settings')).rip_cooldown;
+            this.ripcounterSettings.rip_cooldown = ripsettings_json.rip_cooldown;
 
         }else{
             //init ripcounter settings
             this.store.set('ripcounter_settings', JSON.stringify(this.ripcounterSettings));
         }
-        console.log('TEST 3');
         
       }
 
@@ -159,28 +160,37 @@ export class RipCounter{
         console.log(userstate);
         let badges = userstate.badges;
         console.log('can _USE: mod:' + mod_only + ' sub:' + sub_only + ' isrip:' + isrip + ' sooldown:' + this.cooldown);
-        if(badges != null){//check if broadaster
+        if(userstate['mod']){//check if mod
+            console.log('canUse: mod');
+            return true;
+        }else if(sub_only && userstate['subscriber'] && !this.cooldown && isrip){//subonly = true, cooldown = false
+            console.log('canUse: subonly = true, cooldown = false');
+            return true;
+        }else if(sub_only && userstate['subscriber'] && !isrip){//subonly = true
+            console.log('canUse: subscriber');
+            return true;
+        }else if(!mod_only && !sub_only && !this.cooldown){
+            console.log('canUse: subscriber');
+            return true;
+        }else if(!mod_only && !sub_only && this.cooldown && isWhisper){
+            console.log('canUse: whut');
+            return true;
+        }else if(!mod_only && !sub_only && !isrip){
+            console.log('canUse: egal');
+            return true;
+        }else if(badges != null){//check if broadaster
+            console.log('canUse: badges null');
             if(badges.hasOwnProperty('broadcaster')){
                 return true;
             }
-        }else if(userstate['mod']){//check if mod
-            return true;
-        }else if(sub_only && userstate['subscriber'] && !this.cooldown && isrip){//subonly = true, cooldown = false
-            return true;
-        }else if(sub_only && userstate['subscriber'] && !isrip){//subonly = true
-            return true;
-        }else if(!mod_only && !sub_only && !this.cooldown){
-            return true;
-        }else if(!mod_only && !sub_only && this.cooldown && isWhisper){
-            return true;
-        }else if(!mod_only && !sub_only && !isrip){
-            return true;
         }else{
+            console.log('canUse: false');
             return false;
         }
     }
 
     addRip(currentGame: string, type: string){
+        console.log('ADD RIP');
         //game already on list
         if(this.RipCounterMap.has(currentGame)){
            let rip = this.RipCounterMap.get(currentGame)[0];
@@ -233,6 +243,19 @@ export class RipCounter{
             let newgame:number[] = [0,0];
             return newgame;
         }
+    }
+
+    getRipsByGameSearch(searchName: string){
+        let resultList: string[] = [];
+        this.RipCounterMap.forEach((value: any, key: any) => {
+            //console.log('key: ' + key);
+            if(key.toLowerCase().includes(searchName.toLocaleLowerCase()) && resultList.length < 10){
+                let retStr = key + ' - Deaths: ' + value[0] + ' Gravity-Deaths: ' + value[1];
+                resultList.push(retStr);
+               
+            } 
+        });
+        return resultList.toString();
     }
 
     saveRipMap(){
@@ -331,13 +354,26 @@ export class RipCounter{
                         return command_reply;
                     }
                 }   
+            }else if(message.toLowerCase().split(' ')[0].includes('!ripsearch')){
+                if(message.toLowerCase().split(' ').length > 1){
+                    let ripserach_message = this.getRipsByGameSearch(message.toLowerCase().split(' ')[1]);
+                    if(ripserach_message != ''){
+                        let command_reply = {
+                            message:  ripserach_message,
+                            updateui: false
+                        }
+                        return command_reply;
+                    }
+                }
             }else{
                 console.log('checkcommand ELSE');
+                /*
                 let command_reply = {
                     message:  "Error",
                     updateui: false
                 }
                 return command_reply;
+                */
             }
         }
     }

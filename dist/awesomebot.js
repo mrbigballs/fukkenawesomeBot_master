@@ -43,6 +43,7 @@ var intervalRequests = [];
 var raffleInterval;
 var bits_topic = '';
 var channel_points_topic = '';
+var followersSet = new Set();
 settingsmodule.loadSettings();
 var server = require('http').createServer(expressApp);
 var io = require('socket.io')(server);
@@ -222,6 +223,8 @@ function initTmi() {
             ipcRenderer.send('botConnected', 'connected yeah');
             raffle = new raffle_1.Raffle(store, client);
             initRaffleNotificationSettingsUIComponents();
+            //add channel to bot title
+            $('#bot-title-channel-connected').text('[' + options.channels[0] + ']');
         });
         //on chat message do
         /*
@@ -411,6 +414,23 @@ function initIntervals() {
         }
     }, 60000);
     intervalRequests.push(streamInfoInterval);
+    var followerInfoInterval = setInterval(function () {
+        try {
+            var updateChannelPromise = twitchapi.callTwitchApiFetch(settingsmodule.settings.streamerOAuthkey, 'users/follows?to_id=' + channel_info.id);
+            updateChannelPromise.then(function (response) {
+                return response.json();
+            }).then(function (followers) {
+                // var jgame = JSON.parse(games);
+                console.log(followers.data);
+                checkForNewFollowers(followers.data);
+                console.log("followers updated");
+            });
+        }
+        catch (e) {
+            return;
+        }
+    }, 60000);
+    intervalRequests.push(followerInfoInterval);
 }
 function clearAllIntervals() {
     for (var i = 0; intervalRequests.length > i; i++) {
@@ -421,6 +441,21 @@ function updateLiveUI() {
     jQuery('.stream-info').addClass('online');
     document.getElementById("stream-time").innerHTML = timeDiffCalc(new Date(stream_info.started_at), new Date());
     document.getElementById("viewer-count-update").innerHTML = stream_info.viewer_count;
+}
+function checkForNewFollowers(followersJson) {
+    //initilazation of followers
+    if (followersSet.size == 0) {
+        for (var i = 0; i < followersJson.length; i++) {
+            followersSet.add(followersJson.from_id);
+        }
+    }
+    else { //already initialized now checking for new followers
+        for (var i = 0; i < followersJson.length; i++) {
+            if (followersSet.add(followersJson.from_id)) {
+                console.log('new follower: ' + followersJson.from_name);
+            }
+        }
+    }
 }
 function timeDiffCalc(dateFuture, dateNow) {
     var diffInMilliSeconds = Math.abs(dateFuture - dateNow) / 1000;
@@ -1307,16 +1342,18 @@ function updatePrizePositionInList(elem, moveToIndex) {
 function ripcounterCheckRips(message, userstate, isWhisper) {
     if (ripcounter.ripcounterSettings.active) {
         var rip_reply = ripcounter.checkRipCommand(message, userstate, currentGame == '' ? 'Chicken Police' : currentGame, isWhisper);
-        if (rip_reply.updateui) {
-            updateRipCounterUITable();
-        }
-        if (rip_reply.message != '' && rip_reply.message != 'Error') {
-            if (client != 'undefined') {
-                if (!isWhisper) {
-                    client.say(options.channels[0], rip_reply.message);
-                }
-                else {
-                    client.say(options.channels[0], '/w ' + userstate['display-name'] + ' ' + rip_reply.message);
+        if (typeof rip_reply !== 'undefined') {
+            if (rip_reply.updateui) {
+                updateRipCounterUITable();
+            }
+            if (rip_reply.message != '' && rip_reply.message != 'Error') {
+                if (client != 'undefined') {
+                    if (!isWhisper) {
+                        client.say(options.channels[0], rip_reply.message);
+                    }
+                    else {
+                        client.say(options.channels[0], '/w ' + userstate['display-name'] + ' ' + rip_reply.message);
+                    }
                 }
             }
         }
