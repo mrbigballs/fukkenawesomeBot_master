@@ -10,6 +10,7 @@ var YeelightSearch = require('yeelight-wifi');
 var credentials_1 = require("./credentials");
 var chatformatter_1 = require("./chatformatter");
 var settingsmodule_1 = require("./settingsmodule");
+var quotesmodule_1 = require("./quotesmodule");
 var wikipedia_1 = require("./wikipedia");
 var twitch_api_1 = require("./twitch_api");
 var storelocal_1 = require("./storelocal");
@@ -20,6 +21,7 @@ var store = new storelocal_1.StoreLocal().getLocalStore();
 var credentials = new credentials_1.Credentials();
 var chatMessageFormatter = new chatformatter_1.ChatMessageFormatter();
 var settingsmodule = new settingsmodule_1.SettingsModule();
+var qutotesmodule = new quotesmodule_1.QuotesModule();
 var wikipedia = new wikipedia_1.Wikipedia();
 var twitchapi = new twitch_api_1.TwitchAPI();
 var mainNavigation = new navigation_1.MainNavigation();
@@ -172,6 +174,10 @@ function initApplication() {
     ripcounter = new ripcounter_1.RipCounter(store);
     initRipcounterSettingsUIComponents();
     updateRipcounterTable();
+    //qutotesmodule.checkIfDBisEmpty();
+    //qutotesmodule.addQuoteToDB('"balsldaksdk"', 'other', 'Chicken Police');
+    //qutotesmodule.printTable();
+    qutotesmodule.getQuoteById(2);
 }
 function initTmi() {
     if (client != null) {

@@ -47,6 +47,8 @@ export class MainNavigation{
             //chatInput.style.display = '';
             chatGridDiv.style.display ='';
             ripCounterDiv.style.display ='none';
+            //scroll chat on comming back to chat window
+            this.scrollChat();
         }else if(id == 'navSettings'){
             lotteryDiv.style.display = 'none';
             settingsDiv.style.display = '';
@@ -70,6 +72,11 @@ export class MainNavigation{
     
         
     }
+
+    scrollChat(){
+        const chatDiv = document.getElementById("chatWindow");
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+      }
 
 }
 

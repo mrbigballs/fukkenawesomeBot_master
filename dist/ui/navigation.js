@@ -42,6 +42,8 @@ var MainNavigation = /** @class */ (function () {
             //chatInput.style.display = '';
             chatGridDiv.style.display = '';
             ripCounterDiv.style.display = 'none';
+            //scroll chat on comming back to chat window
+            this.scrollChat();
         }
         else if (id == 'navSettings') {
             lotteryDiv.style.display = 'none';
@@ -65,6 +67,10 @@ var MainNavigation = /** @class */ (function () {
             chatGridDiv.style.display = 'none';
             ripCounterDiv.style.display = '';
         }
+    };
+    MainNavigation.prototype.scrollChat = function () {
+        var chatDiv = document.getElementById("chatWindow");
+        chatDiv.scrollTop = chatDiv.scrollHeight;
     };
     return MainNavigation;
 }());

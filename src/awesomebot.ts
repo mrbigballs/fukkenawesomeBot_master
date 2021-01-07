@@ -12,6 +12,7 @@ import { Credentials } from "./credentials";
 import { ChatMessageFormatter } from "./chatformatter";
 import { Settings } from './settings';
 import { SettingsModule } from './settingsmodule';
+import { QuotesModule } from './quotesmodule';
 import { Wikipedia } from './wikipedia';
 import { TwitchAPI } from './twitch_api';
 import { StoreLocal } from './storelocal';
@@ -27,6 +28,7 @@ const store = new StoreLocal().getLocalStore();
 const credentials = new Credentials();
 const chatMessageFormatter = new ChatMessageFormatter();
 const settingsmodule = new SettingsModule();
+const qutotesmodule = new QuotesModule();
 const wikipedia = new Wikipedia();
 const twitchapi = new TwitchAPI();
 const mainNavigation = new MainNavigation();
@@ -60,6 +62,9 @@ let channel_points_topic: string = '';
 let followersSet: Set<number> = new Set();
 
 settingsmodule.loadSettings();
+
+
+
 
 var server = require('http').createServer(expressApp);
 var io = require('socket.io')(server);
@@ -203,6 +208,10 @@ function initApplication(){
     initRipcounterSettingsUIComponents();
     updateRipcounterTable();
     
+    //qutotesmodule.checkIfDBisEmpty();
+    //qutotesmodule.addQuoteToDB('"balsldaksdk"', 'other', 'Chicken Police');
+    //qutotesmodule.printTable();
+    qutotesmodule.getQuoteById(2);
 }
 
 function initTmi(){
